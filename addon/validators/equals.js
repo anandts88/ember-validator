@@ -11,7 +11,7 @@ export default Base.extend({
     }
 
     if (!this.options.message) {
-      this.set('options.message', Messages.render('accepted', this.options));
+      this.set('options.message', Messages.render('equals', this.options));
     }
   },
 

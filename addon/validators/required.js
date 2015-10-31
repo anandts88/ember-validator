@@ -10,7 +10,7 @@ export default Base.extend({
     }
 
     if (!this.options.message) {
-      this.set('options.message', Messages.render('blank', this.options));
+      this.set('options.message', Messages.render('required', this.options));
     }
   },
 
