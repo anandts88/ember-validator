@@ -464,3 +464,8 @@ import { inlineValidator } from 'ember-validator';
   }
 }
 ```
+
+### References ###
+
+[Dockyard ember-validations](https://github.com/dockyard/ember-validation)
+[Daniel Kuczewski ember-validations](https://github.com/Dani723/ember-validation)
