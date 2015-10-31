@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import Errors from 'ember-validations/errors';
-import Base from 'ember-validations/validators/validator';
+import Errors from 'ember-validator/errors';
+import Base from 'ember-validator/validators/validator';
 
 
 export default Ember.Mixin.create({
@@ -127,7 +127,7 @@ export default Ember.Mixin.create({
       if (customValidator) {
         validator = customValidator;
       } else {
-        var predefined = container.lookupFactory('ember-validations@validator:' + validatorName);
+        var predefined = container.lookupFactory('ember-validator@validator:' + validatorName);
         validator = predefined;
       }
       cache[validatorName] = validator;

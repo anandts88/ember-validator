@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import Base from 'ember-validations/validators/validator';
-import Messages from 'ember-validations/messages';
+import Base from 'ember-validator/validators/validator';
+import Messages from 'ember-validator/messages';
 
 export default Base.extend({
 
