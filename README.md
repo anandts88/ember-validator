@@ -2,8 +2,6 @@
 
 ## Installation ##
 
-#### Along with Ember-CLI ####
-
 Please add `ember-validator` to your `package.json`:
 
 ```javascript
@@ -226,7 +224,7 @@ Validate whether the property equals to the specified value.
   * `accept` - The value to be compared.
 
 ```javascript
-  acceptance: {
+  equals: {
     message: 'Only myusername is accepted',
     accept: 'myusername'
   }
@@ -426,8 +424,6 @@ Please use `if` and `unless` options in validation rules.
 
 ### Custom Validators ###
 
-### With Ember-CLI ###
-
 You can place your custom validators into `my-app/app/validators/<name>`:
 
 ```javascript
@@ -467,5 +463,5 @@ import { inlineValidator } from 'ember-validator';
 
 ### References ###
 
-[Dockyard ember-validations](https://github.com/dockyard/ember-validation)
-[Daniel Kuczewski ember-validations](https://github.com/Dani723/ember-validation)
+1. [Dockyard ember-validations](https://github.com/dockyard/ember-validation)
+2. [Daniel Kuczewski ember-validations](https://github.com/Dani723/ember-validation)
