@@ -7,7 +7,7 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.0.0"
+  "ember-validator": "1.0.1"
 }
 ```
 
