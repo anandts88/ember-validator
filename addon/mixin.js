@@ -10,14 +10,14 @@ export default Ember.Mixin.create({
     return this.validateMap({
       object: this,
       validations: rules,
-      regular: props.regular
+      noPromise: props.noPromise
     });
   },
 
   validateMap: function(props) {
     var object = props.model;
     var validations = props.validations;
-    var regular = props.regular;
+    var noPromise = props.noPromise;
 
     var result = Errors.create();
     var allErrors = Ember.A();
@@ -48,14 +48,14 @@ export default Ember.Mixin.create({
 
     result.set('errors', allErrors);
 
-    if (!regular) {
+    if (noPromise) {
+      return result;
+    } else {
       if (result.get('isValid')) {
         return Ember.RSVP.resolve(true);
       } else {
         return Ember.RSVP.reject(result);
       }
-    } else {
-      return result;
     }
   },
 
@@ -75,7 +75,7 @@ export default Ember.Mixin.create({
     return validators;
   },
 
-  createInlineValidator: function(callback) {
+  createInlineValidator: function() {
     return Base.extend({
       call: function() {
         var errorMessage = this.callback.call(this, this.model, this.property);
@@ -84,7 +84,7 @@ export default Ember.Mixin.create({
           this.errors.pushObject(errorMessage);
         }
       },
-      callback: callback
+      callback: null
     });
   },
 
@@ -92,7 +92,7 @@ export default Ember.Mixin.create({
     var validators = Ember.A();
     var validator;
     for (var validatorName in rules) {
-      if (validatorName !== 'inline' ) {
+      if (validatorName !== 'custom' ) {
         validator = this.lookupValidator(validatorName);
         validators.pushObject(validator.create({
           options: rules[validatorName]
