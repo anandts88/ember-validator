@@ -465,3 +465,6 @@ import { inlineValidator } from 'ember-validator';
 
 1. [Dockyard ember-validations](https://github.com/dockyard/ember-validation)
 2. [Daniel Kuczewski ember-validations](https://github.com/Dani723/ember-validation)
+
+### NPM ###
+[NPM](https://www.npmjs.com/package/ember-validator)
