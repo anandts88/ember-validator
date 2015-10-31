@@ -77,7 +77,7 @@ export default Ember.Mixin.create({
 
   createInlineValidator: function() {
     return Base.extend({
-      call: function() {
+      perform: function() {
         var errorMessage = this.callback.call(this, this.model, this.property);
 
         if (errorMessage) {
