@@ -13,7 +13,7 @@ Please add `ember-validator` to your `package.json`:
 
 ### For Non CLI applications ###
 
-Use [Ember Non CLI library](https://github.com/anandts88/ember-validator/blob/master/ember-validator-non-cli.js)
+Use [Ember Validator Non CLI library](https://github.com/anandts88/ember-validator/blob/master/ember-validator-non-cli.js) for non CLI applications.
 This depends on [moment library](http://momentjs.com/), so please include [moment.js](http://momentjs.com/downloads/moment.min.js) along with this library.
 
 
