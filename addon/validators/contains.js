@@ -27,6 +27,18 @@ export default Base.extend({
         this.errors.pushObject(this.options.messages.exclude);
       } else if (this.options.include && this.options.include.indexOf(value) === -1) {
         this.errors.pushObject(this.options.messages.include);
+      } else if (this.options.exludeRange) {
+        first = this.options.exludeRange[0];
+        last = this.options.exludeRange[1];
+        if (value >= first && value <= last) {
+          this.errors.pushObject(this.options.messages.exludeRange);
+        }
+      } else if (this.options.includeRange) {
+        first = this.options.includeRange[0];
+        last = this.options.includeRange[1];
+        if (value < first && value > last) {
+          this.errors.pushObject(this.options.messages.includeRange);
+        }
       }
     }
   }
