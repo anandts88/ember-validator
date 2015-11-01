@@ -7,7 +7,7 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.0.4"
+  "ember-validator": "1.0.5"
 }
 ```
 
@@ -315,6 +315,27 @@ Validate poperty with passed regular expression
       }
     ]
   }
+```
+
+### email ###
+
+Validate whether the property is email.
+
+#### Options ####
+
+  * `with` - The regular expression to test with, if you are not happy with the default email pattern.
+  * `message` - Error message returned when email validation fails.
+
+```javascript
+  email: {
+    message: "Invalid email"
+  }
+
+  email: {
+    with: /^(([^<>()\[\]\\.,;:\s@\"]+(\.[^<>()\[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    message: "Invalid email"
+  }
+
 ```
 
 ### length ###
