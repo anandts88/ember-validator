@@ -7,7 +7,7 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.0.5"
+  "ember-validator": "1.0.6"
 }
 ```
 
@@ -416,6 +416,58 @@ Validates property is a number
     lessThan: 10,
     messages: {
       lessThan: 'must be less than 10'
+    }
+  }
+```
+
+### date ###
+Perform date validation. Property can be Date object, moment object or string. If the property is string then set `format` option
+
+#### Options ####
+  * `format` - Format of the source date, only if property is date in string.
+  * `time` - By default time is not allowed while performing validations, set this to true, if you want to validate time also.
+  * `weekend` - Validates property is a weekend.
+  * `onlyWeekend` - Validates property is a only saturday or sunday.
+  * `before` - Validates property is before target date
+  * `beforeSame` - Validates property is before or same as target date
+  * `same` - Validates property is same as target date
+  * `after` - Validates property is after target date
+  * `afterSame` - Validates property is after or same as target date
+
+The below two are options for same, before, after, beforeSame and afterSame
+  * `target` - Date to be compared with. This can be date object, moment object or string. If the property is string then set `format` option.
+  * `format` -  Format of target date, if it is string.
+
+#### Messages ####
+  * `date` - Error message to be displayed if date is not valid.
+  * `weekend` - Error message returned when weekend validation fails.
+  * `onlyWeekend` - Error message returned when onlyWeekend validation fails.
+  * `before` - Error message returned when before validation fails.
+  * `beforeSame` - Error message returned when beforeSame validation fails.
+  * `same` - Error message returned when same validation fails.
+  * `after` - Error message returned when after validation fails.
+  * `afterSame` - Error message returned when afterSame validation fails.
+
+```javascript
+  date: {
+    weekend: true,
+    messages: {
+      weekend: 'must not be weekend'
+    }
+  }
+
+// If property date is 'Nov/01/2015'
+  date: {
+    before: {
+      target: 'Oct/31/2015',
+      format: 'MMM/DD/YYYY'
+    },
+    afterSame: {
+      target: new Date()
+    },
+    messages: {
+      before: 'date must be before Oct/31/2015',
+      afterSame: 'date must be after new Date()'
     }
   }
 ```
