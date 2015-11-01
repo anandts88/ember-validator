@@ -10,7 +10,7 @@ export default Base.extend({
       this.set('options', {});
     }
 
-    if (this.options.messages === undefined) {
+    if (!this.options.messages) {
       this.set('options.messages', {});
     }
   },
@@ -25,19 +25,14 @@ export default Base.extend({
 
   getValue: function(key) {
     if (this.options[key].constructor === String) {
-      return get(this.model, this.options[key]) || 0;
+      return this.model.get(this.options[key]) || 0;
     } else {
       return this.options[key];
     }
   },
 
   renderMessageFor: function(key, value) {
-    var options = { count: value };
-    for (var _key in this.options) {
-      options[_key] = this.options[_key];
-    }
-
-    return this.options.messages[key] || Messages.render(key, options);
+    return this.options.messages[key] || Messages.render(key, { count: value });
   },
 
   perform: function() {

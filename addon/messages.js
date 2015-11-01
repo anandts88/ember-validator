@@ -1,17 +1,14 @@
 import Ember from 'ember';
 
 export default {
-  render: function(attribute, context) {
-    if (Ember.I18n) {
-      return Ember.I18n.t('errors.' + attribute, context);
-    } else {
-      var regex = new RegExp("{{(.*?)}}"),
-          attributeName = "";
-      if (regex.test(this.defaults[attribute])) {
-        attributeName = regex.exec(this.defaults[attribute])[1];
-      }
-      return this.defaults[attribute].replace(regex, context[attributeName]);
+  render: function(attribute, options) {
+    var msg;
+
+    for(var option in options) {
+      msg = this.defaults[attribute].replace('{{' + option + '}}', options[option]);
     }
+
+    return msg;
   },
   defaults: {
     include: "is not included in the list",

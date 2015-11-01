@@ -2,18 +2,15 @@ import Ember from 'ember';
 import Base from 'ember-validator/validators/validator';
 import Messages from 'ember-validator/messages';
 
-var get = Ember.get;
-var set = Ember.set;
-
 export default Base.extend({
   init: function() {
     this._super();
     if (typeof(this.options) === 'number') {
-      set(this, 'options', { 'is': this.options });
+      this.set('options', { 'is': this.options });
     }
 
-    if (this.options.messages === undefined) {
-      set(this, 'options.messages', {});
+    if (!this.options.messages) {
+      this.set( 'options.messages', {});
     }
 
     this.options.tokenizer = this.options.tokenizer || function(value) {
@@ -29,19 +26,14 @@ export default Base.extend({
 
   getValue: function(key) {
     if (this.options[key].constructor === String) {
-      return get(this.model, this.options[key]) || 0;
+      return this.model.get(this.options[key]) || 0;
     } else {
       return this.options[key];
     }
   },
 
   renderMessageFor: function(key, value) {
-    var options = { count: value };
-    for (var _key in this.options) {
-      options[_key] = this.options[_key];
-    }
-
-    return this.options.messages[key] || Messages.render(key, options);
+    return this.options.messages[key] || Messages.render(key, { count: value });
   },
 
   perform: function() {

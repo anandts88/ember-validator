@@ -16,7 +16,7 @@ export default Ember.Object.extend({
   },
 
   perform: function () {
-    throw 'Not implemented!';
+    throw 'Please override perform method in you validator.';
   },
 
   validate: function() {

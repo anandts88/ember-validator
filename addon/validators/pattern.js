@@ -2,9 +2,6 @@ import Ember from 'ember';
 import Base from 'ember-validator/validators/validator';
 import Messages from 'ember-validator/messages';
 
-var get = Ember.get;
-var set = Ember.set;
-
 export default Base.extend({
   init: function() {
     this._super();
@@ -16,8 +13,8 @@ export default Base.extend({
       this.set('options', { 'with': this.options });
     }
 
-    if (this.options.messages === undefined) {
-      set(this, 'options.messages', {});
+    if (!this.options.messages) {
+      this.set('options.messages', {});
     }
   },
 
