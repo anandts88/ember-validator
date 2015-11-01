@@ -289,21 +289,21 @@ Validate poperty with passed regular expression
   * `without` - Error message returned when without validation fails.
 
 ```javascript
-  format: {
+  pattern: {
     with: /^([a-zA-Z])+$/,
     messages: {
       with: 'Must be alphabets'  
     }}
   }
 
-  format: {
+  pattern: {
     without: /^([a-zA-Z])+$/,
     messages: {
       without: 'Must not be alphabets'  
     }}
   }
 
-  format: {
+  pattern: {
     array: [
       {
         with: /^([a-zA-Z])+$/,
