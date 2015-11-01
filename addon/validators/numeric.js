@@ -1,8 +1,8 @@
 import Ember from 'ember';
-import Base from 'ember-validator/validators/validator';
+import Validator from 'ember-validator/validators/validator';
 import Messages from 'ember-validator/messages';
 
-export default Base.extend({
+export default Validator.extend({
 
   init: function() {
     this._super();

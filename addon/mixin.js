@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import Errors from 'ember-validator/errors';
-import Base from 'ember-validator/validators/validator';
+import Validator from 'ember-validator/validators/validator';
 
 
 export default Ember.Mixin.create({
@@ -76,7 +76,7 @@ export default Ember.Mixin.create({
   },
 
   createInlineValidator: function() {
-    return Base.extend({
+    return Validator.extend({
       perform: function() {
         var errorMessage = this.callback.call(this, this.model, this.property);
 

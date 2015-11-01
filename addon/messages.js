@@ -28,9 +28,7 @@ export default {
     equalTo: "must be equal to {{count}}",
     lessThan: "must be less than {{count}}",
     lessThanOrEqualTo: "must be less than or equal to {{count}}",
-    otherThan: "must be other than {{count}}",
     odd: "must be odd",
-    even: "must be even",
-    url: "is not a valid URL"
+    even: "must be even"
   }
 };

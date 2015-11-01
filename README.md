@@ -7,9 +7,15 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.0.6"
+  "ember-validator": "1.0.7"
 }
 ```
+
+### For Non CLI applications ###
+
+Use [Ember Non CLI library](https://github.com/anandts88/ember-validator/ember-validator-non-cli.js)
+This depends on [moment library](http://momentjs.com/), so please include [moment.js](http://momentjs.com/downloads/moment.min.js) along with this library.
+
 
 ## Issues or Help? ##
 
