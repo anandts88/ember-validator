@@ -32,10 +32,6 @@ export default Base.extend({
     }
   },
 
-  renderMessageFor: function(key, value) {
-    return this.options.messages[key] || Messages.render(key, { count: value });
-  },
-
   perform: function() {
     var value = this.model.get(this.property);
     var key, comparisonResult;
@@ -54,7 +50,7 @@ export default Base.extend({
         comparisonType = this.CHECKS[key];
 
         if (!this.compare(propertyLength, comparisonLength, comparisonType)) {
-          this.errors.pushObject(this.renderMessageFor(key, comparisonLength));
+          this.errors.pushObject(this.renderMessageFor(key, { count: comparisonValue }));
         }
       }
     }

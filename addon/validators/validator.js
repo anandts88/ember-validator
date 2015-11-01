@@ -19,6 +19,10 @@ export default Ember.Object.extend({
     throw 'Please override perform method in you validator.';
   },
 
+  renderMessageFor: function(key, options) {
+    return this.options.messages[key] || Messages.render(key, options);
+  },
+
   validate: function() {
     var result = this._validate();
     return this.get('errors');
