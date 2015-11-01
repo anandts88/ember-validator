@@ -230,49 +230,52 @@ Validate whether the property equals to the specified value.
   }
 ```
 
-### exclude ###
-Validate property with array of values, and the property must not match to any values in array.
+### contains ###
+Validate property with array of values, and the array of values contains/notcontains the property.
 
 #### Options ####
-  * `message` - Error message returned when exclude validation fails.
-  * `in` - An array of values that are excluded
-  * `range` - An array of lower and upper bound, and values within this range is excluded.
+  * `exclude`:  An array of values that are excluded
+  * `exludeRange`: An array of lower and upper bound, and values within this range is excluded.
+  * `include` - An array of values that are excluded
+  * `includeRange` - An array of lower and upper bound, and values within this range is excluded.
+
+##### Messages #####
+  * `exclude`:  Error message returned when exclude validation fails.
+  * `exludeRange`: Error message returned when exludeRange validation fails.
+  * `include` - Error message returned when include validation fails.
+  * `includeRange` - Error message returned when includeRange validation fails.
 
 ```javascript
-// Examples
-exclude: {
-  in: ['A', 'B', 'C'],
-  message: 'Please enter valid value'
+contains: {
+  exclude: ['A', 'B', 'C'],
+  messages: {
+    exclude: 'Please enter valid value'
+  }
 }
 
-exclude: {
-  range: [1, 10],
-  message: 'cannot be between 1 and 10'
+contains: {
+  excludeRange: [1, 10],
+  messages: {
+    excludeRange: 'cannot be between 1 and 10'
+  }
+}
+
+contains: {
+  include: ['A', 'B', 'C'],
+  messages: {
+    include: 'Please enter valid value'
+  }
+}
+
+contains: {
+  includeRange: [1, 10],
+  messages: {
+    includeRange: 'cannot be between 1 and 10'
+  }
 }
 ```
 
-### include ###
-Validate property with array of values, and the property must match one of the values in array.
-
-#### Options ####
-  * `message` - Error message returned when include validation fails.
-  * `in` - An array of values that are excluded
-  * `range` - An array of lower and upper bound, and values within this range is excluded.
-
-```javascript
-// Examples
-include: {
-  in: ['A', 'B', 'C'],
-  message: 'Please enter valid value'
-}
-
-include: {
-  range: [1, 10],
-  message: 'Must be between 1 and 10'
-}
-```
-
-### Format ###
+### pattern ###
 Validate poperty with passed regular expression
 
 #### Options ####
@@ -314,7 +317,7 @@ Validate poperty with passed regular expression
   }
 ```
 
-### Length ###
+### length ###
 Validate length of property
 
 #### Options ####
