@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import Messages from 'ember-validator/messages';
 
 export default Ember.Object.extend({
   errors: null,
