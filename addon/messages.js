@@ -29,6 +29,9 @@ export default {
     lessThan: "must be less than {{count}}",
     lessThanOrEqualTo: "must be less than or equal to {{count}}",
     odd: "must be odd",
-    even: "must be even"
+    even: "must be even",
+    phone: "valid phone number",
+    ssn: "valid ssn",
+    zip: "valid zip"
   }
 };
