@@ -3,7 +3,6 @@ import Validator from 'ember-validator/validators/validator';
 import Messages from 'ember-validator/messages';
 
 export default Validator.extend({
-
   FORMATS: [
     /^\([0-9]{3}\)\s[0-9]{3}\s[0-9]{4}$/, // (999) 999 9999
     /^\([0-9]{3}\)\s[0-9]{3}\-[0-9]{4}$/, // (999) 999-9999

@@ -1,10 +1,8 @@
 import Ember from 'ember';
 import moment from 'moment';
 import Validator from 'ember-validator/validators/validator';
-import Messages from 'ember-validator/messages';
 
 export default Validator.extend({
-
   init: function() {
     this._super();
     if (typeof(this.options) !== 'object') {

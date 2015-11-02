@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import Validator from 'ember-validator/validators/validator';
-import Messages from 'ember-validator/messages';
 
 export default Validator.extend({
   init: function() {
