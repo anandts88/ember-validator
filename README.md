@@ -7,7 +7,7 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.0.9"
+  "ember-validator": "1.1.0"
 }
 ```
 
@@ -341,7 +341,62 @@ Validate whether the property is email.
     with: /^(([^<>()\[\]\\.,;:\s@\"]+(\.[^<>()\[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     message: "Invalid email"
   }
+```
 
+### ssn ###
+
+Validate whether the property is ssn. Default pattern of ssn NNN-NN-NNNN. change this by setting `with` property
+
+#### Options ####
+
+  * `with` - The regular expression to test with, if you are not happy with the default ssn pattern.
+  * `message` - Error message returned when email validation fails.
+
+```javascript
+  ssn: {
+    message: "Invalid ssn"
+  }
+```
+
+### zip ###
+
+Validate whether the property is valid zip. Default pattern of ssn NNNNN or NNNNN-NNNN. change this by setting `with` property
+
+#### Options ####
+
+  * `with` - The regular expression to test with, if you are not happy with the default zip pattern.
+  * `message` - Error message returned when zip validation fails.
+
+```javascript
+  zip: {
+    message: "Invalid zip"
+  }
+```
+
+### phone ###
+
+Validate whether the property is valid phone. Default supported phone number pattern are.
+
+#### Options ####
+
+  * `format1`: (999) 999 9999. Set to `true` if you want to validate this pattern.
+  * `format2`: (999) 999-9999. Set to `true` if you want to validate this pattern.
+  * `format3`: (999)999 9999. Set to `true` if you want to validate this pattern.
+  * `format4`: (999)999-9999. Set to `true` if you want to validate this pattern.
+  * `format5`: (999)9999999. Set to `true` if you want to validate this pattern.
+  * `format6`: 999 999 9999. Set to `true` if you want to validate this pattern.
+  * `format7`: 999-999-9999. Set to `true` if you want to validate this pattern.
+  * `format8`: 999.999.9999. Set to `true` if you want to validate this pattern.
+  * `format9`: 9999999999. Set to `true` if you want to validate this pattern.
+  * `message`: Error message returned when phone validation fails.
+
+```javascript
+  phone: {
+    format1: true,
+    format5: true,
+    message: "Invalid phone"
+  }
+  // This matches format1 and format4 patterns of phone number
 ```
 
 ### length ###
@@ -387,9 +442,11 @@ Validate length of property
 ```
 
 ### numeric ###
-Validates property is a number
+Validates property is a number, comma separated numbers also supported. Default pattern of numbers /^\d+(,\d{3})*(\.\d*)?$/
+You can change this by setting `pattern` property of the options.
 
 #### Options ####
+  * `pattern` - Default pattern for number /^\d+(,\d{3})*(\.\d*)?$/, set this if you want any other pattern.
   * `integer` - Validates property is a integer
   * `greaterThan` - Validates property is greater than
   * `greaterThanOrEqualTo` - Validates property is greater than or equal to
@@ -398,6 +455,8 @@ Validates property is a number
   * `lessThanOrEqualTo` - Validates property is less than or equal to
   * `odd` - Validates property is odd
   * `even` - Validates property is even
+  * `decimal` - Validates maximum no of decimal digits
+  * `fraction` - Validates maximum no of fraction digits
 
 ##### Messages #####
   * `numeric` - Error message returned when numeric validation fails.
@@ -409,19 +468,32 @@ Validates property is a number
   * `lessThanOrEqualTo` - Error message returned when lessThanOrEqualTo validation fails.
   * `odd` - Error message returned when odd validation fails.
   * `even` - Error message returned when even validation fails.
+  * `decimal` - Error message returned when decimal validation fails.
+  * `fraction` - Error message returned when fraction validation fails.
 
 ```javascript
-  numericality: {
+  numeric: {
     integer: true,
     messages: {
       integer: 'must be an integer'
     }
   }
 
-  numericality: {
+  numeric: {
     lessThan: 10,
     messages: {
       lessThan: 'must be less than 10'
+    }
+  }
+
+  numeric: {
+    greaterThan: "10,000.12",
+    decimal: 5,
+    fraction: 2,
+    messages: {
+      greaterThan: 'must be greater than 10,000.12'
+      decimal: 'must be max of 5 decimal digits',
+      fraction: 'must be max of 2 fraction digits'
     }
   }
 ```
