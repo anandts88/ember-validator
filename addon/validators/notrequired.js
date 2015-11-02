@@ -17,7 +17,7 @@ export default Validator.extend({
   perform: function() {
     var value = this.model.get(this.property);
     if (!Ember.isEmpty(value)) {
-      this.errors.pushObject(this.options.message);
+      this.pushResult(this.options.message);
     }
   }
 });

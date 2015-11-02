@@ -20,7 +20,7 @@ export default Validator.extend({
 
     if (!Ember.isEmpty(value)) {
       if (this.options.accept && value !== this.options.accept) {
-        this.errors.pushObject(this.options.message);
+        this.pushResult(this.options.message);
       }
     }
   }

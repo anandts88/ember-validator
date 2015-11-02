@@ -5,7 +5,7 @@ import Validator from 'ember-validator/validators/validator';
 
 export default Ember.Mixin.create({
   validate: function(props) {
-    var rules = this.get('validations') || validations;
+    var rules = this.get('validations') || props.validations;
 
     return this.validateMap({
       object: this,
@@ -21,13 +21,14 @@ export default Ember.Mixin.create({
     var doValidate = function(props) {
       var object = props.model;
       var validations = props.validations;
-
       var result = Errors.create();
       var allErrors = Ember.A();
+      var allValidators = Ember.A();
       var rules;
       var rule;
       var property;
       var errors;
+      var validationResult;
 
       if (object && validations) {
         var validators = self.constructValidators(object, validations);
@@ -38,10 +39,12 @@ export default Ember.Mixin.create({
 
             for (var count = 0; count < obj.rules.length; count++) {
               rule = obj.rules[count];
-              errors = rule.validate();
+              validationResult = rule.validate();
+              errors = validationResult.get('errors');
               if (!Ember.isEmpty(errors)) {
                 allErrors.pushObjects(errors);
-                result.set(property, Errors.create({ errors: errors }));
+                allValidators.pushObjects(validationResult.get('validators'));
+                result.set(property, validationResult);
                 break;
               }
             }
@@ -49,7 +52,10 @@ export default Ember.Mixin.create({
         }
       }
 
-      result.set('errors', allErrors);
+      result.setProperties({
+        errors: allErrors,
+        validators: allValidators
+      });
 
       return result;
     };
@@ -101,16 +107,20 @@ export default Ember.Mixin.create({
     var validators = Ember.A();
     var validator;
     for (var validatorName in rules) {
-      if (validatorName !== 'custom' ) {
-        validator = this.lookupValidator(validatorName);
-        validators.pushObject(validator.create({
-          options: rules[validatorName]
-        }));
-      } else {
+      if (validatorName === 'custom' ) {
         validator = this.createInlineValidator();
         validators.pushObject(validator.create({
+          validatorName: validatorName,
           callback: rules[validatorName].callback
         }));
+      } else {
+        validator = this.lookupValidator(validatorName);
+        if (validator) {
+          validators.pushObject(validator.create({
+            validatorName: validatorName,
+            options: rules[validatorName]
+          }));
+        }
       }
     }
 

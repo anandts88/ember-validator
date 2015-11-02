@@ -44,7 +44,7 @@ export default Validator.extend({
 
     var isInteger = function(value) {
       var val = Number(value);
-      return toType(val)==='number' && val % 1 === 0;
+      return typeof(val) === 'number' && val % 1 === 0;
     };
 
     var toStr = function(value) {
@@ -58,32 +58,35 @@ export default Validator.extend({
     if (!Ember.isEmpty(value)) {
       str = toStr(value);
       if (!isNumeric(str)) {
-        this.errors.pushObject(this.options.messages.numeric);
+        this.pushResult(this.options.messages.numeric);
       } else {
         str = removeSpecial(str);
         value = Number(str);
         if (this.options.integer && !isInteger(value)) {
-          this.errors.pushObject(this.options.messages.integer);
+          this.pushResult(this.options.messages.integer, 'integer');
         } else if (this.options.odd && parseInt(value, 10) % 2 === 0) {
-          this.errors.pushObject(this.options.messages.odd);
+          this.pushResult(this.options.messages.odd, 'odd');
         } else if (this.options.even && parseInt(value, 10) % 2 !== 0) {
-          this.errors.pushObject(this.options.messages.even);
+          this.pushResult(this.options.messages.even, 'even');
         } else if (this.options.decimal && str.length > this.options.decimal) {
-          this.errors.pushObject(this.options.messages.decimal);
+          this.pushResult(this.options.messages.decimal, 'decimal');
         } else if (this.options.fraction && str.length > this.options.fraction) {
-          this.errors.pushObject(this.options.messages.fraction);
+          this.pushResult(this.options.messages.fraction, 'fraction');
         } else {
           for (var key in this.CHECKS) {
             if (!this.options[key]) {
               continue;
             }
 
-            comparisonStr = toStr(this.options[key]) || 0);
+            comparisonStr = toStr(this.options[key]);
             comparisonValue = isNumeric(comparisonStr) ? Number(removeSpecial(comparisonStr)) : 0;
             comparisonType = this.CHECKS[key];
 
             if (!this.compare(value, comparisonValue, comparisonType)) {
-              this.errors.pushObject(this.renderMessageFor(key, { count: comparisonValue }));
+              this.errors.pushObject();
+              this.pushResult(this.renderMessageFor(key, {
+                count: comparisonValue
+              }), key);
             }
           }
         }

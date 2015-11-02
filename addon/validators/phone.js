@@ -54,7 +54,7 @@ export default Validator.extend({
     });
 
     if (!test) {
-      this.errors.pushObject(this.options.message);
+      this.pushResult(this.options.message);
     }
   }
 });

@@ -25,18 +25,18 @@ export default Validator.extend({
 
     if (!Ember.isEmpty(value)) {
       if (this.options.with && !this.options.with.test(value)) {
-        this.errors.pushObject(this.options.messages.with);
+        this.pushResult(this.options.messages.with, 'with');
       } else if (this.options.without && this.options.without.test(value)) {
-        this.errors.pushObject(this.options.messages.without);
+        this.pushResult(this.options.messages.without, 'without');
       } else if (!Ember.isEmpty(this.options.array)) {
         array = this.options.array;
         for (var count = 0 ; count < array.length ; count++) {
           arr = array[count];
           if (arr.with && !arr.with.test(value)) {
-            this.errors.pushObject(arr.message);
+            this.pushResult(arr.message, 'array');
             break;
           } else if (arr.without && !arr.without.test(value)) {
-            this.errors.pushObject(arr.message);
+            this.pushResult(arr.message, 'array');
             break;
           }
         }

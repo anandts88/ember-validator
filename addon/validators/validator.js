@@ -1,8 +1,10 @@
 import Ember from 'ember';
 import Messages from 'ember-validator/messages';
+import Errors from 'ember-validator/errors';
 
 export default Ember.Object.extend({
   errors: null,
+  validators: null,
   options: null,
   property: null,
   model: null,
@@ -13,7 +15,15 @@ export default Ember.Object.extend({
   isInvalid: Ember.computed.not('isValid'),
 
   init: function() {
-    this.set('errors', Ember.A());
+    this.setProperties({
+      errors: Ember.A(),
+      validators: Ember.A()
+    });
+  },
+
+  pushResult: function(error, rule) {
+    this.errors.push(error);
+    this.validators.push(this.validatorName + (rule ? '-' + rule : ''));
   },
 
   perform: function () {
@@ -25,18 +35,18 @@ export default Ember.Object.extend({
   },
 
   validate: function() {
-    var result = this._validate();
-    return this.get('errors');
-  },
-
-  _validate: function() {
     this.errors.clear();
+    this.validators.clear();
     if (this._isValidate()) {
       this.perform();
     }
 
-    return this.get('isValid');
+    return Errors.create({
+      errors: this.get('errors'),
+      validators: this.get('validators')
+    });
   },
+
 
   _check: function(validate) {
     if (typeof(validate) === 'function') {

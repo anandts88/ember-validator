@@ -21,20 +21,20 @@ export default Validator.extend({
 
     if (!Ember.isEmpty(value)) {
       if (this.options.exclude && this.options.exclude.indexOf(value) !== -1) {
-        this.errors.pushObject(this.options.messages.exclude);
+        this.pushResult(this.options.messages.exclude, 'exclude');
       } else if (this.options.include && this.options.include.indexOf(value) === -1) {
-        this.errors.pushObject(this.options.messages.include);
+        this.pushResult(this.options.messages.include, 'include');
       } else if (this.options.exludeRange) {
         first = this.options.exludeRange[0];
         last = this.options.exludeRange[1];
         if (value >= first && value <= last) {
-          this.errors.pushObject(this.options.messages.exludeRange);
+          this.pushResult(this.options.messages.exludeRange, 'exludeRange');
         }
       } else if (this.options.includeRange) {
         first = this.options.includeRange[0];
         last = this.options.includeRange[1];
         if (value < first && value > last) {
-          this.errors.pushObject(this.options.messages.includeRange);
+          this.pushResult(this.options.messages.includeRange, 'includeRange');
         }
       }
     }

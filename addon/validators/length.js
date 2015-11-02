@@ -34,7 +34,6 @@ export default Validator.extend({
 
   perform: function() {
     var value = this.model.get(this.property);
-    var key, comparisonResult;
     var propertyLength;
     var comparisonLength;
     var comparisonType;
@@ -50,7 +49,7 @@ export default Validator.extend({
         comparisonType = this.CHECKS[key];
 
         if (!this.compare(propertyLength, comparisonLength, comparisonType)) {
-          this.errors.pushObject(this.renderMessageFor(key, { count: comparisonValue }));
+          this.pushResult(this.renderMessageFor(key, { count: comparisonLength }), key);
         }
       }
     }

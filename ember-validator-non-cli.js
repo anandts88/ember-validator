@@ -1,7 +1,7 @@
 /**
   @overview  ember-validator - Perform Ember Object Validation
   @license   Licensed under MIT license
-  @version   1.1.1
+  @version   1.1.2
 
   Used for Non CLI type of ember applications
 */
@@ -11,7 +11,9 @@
 
   var Errors = Ember.Object.extend({
     errors: null,
+    validators: null,
     error: Ember.computed.alias('errors.firstObject'),
+    validator: Ember.computed.alias('validators.firstObject'),
     isValid: Ember.computed.empty('errors.[]'),
     isInvalid: Ember.computed.not('isValid'),
     hasError: Ember.computed.notEmpty('error')
@@ -61,6 +63,7 @@
 
   var Validator = Ember.Object.extend({
     errors: null,
+    validators: null,
     options: null,
     property: null,
     model: null,
@@ -71,7 +74,15 @@
     isInvalid: Ember.computed.not('isValid'),
 
     init: function() {
-      this.set('errors', Ember.A());
+      this.setProperties({
+        errors: Ember.A(),
+        validators: Ember.A()
+      });
+    },
+
+    pushResult: function(error, rule) {
+      this.errors.push(error);
+      this.validators.push(this.validatorName + (rule ? '-' + rule : ''));
     },
 
     perform: function () {
@@ -83,18 +94,18 @@
     },
 
     validate: function() {
-      var result = this._validate();
-      return this.get('errors');
-    },
-
-    _validate: function() {
       this.errors.clear();
+      this.validators.clear();
       if (this._isValidate()) {
         this.perform();
       }
 
-      return this.get('isValid');
+      return Errors.create({
+        errors: this.get('errors'),
+        validators: this.get('validators')
+      });
     },
+
 
     _check: function(validate) {
       if (typeof(validate) === 'function') {
@@ -155,20 +166,20 @@
 
       if (!Ember.isEmpty(value)) {
         if (this.options.exclude && this.options.exclude.indexOf(value) !== -1) {
-          this.errors.pushObject(this.options.messages.exclude);
+          this.pushResult(this.options.messages.exclude, 'exclude');
         } else if (this.options.include && this.options.include.indexOf(value) === -1) {
-          this.errors.pushObject(this.options.messages.include);
+          this.pushResult(this.options.messages.include, 'include');
         } else if (this.options.exludeRange) {
           first = this.options.exludeRange[0];
           last = this.options.exludeRange[1];
           if (value >= first && value <= last) {
-            this.errors.pushObject(this.options.messages.exludeRange);
+            this.pushResult(this.options.messages.exludeRange, 'exludeRange');
           }
         } else if (this.options.includeRange) {
           first = this.options.includeRange[0];
           last = this.options.includeRange[1];
           if (value < first && value > last) {
-            this.errors.pushObject(this.options.messages.includeRange);
+            this.pushResult(this.options.messages.includeRange, 'includeRange');
           }
         }
       }
@@ -221,7 +232,6 @@
       var value = this.model.get(this.property);
       var option;
       var target;
-      var comparisonType;
 
       var transform = function(value, format) {
         var date;
@@ -249,12 +259,12 @@
         }
 
         if (!value.isValid()) {
-          this.errors.pushObject(this.options.messages.date);
+          this.pushResult(this.options.messages.date);
         } else {
           if (this.options.weekend && [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) !== -1) {
-            this.errors.pushObject(this.options.messages.weekend);
+            this.pushResult(this.options.messages.weekend, 'weekend');
           } else if (this.options.onlyWeekend && [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) === -1) {
-            this.errors.pushObject(this.options.messages.onlyWeekend);
+            this.pushResult(this.options.messages.onlyWeekend, 'onlyWeekend');
           } else {
             for (var key in this.CHECKS) {
               option = this.options[key];
@@ -273,7 +283,9 @@
               }
 
               if (!this.compare(value, target, this.CHECKS[key])) {
-                this.errors.pushObject(this.renderMessageFor(key, { date: target.format(option.format) }));
+                this.pushResult(this.renderMessageFor(key, {
+                  date: target.format(option.format)
+                }), key);
               }
             }
           }
@@ -300,7 +312,7 @@
 
       if (!Ember.isEmpty(value)) {
         if (this.options.accept && value !== this.options.accept) {
-          this.errors.pushObject(this.options.message);
+          this.pushResult(this.options.message);
         }
       }
     }
@@ -338,7 +350,6 @@
 
     perform: function() {
       var value = this.model.get(this.property);
-      var key, comparisonResult;
       var propertyLength;
       var comparisonLength;
       var comparisonType;
@@ -354,7 +365,7 @@
           comparisonType = this.CHECKS[key];
 
           if (!this.compare(propertyLength, comparisonLength, comparisonType)) {
-            this.errors.pushObject(this.renderMessageFor(key, { count: comparisonValue }));
+            this.pushResult(this.renderMessageFor(key, { count: comparisonLength }), key);
           }
         }
       }
@@ -376,7 +387,7 @@
     perform: function() {
       var value = this.model.get(this.property);
       if (!Ember.isEmpty(value)) {
-        this.errors.pushObject(this.options.message);
+        this.pushResult(this.options.message);
       }
     }
   });
@@ -424,7 +435,7 @@
 
       var isInteger = function(value) {
         var val = Number(value);
-        return toType(val)==='number' && val % 1 === 0;
+        return typeof(val) === 'number' && val % 1 === 0;
       };
 
       var toStr = function(value) {
@@ -438,32 +449,35 @@
       if (!Ember.isEmpty(value)) {
         str = toStr(value);
         if (!isNumeric(str)) {
-          this.errors.pushObject(this.options.messages.numeric);
+          this.pushResult(this.options.messages.numeric);
         } else {
           str = removeSpecial(str);
           value = Number(str);
           if (this.options.integer && !isInteger(value)) {
-            this.errors.pushObject(this.options.messages.integer);
+            this.pushResult(this.options.messages.integer, 'integer');
           } else if (this.options.odd && parseInt(value, 10) % 2 === 0) {
-            this.errors.pushObject(this.options.messages.odd);
+            this.pushResult(this.options.messages.odd, 'odd');
           } else if (this.options.even && parseInt(value, 10) % 2 !== 0) {
-            this.errors.pushObject(this.options.messages.even);
+            this.pushResult(this.options.messages.even, 'even');
           } else if (this.options.decimal && str.length > this.options.decimal) {
-            this.errors.pushObject(this.options.messages.decimal);
+            this.pushResult(this.options.messages.decimal, 'decimal');
           } else if (this.options.fraction && str.length > this.options.fraction) {
-            this.errors.pushObject(this.options.messages.fraction);
+            this.pushResult(this.options.messages.fraction, 'fraction');
           } else {
             for (var key in this.CHECKS) {
               if (!this.options[key]) {
                 continue;
               }
 
-              comparisonStr = toStr(this.options[key]) || 0);
+              comparisonStr = toStr(this.options[key]);
               comparisonValue = isNumeric(comparisonStr) ? Number(removeSpecial(comparisonStr)) : 0;
               comparisonType = this.CHECKS[key];
 
               if (!this.compare(value, comparisonValue, comparisonType)) {
-                this.errors.pushObject(this.renderMessageFor(key, { count: comparisonValue }));
+                this.errors.pushObject();
+                this.pushResult(this.renderMessageFor(key, {
+                  count: comparisonValue
+                }), key);
               }
             }
           }
@@ -495,18 +509,18 @@
 
       if (!Ember.isEmpty(value)) {
         if (this.options.with && !this.options.with.test(value)) {
-          this.errors.pushObject(this.options.messages.with);
+          this.pushResult(this.options.messages.with, 'with');
         } else if (this.options.without && this.options.without.test(value)) {
-          this.errors.pushObject(this.options.messages.without);
+          this.pushResult(this.options.messages.without, 'without');
         } else if (!Ember.isEmpty(this.options.array)) {
           array = this.options.array;
           for (var count = 0 ; count < array.length ; count++) {
             arr = array[count];
             if (arr.with && !arr.with.test(value)) {
-              this.errors.pushObject(arr.message);
+              this.pushResult(arr.message, 'array');
               break;
             } else if (arr.without && !arr.without.test(value)) {
-              this.errors.pushObject(arr.message);
+              this.pushResult(arr.message, 'array');
               break;
             }
           }
@@ -662,7 +676,7 @@
       });
 
       if (!test) {
-        this.errors.pushObject(this.options.message);
+        this.pushResult(this.options.message);
       }
     }
   });
@@ -682,14 +696,14 @@
     perform: function() {
       var value = this.model.get(this.property);
       if (Ember.isBlank(value)) {
-        this.errors.pushObject(this.options.message);
+        this.pushResult(this.options.message);
       }
     }
   });
 
   Ember.Validations.Mixin = Ember.Mixin.create({
     validate: function(props) {
-      var rules = this.get('validations') || validations;
+      var rules = this.get('validations') || props.validations;
 
       return this.validateMap({
         object: this,
@@ -708,10 +722,12 @@
 
         var result = Errors.create();
         var allErrors = Ember.A();
+        var allValidators = Ember.A();
         var rules;
         var rule;
         var property;
         var errors;
+        var validationResult;
 
         if (object && validations) {
           var validators = self.constructValidators(object, validations);
@@ -722,10 +738,12 @@
 
               for (var count = 0; count < obj.rules.length; count++) {
                 rule = obj.rules[count];
-                errors = rule.validate();
+                validationResult = rule.validate();
+                errors = validationResult.get('errors');
                 if (!Ember.isEmpty(errors)) {
                   allErrors.pushObjects(errors);
-                  result.set(property, Errors.create({ errors: errors }));
+                  allValidators.pushObjects(validationResult.get('validators'));
+                  result.set(property, validationResult);
                   break;
                 }
               }
@@ -733,7 +751,10 @@
           }
         }
 
-        result.set('errors', allErrors);
+        result.setProperties({
+          errors: allErrors,
+          validators: allValidators
+        });
 
         return result;
       };

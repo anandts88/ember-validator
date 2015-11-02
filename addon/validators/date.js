@@ -48,7 +48,6 @@ export default Validator.extend({
     var value = this.model.get(this.property);
     var option;
     var target;
-    var comparisonType;
 
     var transform = function(value, format) {
       var date;
@@ -76,12 +75,12 @@ export default Validator.extend({
       }
 
       if (!value.isValid()) {
-        this.errors.pushObject(this.options.messages.date);
+        this.pushResult(this.options.messages.date);
       } else {
         if (this.options.weekend && [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) !== -1) {
-          this.errors.pushObject(this.options.messages.weekend);
+          this.pushResult(this.options.messages.weekend, 'weekend');
         } else if (this.options.onlyWeekend && [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) === -1) {
-          this.errors.pushObject(this.options.messages.onlyWeekend);
+          this.pushResult(this.options.messages.onlyWeekend, 'onlyWeekend');
         } else {
           for (var key in this.CHECKS) {
             option = this.options[key];
@@ -100,7 +99,9 @@ export default Validator.extend({
             }
 
             if (!this.compare(value, target, this.CHECKS[key])) {
-              this.errors.pushObject(this.renderMessageFor(key, { date: target.format(option.format) }));
+              this.pushResult(this.renderMessageFor(key, {
+                date: target.format(option.format)
+              }), key);
             }
           }
         }
