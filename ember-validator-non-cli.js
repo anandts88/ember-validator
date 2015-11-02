@@ -1,7 +1,7 @@
 /**
   @overview  ember-validator - Perform Ember Object Validation
   @license   Licensed under MIT license
-  @version   1.1.2
+  @version   1.1.3
 
   Used for Non CLI type of ember applications
 */
@@ -710,6 +710,39 @@
         validations: rules,
         noPromise: props.noPromise
       });
+    },
+
+    computedValidateMap: function(props) {
+      var object = props.model;
+      var validations = props.validations;
+      var self = this;
+
+      for (var key in object) {
+        if (key.indexOf('ValidatorResult') !== -1 || key.indexOf('ValidatorPreviousVal') != -1) {
+          object.set(key, null);
+        }
+      }
+
+      for (var property in validations) {
+        object.set(property + 'ValidatorPreviousVal', object.get(property));
+        Ember.defineProperty(object, property + 'ValidatorResult', Ember.computed(property, function(sender) {
+          var rules = {};
+          var prop = sender.replace('ValidatorResult', '');
+          var result;
+
+          if (object.get(prop) !== object.get(prop + 'ValidatorPreviousVal')) {
+            rules[prop] = validations[prop];
+
+            result = self.validateMap({
+              model: object,
+              validations: rules,
+              noPromise: true
+            });
+          }
+
+          return result;
+        }));
+      }
     },
 
     validateMap: function(props) {

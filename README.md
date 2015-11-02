@@ -7,7 +7,7 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.1.2"
+  "ember-validator": "1.1.3"
 }
 ```
 
@@ -55,7 +55,8 @@ Ember.Object.extend(EmberValidator, {});
 
 `EmberValidator` exposes two functions to perform validation.
 1. `validateMap`
-2. `validate`
+2. `computedValidateMap`
+3. `validate`
 
 ### validateMap ###
 
@@ -113,6 +114,67 @@ export default Ember.Controller.extend(EmberValidations, {
   }
 
 });
+```
+
+### computedValidateMap ###
+
+Triggers validator by computing property change.
+For example, if you are defining validation rules for a property called `userName` for the object called `model`, then validation result of that property is available in property `userNameValidatorResult`
+
+model.get('userNameValidatorResult.errors') -> Returns all error messages related with userName property
+result.get('userNameValidatorResult.errors') -> Returns first message related with userName property
+result.get('userNameValidatorResult.isValid') -> Returns true if userName property is valid
+result.get('userNameValidatorResult.isInvalid') -> Returns true if userName property is invalid
+result.get('userNameValidatorResult.hasError') -> Returns true if userName property has errors
+
+```javascript
+  // app/models/login.js
+  import Ember from 'ember';
+
+  export default Ember.Object.extend({
+    userName: null,
+    password: null
+  });  
+
+  // app/routes/login.js
+  import Ember from 'ember';
+  import EmberValidator from 'ember-validator';
+  import LoginModel from 'app/models/login';
+
+  export default Ember.Route.extend(EmberValidations, {
+    model: function() {
+      var model = LoginModel.create();
+      var validations = {
+        userName: {
+          required: { message: 'Enter username' },
+          length: {
+            minimum: 4,
+            messages: {
+              minimum: 'Username is minimum of 4 characters'
+            }
+          }
+        },
+        password: {
+          required: { message: 'Enter Password' }
+        }
+      };
+
+      this.computedValidateMap({
+        model: model,
+        validations: validations
+      });
+    }
+  });
+
+  // app/templates/login.hbs
+  <form {{action "login" on="submit"}}>
+    <p style="color:red">{{model.userNameValidatorResult.error}}</p>
+    {{input type="text" value=model.userName}}
+    <p style="color:red">{{model.passwordValidatorResult.error}}</p>
+    {{input type="password" value=model.password}}
+    <button type="submit">Login</button>
+  </form>
+
 ```
 
 ### validate ###
