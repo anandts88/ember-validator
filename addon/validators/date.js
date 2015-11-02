@@ -79,29 +79,31 @@ export default Validator.extend({
 
       if (!value.isValid()) {
         this.errors.pushObject(this.options.messages.date);
-      } else if (this.options.weekend && [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) !== -1) {
-        this.errors.pushObject(this.options.messages.weekend);
-      } else if (this.options.onlyWeekend && [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) === -1) {
-        this.errors.pushObject(this.options.messages.onlyWeekend);
       } else {
-        for (var key in this.CHECKS) {
-          option = this.options[key];
-          if (!option) {
-            continue;
-          }
+        if (this.options.weekend && [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) !== -1) {
+          this.errors.pushObject(this.options.messages.weekend);
+        } else if (this.options.onlyWeekend && [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) === -1) {
+          this.errors.pushObject(this.options.messages.onlyWeekend);
+        } else {
+          for (var key in this.CHECKS) {
+            option = this.options[key];
+            if (!option) {
+              continue;
+            }
 
-          target = transform(option.target, option.format);
+            target = transform(option.target, option.format);
 
-          if (!this.options.time) {
-            target = setTime(target, 0, 0, 0, 0);
-          }
+            if (!this.options.time) {
+              target = setTime(target, 0, 0, 0, 0);
+            }
 
-          if (!target.isValid()) {
-            continue;
-          }
+            if (!target.isValid()) {
+              continue;
+            }
 
-          if (!this.compare(value, target, this.CHECKS[key])) {
-            this.errors.pushObject(this.renderMessageFor(key, { date: target.format(option.format) }));
+            if (!this.compare(value, target, this.CHECKS[key])) {
+              this.errors.pushObject(this.renderMessageFor(key, { date: target.format(option.format) }));
+            }
           }
         }
       }
