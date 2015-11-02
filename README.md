@@ -13,7 +13,7 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.1.4"
+  "ember-validator": "1.1.5"
 }
 ```
 
@@ -629,7 +629,7 @@ Please use `if` and `unless` options in validation rules.
 ```javascript
   userName: {
     length: {
-      'if': function(object, validator) {
+      'if': function(model, property) {
         return true;
       }
     }
@@ -637,7 +637,7 @@ Please use `if` and `unless` options in validation rules.
 
   password: {
     numeric: {
-      unless: function(object, validator) {
+      unless: function(model, property) {
         return false;
       }
     }
@@ -676,7 +676,7 @@ import { inlineValidator } from 'ember-validator';
 
 {
   userName: {
-    custom: inlineValidator(function() {
+    custom: inlineValidator(function(model, property) {
       return 'Error message';
     })
   }

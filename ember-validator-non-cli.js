@@ -1,7 +1,7 @@
 /**
   @overview  ember-validator - Perform Ember Object Validation
   @license   Licensed under MIT license
-  @version   1.1.4
+  @version   1.1.5
 
   Used for Non CLI type of ember applications
 */
