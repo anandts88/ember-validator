@@ -15,47 +15,56 @@ export default Ember.Mixin.create({
   },
 
   validateMap: function(props) {
-    var object = props.model;
-    var validations = props.validations;
+    var self = this;
     var noPromise = props.noPromise;
 
-    var result = Errors.create();
-    var allErrors = Ember.A();
-    var rules;
-    var rule;
-    var property;
-    var errors;
+    var doValidate = function(props) {
+      var object = props.model;
+      var validations = props.validations;
 
-    if (object && validations) {
-      var validators = this.constructValidators(object, validations);
-      if (!Ember.isEmpty(validators)) {
-        validators.forEach(function(obj) {
-          rules = obj.rules;
-          property = obj.property;
+      var result = Errors.create();
+      var allErrors = Ember.A();
+      var rules;
+      var rule;
+      var property;
+      var errors;
 
-          for (var count = 0; count < obj.rules.length; count++) {
-            rule = obj.rules[count];
-            errors = rule.validate();
-            if (!Ember.isEmpty(errors)) {
-              allErrors.pushObjects(errors);
-              result.set(property, Errors.create({ errors: errors }));
-              break;
+      if (object && validations) {
+        var validators = self.constructValidators(object, validations);
+        if (!Ember.isEmpty(validators)) {
+          validators.forEach(function(obj) {
+            rules = obj.rules;
+            property = obj.property;
+
+            for (var count = 0; count < obj.rules.length; count++) {
+              rule = obj.rules[count];
+              errors = rule.validate();
+              if (!Ember.isEmpty(errors)) {
+                allErrors.pushObjects(errors);
+                result.set(property, Errors.create({ errors: errors }));
+                break;
+              }
             }
-          }
-        });
+          });
+        }
       }
-    }
 
-    result.set('errors', allErrors);
+      result.set('errors', allErrors);
+
+      return result;
+    };
 
     if (noPromise) {
-      return result;
+      return doValidate(props);
     } else {
-      if (result.get('isValid')) {
-        return Ember.RSVP.resolve(true);
-      } else {
-        return Ember.RSVP.reject(result);
-      }
+      return new Ember.RSVP.Promise(function(resolve, reject) {
+        var result = doValidate(props);
+        if (result.get('isValid')) {
+          resolve(true);
+        } else {
+          reject(result);
+        }
+      });
     }
   },
 
