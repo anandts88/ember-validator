@@ -3,11 +3,14 @@ import Validator from 'ember-validator/validators/validator';
 import Messages from 'ember-validator/messages';
 
 export default Validator.extend({
-
   init: function() {
     this._super();
     if (typeof(this.options) !== 'object') {
       this.set('options', {});
+    }
+
+    if (!this.options.pattern) {
+      this.set('options.pattern', /^\d+(,\d{3})*(\.\d*)?$/);
     }
 
     if (!this.options.messages) {
@@ -23,49 +26,66 @@ export default Validator.extend({
     lessThanOrEqualTo: '<='
   },
 
-  getValue: function(key) {
-    if (this.options[key].constructor === String) {
-      return this.model.get(this.options[key]) || 0;
-    } else {
-      return this.options[key];
-    }
-  },
-
   perform: function() {
     var value = this.model.get(this.property);
+    var pattern = this.options.pattern;
+    var str;
     var comparisonValue;
+    var comparisonStr;
     var comparisonType;
 
-    var isNumeric = function(value) {
-      return !isNaN(parseFloat(value)) && isFinite(value);
+    var isNumeric = function(str) {
+      var val;
+      if (pattern.test(str)) {
+        val = Number(removeSpecial(str));
+        return !isNaN(value) && isFinite(value);
+      }
+      return false;
     };
 
     var isInteger = function(value) {
-      var val = parseFloat(value);
+      var val = Number(value);
       return toType(val)==='number' && val % 1 === 0;
     };
 
+    var toStr = function(value) {
+      return value + '';
+    };
+
+    var removeSpecial = function(str) {
+      return str.replace(/[^\d.]/g, '');
+    };
+
     if (!Ember.isEmpty(value)) {
-      if (!isNumeric(value)) {
+      str = toStr(value);
+      if (!isNumeric(str)) {
         this.errors.pushObject(this.options.messages.numeric);
-      } else if (this.options.integer && !isInteger(value)) {
-        this.errors.pushObject(this.options.messages.integer);
-      } else if (this.options.odd && parseInt(value, 10) % 2 === 0) {
-        this.errors.pushObject(this.options.messages.odd);
-      } else if (this.options.even && parseInt(value, 10) % 2 !== 0) {
-        this.errors.pushObject(this.options.messages.even);
       } else {
-        value = parseFloat(value);
-        for (var key in this.CHECKS) {
-          if (!this.options[key]) {
-            continue;
-          }
+        str = removeSpecial(str);
+        value = Number(str);
+        if (this.options.integer && !isInteger(value)) {
+          this.errors.pushObject(this.options.messages.integer);
+        } else if (this.options.odd && parseInt(value, 10) % 2 === 0) {
+          this.errors.pushObject(this.options.messages.odd);
+        } else if (this.options.even && parseInt(value, 10) % 2 !== 0) {
+          this.errors.pushObject(this.options.messages.even);
+        } else if (this.options.decimal && str.length > this.options.decimal) {
+          this.errors.pushObject(this.options.messages.decimal);
+        } else if (this.options.fraction && str.length > this.options.fraction) {
+          this.errors.pushObject(this.options.messages.fraction);
+        } else {
+          for (var key in this.CHECKS) {
+            if (!this.options[key]) {
+              continue;
+            }
 
-          comparisonValue = this.getValue(key);
-          comparisonType = this.CHECKS[key];
+            comparisonStr = toStr(this.options[key]) || 0);
+            comparisonValue = isNumeric(comparisonStr) ? Number(removeSpecial(comparisonStr)) : 0;
+            comparisonType = this.CHECKS[key];
 
-          if (!this.compare(value, comparisonValue, comparisonType)) {
-            this.errors.pushObject(this.renderMessageFor(key, { count: comparisonValue }));
+            if (!this.compare(value, comparisonValue, comparisonType)) {
+              this.errors.pushObject(this.renderMessageFor(key, { count: comparisonValue }));
+            }
           }
         }
       }
