@@ -1,7 +1,7 @@
 /**
   @overview  ember-validator - Perform Ember Object Validation
   @license   Licensed under MIT license
-  @version   1.0.8
+  @version   1.0.9
 
   Used for Non CLI type of ember applications
 */
@@ -48,7 +48,10 @@
       lessThan: "must be less than {{count}}",
       lessThanOrEqualTo: "must be less than or equal to {{count}}",
       odd: "must be odd",
-      even: "must be even"
+      even: "must be even",
+      phone: "valid phone number",
+      ssn: "valid ssn",
+      zip: "valid zip"
     }
   };
 
@@ -247,29 +250,31 @@
 
         if (!value.isValid()) {
           this.errors.pushObject(this.options.messages.date);
-        } else if (this.options.weekend && [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) !== -1) {
-          this.errors.pushObject(this.options.messages.weekend);
-        } else if (this.options.onlyWeekend && [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) === -1) {
-          this.errors.pushObject(this.options.messages.onlyWeekend);
         } else {
-          for (var key in this.CHECKS) {
-            option = this.options[key];
-            if (!option) {
-              continue;
-            }
+          if (this.options.weekend && [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) !== -1) {
+            this.errors.pushObject(this.options.messages.weekend);
+          } else if (this.options.onlyWeekend && [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) === -1) {
+            this.errors.pushObject(this.options.messages.onlyWeekend);
+          } else {
+            for (var key in this.CHECKS) {
+              option = this.options[key];
+              if (!option) {
+                continue;
+              }
 
-            target = transform(option.target, option.format);
+              target = transform(option.target, option.format);
 
-            if (!this.options.time) {
-              target = setTime(target, 0, 0, 0, 0);
-            }
+              if (!this.options.time) {
+                target = setTime(target, 0, 0, 0, 0);
+              }
 
-            if (!target.isValid()) {
-              continue;
-            }
+              if (!target.isValid()) {
+                continue;
+              }
 
-            if (!this.compare(value, target, this.CHECKS[key])) {
-              this.errors.pushObject(this.renderMessageFor(key, { date: target.format(option.format) }));
+              if (!this.compare(value, target, this.CHECKS[key])) {
+                this.errors.pushObject(this.renderMessageFor(key, { date: target.format(option.format) }));
+              }
             }
           }
         }
@@ -383,6 +388,10 @@
         this.set('options', {});
       }
 
+      if (!this.options.pattern) {
+        this.set('options.pattern', /^\d+(,\d{3})*(\.\d*)?$/);
+      }
+
       if (!this.options.messages) {
         this.set('options.messages', {});
       }
@@ -396,49 +405,66 @@
       lessThanOrEqualTo: '<='
     },
 
-    getValue: function(key) {
-      if (this.options[key].constructor === String) {
-        return this.model.get(this.options[key]) || 0;
-      } else {
-        return this.options[key];
-      }
-    },
-
     perform: function() {
       var value = this.model.get(this.property);
+      var pattern = this.options.pattern;
+      var str;
       var comparisonValue;
+      var comparisonStr;
       var comparisonType;
 
-      var isNumeric = function(value) {
-        return !isNaN(parseFloat(value)) && isFinite(value);
+      var isNumeric = function(str) {
+        var val;
+        if (pattern.test(str)) {
+          val = Number(removeSpecial(str));
+          return !isNaN(value) && isFinite(value);
+        }
+        return false;
       };
 
       var isInteger = function(value) {
-        var val = parseFloat(value);
+        var val = Number(value);
         return toType(val)==='number' && val % 1 === 0;
       };
 
+      var toStr = function(value) {
+        return value + '';
+      };
+
+      var removeSpecial = function(str) {
+        return str.replace(/[^\d.]/g, '');
+      };
+
       if (!Ember.isEmpty(value)) {
-        if (!isNumeric(value)) {
+        str = toStr(value);
+        if (!isNumeric(str)) {
           this.errors.pushObject(this.options.messages.numeric);
-        } else if (this.options.integer && !isInteger(value)) {
-          this.errors.pushObject(this.options.messages.integer);
-        } else if (this.options.odd && parseInt(value, 10) % 2 === 0) {
-          this.errors.pushObject(this.options.messages.odd);
-        } else if (this.options.even && parseInt(value, 10) % 2 !== 0) {
-          this.errors.pushObject(this.options.messages.even);
         } else {
-          value = parseFloat(value);
-          for (var key in this.CHECKS) {
-            if (!this.options[key]) {
-              continue;
-            }
+          str = removeSpecial(str);
+          value = Number(str);
+          if (this.options.integer && !isInteger(value)) {
+            this.errors.pushObject(this.options.messages.integer);
+          } else if (this.options.odd && parseInt(value, 10) % 2 === 0) {
+            this.errors.pushObject(this.options.messages.odd);
+          } else if (this.options.even && parseInt(value, 10) % 2 !== 0) {
+            this.errors.pushObject(this.options.messages.even);
+          } else if (this.options.decimal && str.length > this.options.decimal) {
+            this.errors.pushObject(this.options.messages.decimal);
+          } else if (this.options.fraction && str.length > this.options.fraction) {
+            this.errors.pushObject(this.options.messages.fraction);
+          } else {
+            for (var key in this.CHECKS) {
+              if (!this.options[key]) {
+                continue;
+              }
 
-            comparisonValue = this.getValue(key);
-            comparisonType = this.CHECKS[key];
+              comparisonStr = toStr(this.options[key]) || 0);
+              comparisonValue = isNumeric(comparisonStr) ? Number(removeSpecial(comparisonStr)) : 0;
+              comparisonType = this.CHECKS[key];
 
-            if (!this.compare(value, comparisonValue, comparisonType)) {
-              this.errors.pushObject(this.renderMessageFor(key, { count: comparisonValue }));
+              if (!this.compare(value, comparisonValue, comparisonType)) {
+                this.errors.pushObject(this.renderMessageFor(key, { count: comparisonValue }));
+              }
             }
           }
         }
@@ -534,6 +560,113 @@
     }
   });
 
+  Ember.Validator.validators.Zip = Pattern.extend({
+    pattern: /^[0-9]{5}(\-[0-9]{4})?$/,
+
+    init: function() {
+      this._super();
+      if (typeof(this.options) !== 'object') {
+        this.set('options', {});
+      }
+
+      if (this.options.constructor === RegExp) {
+        this.set('options', { 'with': this.options });
+      }
+
+      if (!this.options.with) {
+        this.set('options.with', this.get('pattern'));
+      }
+
+      if (!this.options.message) {
+        this.set('options.message', Messages.render('zip', this.options));
+      }
+
+      this.options.messages.with = this.options.message;
+    }
+  });
+
+  Ember.Validator.validators.Ssn = Pattern.extend({
+    pattern: /^[0-9]{3}\-[0-9]{2}\-[0-9]{4}$/,
+
+    init: function() {
+      this._super();
+      if (typeof(this.options) !== 'object') {
+        this.set('options', {});
+      }
+
+      if (this.options.constructor === RegExp) {
+        this.set('options', { 'with': this.options });
+      }
+
+      if (!this.options.with) {
+        this.set('options.with', this.get('pattern'));
+      }
+
+      if (!this.options.message) {
+        this.set('options.message', Messages.render('ssn', this.options));
+      }
+
+      this.options.messages.with = this.options.message;
+    }
+  });
+
+  Ember.Validator.validators.Phone = Validator.extend({
+    FORMATS: [
+      /^\([0-9]{3}\)\s[0-9]{3}\s[0-9]{4}$/, // (999) 999 9999
+      /^\([0-9]{3}\)\s[0-9]{3}\-[0-9]{4}$/, // (999) 999-9999
+      /^\([0-9]{3}\)[0-9]{3}\s[0-9]{4}$/, // (999)999 9999
+      /^\([0-9]{3}\)[0-9]{3}\-[0-9]{4}$/, // (999)999-9999
+      /^\([0-9]{3}\)[0-9]{3}[0-9]{4}$/, // (999)9999999
+      /^[0-9]{3}\s[0-9]{3}\s[0-9]{4}$/, // 999 999 9999
+      /^[0-9]{3}\-[0-9]{3}\-[0-9]{4}$/, // 999-999-9999
+      /^[0-9]{3}\.[0-9]{3}\.[0-9]{4}$/, // 999.999.9999
+      /^[0-9]{10}$/ // 9999999999
+    ],
+
+    init: function() {
+      var pattern = Ember.A();
+      var format;
+      var index;
+
+      this._super();
+
+      if (typeof(this.options) !== 'object') {
+        this.set('options', { format1: true });
+      }
+
+      for (var count = 1; count <= this.FORMATS.length; count++) {
+        index = count - 1;
+        format = this.options['format' + count];
+        if (format) {
+          pattern.pushObject(this.FORMATS[index]);
+        }
+      }
+
+      this.set('options.array', pattern);
+
+      if (!this.options.message) {
+        this.set('options.message', Messages.render('phone', this.options));
+      }
+
+      this.options.array.setEach('message', this.options.message);
+    },
+
+    perform: function() {
+      var value = this.model.get(this.property);
+      var test  = false;
+
+      this.options.array.forEach(function(arr) {
+        if (arr.test(value)) {
+          test = true;
+        }
+      });
+
+      if (!test) {
+        this.errors.pushObject(this.options.message);
+      }
+    }
+  });
+
   Ember.Validator.validators.Required = Validator.extend({
     init: function() {
       this._super();
@@ -566,47 +699,56 @@
     },
 
     validateMap: function(props) {
-      var object = props.model;
-      var validations = props.validations;
+      var self = this;
       var noPromise = props.noPromise;
 
-      var result = Errors.create();
-      var allErrors = Ember.A();
-      var rules;
-      var rule;
-      var property;
-      var errors;
+      var doValidate = function(props) {
+        var object = props.model;
+        var validations = props.validations;
 
-      if (object && validations) {
-        var validators = this.constructValidators(object, validations);
-        if (!Ember.isEmpty(validators)) {
-          validators.forEach(function(obj) {
-            rules = obj.rules;
-            property = obj.property;
+        var result = Errors.create();
+        var allErrors = Ember.A();
+        var rules;
+        var rule;
+        var property;
+        var errors;
 
-            for (var count = 0; count < obj.rules.length; count++) {
-              rule = obj.rules[count];
-              errors = rule.validate();
-              if (!Ember.isEmpty(errors)) {
-                allErrors.pushObjects(errors);
-                result.set(property, Errors.create({ errors: errors }));
-                break;
+        if (object && validations) {
+          var validators = self.constructValidators(object, validations);
+          if (!Ember.isEmpty(validators)) {
+            validators.forEach(function(obj) {
+              rules = obj.rules;
+              property = obj.property;
+
+              for (var count = 0; count < obj.rules.length; count++) {
+                rule = obj.rules[count];
+                errors = rule.validate();
+                if (!Ember.isEmpty(errors)) {
+                  allErrors.pushObjects(errors);
+                  result.set(property, Errors.create({ errors: errors }));
+                  break;
+                }
               }
-            }
-          });
+            });
+          }
         }
-      }
 
-      result.set('errors', allErrors);
+        result.set('errors', allErrors);
+
+        return result;
+      };
 
       if (noPromise) {
-        return result;
+        return doValidate(props);
       } else {
-        if (result.get('isValid')) {
-          return Ember.RSVP.resolve(true);
-        } else {
-          return Ember.RSVP.reject(result);
-        }
+        return new Ember.RSVP.Promise(function(resolve, reject) {
+          var result = doValidate(props);
+          if (result.get('isValid')) {
+            resolve(true);
+          } else {
+            reject(result);
+          }
+        });
       }
     },
 
