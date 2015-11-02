@@ -1,5 +1,11 @@
 # Ember Validator #
 
+1. Performs validation on ember object.
+2. Provides facility to perform validation on submit or focus out.
+3. Provides facility to perform validation when user starts typing, based on computed property rather using observer.
+4. Returns validation result as promise.
+5. Provides facility to return result as regular object rather than promise.
+
 ## Installation ##
 
 Please add `ember-validator` to your `package.json`:
@@ -7,7 +13,7 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.1.3"
+  "ember-validator": "1.1.4"
 }
 ```
 
