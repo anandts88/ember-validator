@@ -35,7 +35,7 @@ export default Validator.extend({
           if (arr.with && !arr.with.test(value)) {
             this.pushResult(arr.message, 'array');
             break;
-          } else if (arr.without && !arr.without.test(value)) {
+          } else if (arr.without && arr.without.test(value)) {
             this.pushResult(arr.message, 'array');
             break;
           }

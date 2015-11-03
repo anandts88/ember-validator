@@ -1,7 +1,7 @@
 /**
   @overview  ember-validator - Perform Ember Object Validation
   @license   Licensed under MIT license
-  @version   1.1.5
+  @version   1.1.6
 
   Used for Non CLI type of ember applications
 */
@@ -519,7 +519,7 @@
             if (arr.with && !arr.with.test(value)) {
               this.pushResult(arr.message, 'array');
               break;
-            } else if (arr.without && !arr.without.test(value)) {
+            } else if (arr.without && arr.without.test(value)) {
               this.pushResult(arr.message, 'array');
               break;
             }
