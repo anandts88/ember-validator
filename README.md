@@ -13,7 +13,7 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.1.7"
+  "ember-validator": "1.1.8"
 }
 ```
 
