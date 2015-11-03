@@ -83,7 +83,6 @@ export default Validator.extend({
             comparisonType = this.CHECKS[key];
 
             if (!this.compare(value, comparisonValue, comparisonType)) {
-              this.errors.pushObject();
               this.pushResult(this.renderMessageFor(key, {
                 count: comparisonValue
               }), key);
