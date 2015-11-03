@@ -1,7 +1,7 @@
 /**
   @overview  ember-validator - Perform Ember Object Validation
   @license   Licensed under MIT license
-  @version   1.1.6
+  @version   1.1.7
 
   Used for Non CLI type of ember applications
 */
@@ -474,7 +474,6 @@
               comparisonType = this.CHECKS[key];
 
               if (!this.compare(value, comparisonValue, comparisonType)) {
-                this.errors.pushObject();
                 this.pushResult(this.renderMessageFor(key, {
                   count: comparisonValue
                 }), key);
