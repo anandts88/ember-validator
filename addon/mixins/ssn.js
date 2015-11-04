@@ -1,9 +1,10 @@
 import Ember from 'ember';
 import Pattern from 'ember-validator/mixins/pattern';
 import Messages from 'ember-validator/messages';
+import Constants from 'ember-validator/constants';
 
 export default Ember.Mixin.create(Pattern, {
-  pattern: /^[0-9]{3}\-[0-9]{2}\-[0-9]{4}$/,
+  pattern: Constants.SSN_PATTERN,
 
   init: function() {
     this._super();

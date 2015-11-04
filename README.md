@@ -13,7 +13,7 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.1.8"
+  "ember-validator": "1.1.9"
 }
 ```
 
@@ -411,6 +411,10 @@ Validate whether the property is email.
   }
 ```
 
+### emailorphone ###
+
+Validate the property is email or phone number. Options are same as like email and phone validators.
+
 ### ssn ###
 
 Validate whether the property is ssn. Default pattern of ssn NNN-NN-NNNN. change this by setting `with` property
@@ -512,6 +516,7 @@ Validate length of property
 ### numeric ###
 Validates property is a number, comma separated numbers also supported. Default pattern of numbers /^\d+(,\d{3})*(\.\d*)?$/
 You can change this by setting `pattern` property of the options.
+By default maximum allowed decimal length is 12 and maximum allowed fraction length is 2.
 
 #### Options ####
   * `pattern` - Default pattern for number /^\d+(,\d{3})*(\.\d*)?$/, set this if you want any other pattern.
@@ -523,8 +528,8 @@ You can change this by setting `pattern` property of the options.
   * `lessThanOrEqualTo` - Validates property is less than or equal to
   * `odd` - Validates property is odd
   * `even` - Validates property is even
-  * `decimal` - Validates maximum no of decimal digits
-  * `fraction` - Validates maximum no of fraction digits
+  * `decimal` - Validates maximum no of decimal digits. Default allowed digits is 12.
+  * `fraction` - Validates maximum no of fraction digits. Default allowed digits is 2.
 
 ##### Messages #####
   * `numeric` - Error message returned when numeric validation fails.

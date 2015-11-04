@@ -1,9 +1,8 @@
 import Ember from 'ember';
+import Phone from 'ember-validator/mixins/phone';
 import Constants from 'ember-validator/constants';
-import Pattern from 'ember-validator/mixins/pattern';
-import Messages from 'ember-validator/messages';
 
-export default Ember.Mixin.create(Pattern, {
+export default Ember.Mixin.create(Phone, {
   pattern: Constants.EMAIL_PATTERN,
 
   init: function() {
@@ -21,9 +20,18 @@ export default Ember.Mixin.create(Pattern, {
     }
 
     if (!this.options.message) {
-      this.set('options.message', Messages.render('email', this.options));
+      this.set('options.message', Messages.render('emailorphone', this.options));
     }
+  },
 
-    this.options.messages.with = this.options.message;
+  perform: function() {
+    var value = this.model.get(this.property);
+    if (this.options.with && !this.options.with.test(value)) {
+      this._super();
+
+      if (this.get('isInvalid')) {
+        this.pushResult(this.options.message);
+      }
+    }
   }
 });

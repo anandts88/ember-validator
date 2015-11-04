@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import Constants from 'ember-validator/constants';
 
 export default Ember.Mixin.create({
   init: function() {
@@ -8,11 +9,19 @@ export default Ember.Mixin.create({
     }
 
     if (!this.options.pattern) {
-      this.set('options.pattern', /^\d+(,\d{3})*(\.\d*)?$/);
+      this.set('options.pattern', Constants.NUMERIC_PATTERN);
     }
 
     if (!this.options.messages) {
       this.set('options.messages', {});
+    }
+
+    if (!this.options.decimal) {
+      this.set('options.decimal', 12);
+    }
+
+    if (!this.options.fractions) {
+      this.set('options.fractions', 2);
     }
   },
 
@@ -31,12 +40,14 @@ export default Ember.Mixin.create({
     var comparisonValue;
     var comparisonStr;
     var comparisonType;
+    var dotIndex;
+    var val;
 
     var isNumeric = function(str) {
       var val;
       if (pattern.test(str)) {
         val = Number(removeSpecial(str));
-        return !isNaN(value) && isFinite(value);
+        return !isNaN(val) && isFinite(val);
       }
       return false;
     };
@@ -67,10 +78,19 @@ export default Ember.Mixin.create({
           this.pushResult(this.options.messages.odd, 'odd');
         } else if (this.options.even && parseInt(value, 10) % 2 !== 0) {
           this.pushResult(this.options.messages.even, 'even');
-        } else if (this.options.decimal && str.length > this.options.decimal) {
-          this.pushResult(this.options.messages.decimal, 'decimal');
-        } else if (this.options.fraction && str.length > this.options.fraction) {
-          this.pushResult(this.options.messages.fraction, 'fraction');
+        } else if (this.options.decimal || this.options.fraction) {
+          dotIndex  = str.indexOf('.');
+          if (this.options.decimal) {
+            val = dotIndex !== -1 ? str.substring(0, dotIndex) : str;
+            if (val.length > this.options.decimal) {
+              this.pushResult(this.options.messages.decimal, 'decimal');
+            }
+          } else if (this.options.fraction && dotIndex !== -1) {
+            val = str.substring(dotIndex);
+            if (val.length > this.options.fraction) {
+              this.pushResult(this.options.messages.fraction, 'fraction');
+            }
+          }
         } else {
           for (var key in this.CHECKS) {
             if (!this.options[key]) {
