@@ -20,6 +20,7 @@ export default Ember.Mixin.create({
 
   CHECKS: {
     same: '===',
+    notSame: '!==',
     before: '<', // before
     after: '>', // after
     beforeSame: '<=', // before or same
@@ -30,6 +31,8 @@ export default Ember.Mixin.create({
     switch (operator) {
       case '===':
         return source.isSame(target);
+      case '!==':
+        return !source.isSame(target);
       case '>=':
         return source.isAfter(target) || source.isSame(target);
       case '<=':

@@ -13,7 +13,7 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.1.9"
+  "ember-validator": "1.2.0"
 }
 ```
 
@@ -411,21 +411,21 @@ Validate whether the property is email.
   }
 ```
 
-### emailorphone ###
-
-Validate the property is email or phone number. Options are same as like email and phone validators.
-
 ### ssn ###
 
 Validate whether the property is ssn. Default pattern of ssn NNN-NN-NNNN. change this by setting `with` property
 
 #### Options ####
 
-  * `with` - The regular expression to test with, if you are not happy with the default ssn pattern.
+  * `format1`: 999-99-9999. Set to `true` if you want to validate this pattern.
+  * `format2`: 999999999. Set to `true` if you want to validate this pattern.
+  * `format3`: 999.99.9999. Set to `true` if you want to validate this pattern.
+  * `all`: Set to true, if you want to validate with all the default formats.
   * `message` - Error message returned when email validation fails.
 
 ```javascript
   ssn: {
+    format1: true,
     message: "Invalid ssn"
   }
 ```
@@ -460,6 +460,7 @@ Validate whether the property is valid phone. Default supported phone number pat
   * `format7`: 999-999-9999. Set to `true` if you want to validate this pattern.
   * `format8`: 999.999.9999. Set to `true` if you want to validate this pattern.
   * `format9`: 9999999999. Set to `true` if you want to validate this pattern.
+  * `all`: Set to true, if you want to validate with all the default formats.
   * `message`: Error message returned when phone validation fails.
 
 ```javascript
@@ -524,6 +525,7 @@ By default maximum allowed decimal length is 12 and maximum allowed fraction len
   * `greaterThan` - Validates property is greater than
   * `greaterThanOrEqualTo` - Validates property is greater than or equal to
   * `equalTo` - Validates property is equal to
+  * `notEqualTo` - Validates property is not equal to
   * `lessThan` - Validates property is less than
   * `lessThanOrEqualTo` - Validates property is less than or equal to
   * `odd` - Validates property is odd
@@ -537,6 +539,7 @@ By default maximum allowed decimal length is 12 and maximum allowed fraction len
   * `greaterThan` - Error message returned when greaterThan validation fails.
   * `greaterThanOrEqualTo` - Error message returned when greaterThanOrEqualTo validation fails.
   * `equalTo` - Error message returned when equalTo validation fails.
+  * `notEqualTo` - Error message returned when notEqualTo validation fails.
   * `lessThan` - Error message returned when lessThan validation fails.
   * `lessThanOrEqualTo` - Error message returned when lessThanOrEqualTo validation fails.
   * `odd` - Error message returned when odd validation fails.
@@ -582,6 +585,7 @@ Perform date validation. Property can be Date object, moment object or string. I
   * `before` - Validates property is before target date
   * `beforeSame` - Validates property is before or same as target date
   * `same` - Validates property is same as target date
+  * `notSame` - Validates property is not same as target date
   * `after` - Validates property is after target date
   * `afterSame` - Validates property is after or same as target date
 
@@ -596,6 +600,7 @@ The below two are options for same, before, after, beforeSame and afterSame
   * `before` - Error message returned when before validation fails.
   * `beforeSame` - Error message returned when beforeSame validation fails.
   * `same` - Error message returned when same validation fails.
+  * `notSame` - Error message returned when notSame validation fails.
   * `after` - Error message returned when after validation fails.
   * `afterSame` - Error message returned when afterSame validation fails.
 

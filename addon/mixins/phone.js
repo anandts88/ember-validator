@@ -34,22 +34,28 @@ export default Ember.Mixin.create({
     var format;
     var index;
 
-    for (var count = 1; count <= this.FORMATS.length; count++) {
-      index = count - 1;
-      format = this.options['format' + count];
-      if (format || this.options.all) {
-        pattern.pushObject(this.FORMATS[index]);
+    if (!Ember.isEmpty(value)) {
+      for (var count = 1; count <= this.FORMATS.length; count++) {
+        index = count - 1;
+        format = this.options['format' + count];
+        if (format || this.options.all) {
+          pattern.pushObject(this.FORMATS[index]);
+        }
       }
-    }
 
-    pattern.forEach(function(arr) {
-      if (arr.test(value)) {
-        test = true;
+      if (this.options.with) {
+        pattern.pushObject(this.options.with);
       }
-    });
 
-    if (!test) {
-      this.pushResult(this.options.message);
+      pattern.forEach(function(arr) {
+        if (arr.test(value)) {
+          test = true;
+        }
+      });
+
+      if (!test) {
+        this.pushResult(this.options.message);
+      }
     }
   }
 });

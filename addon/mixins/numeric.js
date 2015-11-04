@@ -26,6 +26,7 @@ export default Ember.Mixin.create({
   },
 
   CHECKS: {
+    notEqualTo: '!==',
     equalTo: '===',
     greaterThan: '>',
     greaterThanOrEqualTo: '>=',
@@ -41,7 +42,7 @@ export default Ember.Mixin.create({
     var comparisonStr;
     var comparisonType;
     var dotIndex;
-    var val;
+    var decimalVal;
 
     var isNumeric = function(str) {
       var val;
@@ -72,25 +73,19 @@ export default Ember.Mixin.create({
       } else {
         str = removeSpecial(str);
         value = Number(str);
+        dotIndex  = str.indexOf('.');
+        decimalVal = dotIndex !== -1 ? str.substring(0, dotIndex) : str;
+
         if (this.options.integer && !isInteger(value)) {
           this.pushResult(this.options.messages.integer, 'integer');
         } else if (this.options.odd && parseInt(value, 10) % 2 === 0) {
           this.pushResult(this.options.messages.odd, 'odd');
         } else if (this.options.even && parseInt(value, 10) % 2 !== 0) {
           this.pushResult(this.options.messages.even, 'even');
-        } else if (this.options.decimal || this.options.fraction) {
-          dotIndex  = str.indexOf('.');
-          if (this.options.decimal) {
-            val = dotIndex !== -1 ? str.substring(0, dotIndex) : str;
-            if (val.length > this.options.decimal) {
-              this.pushResult(this.options.messages.decimal, 'decimal');
-            }
-          } else if (this.options.fraction && dotIndex !== -1) {
-            val = str.substring(dotIndex);
-            if (val.length > this.options.fraction) {
-              this.pushResult(this.options.messages.fraction, 'fraction');
-            }
-          }
+        } else if (this.options.decimal && decimalVal.length > this.options.decimal) {
+          this.pushResult(this.options.messages.decimal, 'decimal');
+        } else if (this.options.fraction && dotIndex !== -1 && str.substring(dotIndex).length > this.options.fraction) {
+          this.pushResult(this.options.messages.fraction, 'fraction');
         } else {
           for (var key in this.CHECKS) {
             if (!this.options[key]) {

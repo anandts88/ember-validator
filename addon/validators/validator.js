@@ -72,6 +72,10 @@ export default Ember.Object.extend({
         return a == b; // jshint ignore:line
       case '===':
         return a === b;
+      case '!=':
+        return a != b;
+      case '!==':
+        return a !== b;
       case '>=':
         return a >= b;
       case '<=':
