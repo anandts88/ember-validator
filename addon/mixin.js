@@ -56,7 +56,6 @@ export default Ember.Mixin.create({
       var validations = props.validations;
       var result = Errors.create();
       var allErrors = Ember.A();
-      var allValidators = Ember.A();
       var rules;
       var rule;
       var property;
@@ -76,7 +75,6 @@ export default Ember.Mixin.create({
               errors = validationResult.get('errors');
               if (!Ember.isEmpty(errors)) {
                 allErrors.pushObjects(errors);
-                allValidators.pushObjects(validationResult.get('validators'));
                 result.set(property, validationResult);
                 break;
               }
@@ -85,10 +83,7 @@ export default Ember.Mixin.create({
         }
       }
 
-      result.setProperties({
-        errors: allErrors,
-        validators: allValidators
-      });
+      result.set('errors', allErrors);
 
       return result;
     };

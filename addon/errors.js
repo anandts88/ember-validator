@@ -7,5 +7,5 @@ export default Ember.Object.extend({
   validator: Ember.computed.alias('validators.firstObject'),
   isValid: Ember.computed.empty('errors.[]'),
   isInvalid: Ember.computed.not('isValid'),
-  hasError: Ember.computed.notEmpty('error')
+  hasError: Ember.computed.alias('isInvalid')
 });

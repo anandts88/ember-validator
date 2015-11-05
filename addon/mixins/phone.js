@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import Messages from 'ember-validator/messages';
 import Constants from 'ember-validator/constants';
 
 export default Ember.Mixin.create({
@@ -14,18 +13,6 @@ export default Ember.Mixin.create({
     Constants.PHONE_PATTERN8, // 999.999.9999
     Constants.PHONE_PATTERN9 // 9999999999
   ],
-
-  init: function() {
-    this._super();
-
-    if (typeof(this.options) !== 'object') {
-      this.set('options', { format1: true });
-    }
-
-    if (!this.options.message) {
-      this.set('options.message', Messages.render('phone', this.options));
-    }
-  },
 
   perform: function() {
     var value = this.model.get(this.property);
@@ -45,6 +32,10 @@ export default Ember.Mixin.create({
 
       if (this.options.with) {
         pattern.pushObject(this.options.with);
+      }
+
+      if (Ember.isEmpty(pattern)) {
+        pattern.pushObject(this.FORMATS[0]);
       }
 
       pattern.forEach(function(arr) {

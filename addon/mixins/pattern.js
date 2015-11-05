@@ -1,22 +1,6 @@
 import Ember from 'ember';
-import Messages from 'ember-validator/messages';
 
 export default Ember.Mixin.create({
-  init: function() {
-    this._super();
-    if (typeof(this.options) !== 'object') {
-      this.set('options', {});
-    }
-
-    if (this.options.constructor === RegExp) {
-      this.set('options', { 'with': this.options });
-    }
-
-    if (!this.options.messages) {
-      this.set('options.messages', {});
-    }
-  },
-
   perform: function() {
     var value = this.model.get(this.property);
     var array;

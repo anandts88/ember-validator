@@ -15,15 +15,43 @@ export default Ember.Object.extend({
   isInvalid: Ember.computed.not('isValid'),
 
   init: function() {
-    this.setProperties({
-      errors: Ember.A(),
-      validators: Ember.A()
-    });
+    var messages;
+
+    this.set('errors', Ember.A());
+
+    if (this.validatorName !== 'custom') {
+      if (typeof(this.options) !== 'object') {
+        this.set('options', {});
+      }
+
+      if (!this.options.messages) {
+        this.set('options.messages', {});
+      }
+
+      messages = Messages[this.validatorName];
+
+      if (typeof(messages) === 'string' && !this.options.message) {
+        this.set('options.message', messages);
+      } else if (typeof(messages) === 'object') {
+        for (var key in messages) {
+          if (Ember.isEmpty(this.options.messages[key])) {
+            this.options.messages[key] = this.options.message || messages[key];
+          }
+        }
+      }
+    }
   },
 
-  pushResult: function(error, rule) {
-    this.errors.push(error);
-    this.validators.push(this.validatorName + (rule ? '-' + rule : ''));
+  render: function(message, options) {
+    for(var option in options) {
+      message = (message || 'Invalid').replace('{{' + option + '}}', options[option]);
+    }
+
+    return message;
+  },
+
+  pushResult: function(error, options) {
+    this.errors.push(this.render(error, options));
   },
 
   perform: function () {
@@ -36,7 +64,6 @@ export default Ember.Object.extend({
 
   validate: function() {
     this.errors.clear();
-    this.validators.clear();
     if (this._isValidate()) {
       this.perform();
     }

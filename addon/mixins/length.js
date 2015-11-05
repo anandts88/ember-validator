@@ -1,16 +1,8 @@
 import Ember from 'ember';
-import Messages from 'ember-validator/messages';
 
 export default Ember.Mixin.create({
   init: function() {
     this._super();
-    if (typeof(this.options) === 'number') {
-      this.set('options', { 'is': this.options });
-    }
-
-    if (!this.options.messages) {
-      this.set( 'options.messages', {});
-    }
 
     this.options.tokenizer = this.options.tokenizer || function(value) {
       return value.toString().split('');

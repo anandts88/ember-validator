@@ -2,18 +2,12 @@ import Ember from 'ember';
 import Constants from 'ember-validator/constants';
 
 export default Ember.Mixin.create({
+
   init: function() {
     this._super();
-    if (typeof(this.options) !== 'object') {
-      this.set('options', {});
-    }
 
     if (!this.options.pattern) {
       this.set('options.pattern', Constants.NUMERIC_PATTERN);
-    }
-
-    if (!this.options.messages) {
-      this.set('options.messages', {});
     }
 
     if (!this.options.decimal) {

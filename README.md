@@ -13,7 +13,7 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.2.0"
+  "ember-validator": "1.2.1"
 }
 ```
 
@@ -289,6 +289,37 @@ Validate the property dont have value.
   notrequired: { message: 'Value must be empty' }
 ```
 
+### boolean ###
+
+Validate the property is boolean and has value true or false.
+
+#### Options ####
+  * `required` - Validates property is `true`.
+  * `notrequired` - Validates property is `false`.
+  * `message` - Error message returned when validation fails.
+
+#### messages ####
+  If you want to override message of individual rule.
+
+  * `required` - Validates property is `true`.
+  * `notrequired` - Validates property is `false`.
+  * `boolean` - Validates property is `boolean`.
+
+```javascript
+  boolean: {
+    required: true
+    message: 'must be true'
+  }
+
+  boolean: {
+    notrequired: true
+    messages: {
+      boolean: 'must be boolean'
+      notrequired: 'must be false'
+    }
+  }
+```
+
 ### equals ###
 
 Validate whether the property equals to the specified value.
@@ -312,8 +343,11 @@ Validate property with array of values, and the array of values contains/notcont
   * `exludeRange`: An array of lower and upper bound, and values within this range is excluded.
   * `include` - An array of values that are excluded
   * `includeRange` - An array of lower and upper bound, and values within this range is excluded.
+  * `message` - Error message returned when validation fails.
 
 ##### Messages #####
+  If you want to override message of individual rule.
+
   * `exclude`:  Error message returned when exclude validation fails.
   * `exludeRange`: Error message returned when exludeRange validation fails.
   * `include` - Error message returned when include validation fails.
@@ -356,9 +390,11 @@ Validate poperty with passed regular expression
   * `with` - The regular expression to test with
   * `without` - The regular expression to inverse test
   * `array` - Array of regular expression, when you want to validate more than one regex
-  * `messages` - Error message for with and without validation
+  * `message` - Error message returned when validation fails.
 
 #### messages ####
+  If you want to override message of individual rule.
+
   * `with` - Error message returned when with validation fails.
   * `without` - Error message returned when without validation fails.
 
@@ -480,8 +516,11 @@ Validate length of property
   * `maximum` - The maximum length of the value
   * `is` - The exact length of the value
   * `tokenizer` - A function that tokenize the string to get length, by default tokenized with ''.
+  * `message` - Error message returned when validation fails.
 
 ##### Messages #####
+  If you want to override message of individual rule.
+
   * `minimum` - Error message returned when minimum validation fails.
   * `maximum` - Error message returned when maximum validation fails.
   * `is` - Error message returned when is validation fails.
@@ -532,8 +571,11 @@ By default maximum allowed decimal length is 12 and maximum allowed fraction len
   * `even` - Validates property is even
   * `decimal` - Validates maximum no of decimal digits. Default allowed digits is 12.
   * `fraction` - Validates maximum no of fraction digits. Default allowed digits is 2.
+  * `message` - Error message returned when validation fails.
 
 ##### Messages #####
+  If you want to override message of individual rule.
+
   * `numeric` - Error message returned when numeric validation fails.
   * `integer` - Error message returned when integer validation fails.
   * `greaterThan` - Error message returned when greaterThan validation fails.
@@ -588,12 +630,15 @@ Perform date validation. Property can be Date object, moment object or string. I
   * `notSame` - Validates property is not same as target date
   * `after` - Validates property is after target date
   * `afterSame` - Validates property is after or same as target date
+  * `message` - Error message returned when validation fails.
 
 The below two are options for same, before, after, beforeSame and afterSame
   * `target` - Date to be compared with. This can be date object, moment object or string. If the property is string then set `format` option.
   * `format` -  Format of target date, if it is string.
 
 #### Messages ####
+  If you want to override message of individual rule.
+
   * `date` - Error message to be displayed if date is not valid.
   * `weekend` - Error message returned when weekend validation fails.
   * `onlyWeekend` - Error message returned when onlyWeekend validation fails.
