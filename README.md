@@ -13,7 +13,7 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.2.1"
+  "ember-validator": "1.2.2"
 }
 ```
 
@@ -678,8 +678,8 @@ The below two are options for same, before, after, beforeSame and afterSame
 In some cases we may want to execute the function only if certain conditions are satisfied.
 Please use `if` and `unless` options in validation rules.
 
-* `if` - Validator will be executed only if the supplied call back returns true.
-* `unless` - Validator will be executed only if the supplied call back returns false.
+* `if` - Validator will be executed only if the supplied call back returns true. This can be a function or a boolean.
+* `unless` - Validator will be executed only if the supplied call back returns false. This can be a function or a boolean.
 
 ```javascript
   userName: {
@@ -695,6 +695,28 @@ Please use `if` and `unless` options in validation rules.
       unless: function(model, property) {
         return false;
       }
+    }
+  }
+```
+
+Conditional validators are also added in property level, so it wont validate any validators defined for the property.
+
+```javascript
+  userName: {
+    'if': function(model, property) {
+      return true;
+    },
+    length: {
+
+    }
+  }
+
+  password: {
+    unless: function(model, property) {
+      return false;
+    },
+    numeric: {
+
     }
   }
 ```
