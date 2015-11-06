@@ -13,7 +13,7 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.2.2"
+  "ember-validator": "1.2.3"
 }
 ```
 
@@ -275,6 +275,8 @@ Validate the property has value.
 
 ```javascript
   required: { message: 'Please enter a value' }
+  required: 'Please enter a value'
+  required: true
 ```
 
 ### notrequired ###
@@ -287,6 +289,8 @@ Validate the property dont have value.
 
 ```javascript
   notrequired: { message: 'Value must be empty' }
+  notrequired: 'Value must be empty'
+  notrequired: true
 ```
 
 ### boolean ###
@@ -318,6 +322,9 @@ Validate the property is boolean and has value true or false.
       notrequired: 'must be false'
     }
   }
+
+  boolean: 'must be true'
+  boolean: true
 ```
 
 ### equals ###
@@ -362,6 +369,11 @@ contains: {
 }
 
 contains: {
+  exclude: ['A', 'B', 'C'],
+  message: 'Please enter valid value'
+}
+
+contains: {
   excludeRange: [1, 10],
   messages: {
     excludeRange: 'cannot be between 1 and 10'
@@ -373,6 +385,11 @@ contains: {
   messages: {
     include: 'Please enter valid value'
   }
+}
+
+contains: {
+  include: ['A', 'B', 'C'],
+  message: 'Please enter valid value'
 }
 
 contains: {
@@ -403,14 +420,24 @@ Validate poperty with passed regular expression
     with: /^([a-zA-Z])+$/,
     messages: {
       with: 'Must be alphabets'  
-    }}
+    }
+  }
+
+  pattern: {
+    with: /^([a-zA-Z])+$/,
+    message: 'Must be alphabets'  
   }
 
   pattern: {
     without: /^([a-zA-Z])+$/,
     messages: {
       without: 'Must not be alphabets'  
-    }}
+    }
+  }
+
+  pattern: {
+    without: /^([a-zA-Z])+$/,
+    message: 'Must not be alphabets'  
   }
 
   pattern: {
@@ -441,6 +468,9 @@ Validate whether the property is email.
     message: "Invalid email"
   }
 
+  email: true
+  email: 'Invalid email'
+
   email: {
     with: /^(([^<>()\[\]\\.,;:\s@\"]+(\.[^<>()\[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     message: "Invalid email"
@@ -464,6 +494,14 @@ Validate whether the property is ssn. Default pattern of ssn NNN-NN-NNNN. change
     format1: true,
     message: "Invalid ssn"
   }
+
+  ssn: {
+    all: true,
+    message: "Invalid ssn"
+  }
+
+  ssn: true
+  ssn: 'Invalid ssn'
 ```
 
 ### zip ###
@@ -479,6 +517,9 @@ Validate whether the property is valid zip. Default pattern of ssn NNNNN or NNNN
   zip: {
     message: "Invalid zip"
   }
+
+  zip: true
+  zip: 'Invalid zip'
 ```
 
 ### phone ###
@@ -506,6 +547,14 @@ Validate whether the property is valid phone. Default supported phone number pat
     message: "Invalid phone"
   }
   // This matches format1 and format4 patterns of phone number
+
+  phone: {
+    all: true
+    message: "Invalid phone"
+  }
+
+  phone: true
+  phone: 'Invalid phone'
 ```
 
 ### length ###
@@ -544,9 +593,12 @@ Validate length of property
 
   length: {
     is: 4,
-    messages: {
-      is: 'Must be contains to 4 words'
-    },
+    message: 'Must be contains 4 characters'
+  }
+
+  length: {
+    is: 4,
+    message: 'Must be contains 4 characters'
     tokenizer: function(value) {
       return value.split(' ');
     }
@@ -614,6 +666,16 @@ By default maximum allowed decimal length is 12 and maximum allowed fraction len
       fraction: 'must be max of 2 fraction digits'
     }
   }
+
+  numeric: {
+    greaterThan: "10,000.12",
+    decimal: 5,
+    fraction: 2,
+    message: 'Valid number'
+    messages: {
+      greaterThan: 'must be greater than 10,000.12'
+    }
+  }
 ```
 
 ### date ###
@@ -659,6 +721,7 @@ The below two are options for same, before, after, beforeSame and afterSame
 
 // If property date is 'Nov/01/2015'
   date: {
+    format: 'MMM/DD/YYYY',
     before: {
       target: 'Oct/31/2015',
       format: 'MMM/DD/YYYY'
