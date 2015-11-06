@@ -8,18 +8,18 @@ export default Ember.Mixin.create({
 
     if (!Ember.isEmpty(value)) {
       if (this.options.with && !this.options.with.test(value)) {
-        this.pushResult(this.options.messages.with, 'with');
+        this.pushResult(this.options.messages.with);
       } else if (this.options.without && this.options.without.test(value)) {
-        this.pushResult(this.options.messages.without, 'without');
+        this.pushResult(this.options.messages.without);
       } else if (!Ember.isEmpty(this.options.array)) {
         array = this.options.array;
         for (var count = 0 ; count < array.length ; count++) {
           arr = array[count];
           if (arr.with && !arr.with.test(value)) {
-            this.pushResult(arr.message, 'array');
+            this.pushResult(arr.message);
             break;
           } else if (arr.without && arr.without.test(value)) {
-            this.pushResult(arr.message, 'array');
+            this.pushResult(arr.message);
             break;
           }
         }

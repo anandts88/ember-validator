@@ -71,15 +71,15 @@ export default Ember.Mixin.create({
         decimalVal = dotIndex !== -1 ? str.substring(0, dotIndex) : str;
 
         if (this.options.integer && !isInteger(value)) {
-          this.pushResult(this.options.messages.integer, 'integer');
+          this.pushResult(this.options.messages.integer);
         } else if (this.options.odd && parseInt(value, 10) % 2 === 0) {
-          this.pushResult(this.options.messages.odd, 'odd');
+          this.pushResult(this.options.messages.odd);
         } else if (this.options.even && parseInt(value, 10) % 2 !== 0) {
-          this.pushResult(this.options.messages.even, 'even');
+          this.pushResult(this.options.messages.even);
         } else if (this.options.decimal && decimalVal.length > this.options.decimal) {
-          this.pushResult(this.options.messages.decimal, 'decimal');
+          this.pushResult(this.options.messages.decimal);
         } else if (this.options.fraction && dotIndex !== -1 && str.substring(dotIndex).length > this.options.fraction) {
-          this.pushResult(this.options.messages.fraction, 'fraction');
+          this.pushResult(this.options.messages.fraction);
         } else {
           for (var key in this.CHECKS) {
             if (!this.options[key]) {
@@ -91,9 +91,7 @@ export default Ember.Mixin.create({
             comparisonType = this.CHECKS[key];
 
             if (!this.compare(value, comparisonValue, comparisonType)) {
-              this.pushResult(this.renderMessageFor(key, {
-                count: comparisonValue
-              }), key);
+              this.pushResult(this.options.messages[key], { count: comparisonValue });
             }
           }
         }

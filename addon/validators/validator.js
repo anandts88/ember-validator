@@ -9,6 +9,7 @@ export default Ember.Object.extend({
   property: null,
   model: null,
 
+  callback: Ember.computed.alias('options.callback'),
   'if': Ember.computed.alias('options.if'),
   unless: Ember.computed.alias('options.unless'),
   isValid: Ember.computed.empty('errors.[]'),
@@ -43,8 +44,10 @@ export default Ember.Object.extend({
   },
 
   render: function(message, options) {
+    message = message || 'Invalid';
+
     for(var option in options) {
-      message = (message || 'Invalid').replace('{{' + option + '}}', options[option]);
+      message = message.replace('{{' + option + '}}', options[option]);
     }
 
     return message;
@@ -56,10 +59,6 @@ export default Ember.Object.extend({
 
   perform: function () {
     throw 'Please override perform method in you validator.';
-  },
-
-  renderMessageFor: function(key, options) {
-    return this.options.messages[key] || Messages.render(key, options);
   },
 
   validate: function() {
@@ -75,21 +74,32 @@ export default Ember.Object.extend({
   },
 
 
-  _check: function(validate) {
-    if (typeof(validate) === 'function') {
-      return validate(this.model, this.property);
-    } else if (typeof(validate) === 'string') {
-      if (typeof(this.model[validate]) === 'function') {
-        return this.model[validate]();
-      } else {
-        return this.model.get(validate);
+  _check: function(validate, model, property, positive) {
+    var result = true;
+
+    if (typeof(validate) === 'undefined') {
+      result = true;
+    } else {
+      if (typeof(validate) === 'boolean') {
+        result = validate;
+      } else if (typeof(validate) === 'function') {
+        result = validate(model, property);
+      } else if (typeof(validate) === 'string') {
+        if (typeof(model[validate]) === 'function') {
+          result = model[validate]();
+        } else {
+          result = model.get(validate);
+        }
       }
+      result = positive ? result : !result;
     }
+
+    return result;
   },
 
   _isValidate: function() {
-    var ifValidate = (this.get('if') ? this._check(this.get('if')) : true);
-    var unlessValidate = (this.get('unless') ? !this._check(this.get('unless')) : true);
+    var ifValidate = this._check(this.get('if'), this.model, this.property, true);
+    var unlessValidate = this._check(this.get('unless'), this.model, this.property, false);
     return ifValidate && unlessValidate;
   },
 

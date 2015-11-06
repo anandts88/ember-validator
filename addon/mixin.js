@@ -18,6 +18,7 @@ export default Ember.Mixin.create({
     var object = props.model;
     var validations = props.validations;
     var self = this;
+    var propDetails;
 
     for (var key in object) {
       if (key.indexOf('ValidatorResult') !== -1 || key.indexOf('ValidatorPreviousVal') != -1) {
@@ -26,24 +27,28 @@ export default Ember.Mixin.create({
     }
 
     for (var property in validations) {
-      object.set(property + 'ValidatorPreviousVal', object.get(property));
-      Ember.defineProperty(object, property + 'ValidatorResult', Ember.computed(property, function(sender) {
-        var rules = {};
-        var prop = sender.replace('ValidatorResult', '');
-        var result;
+      propDetails = validations[property];
 
-        if (object.get(prop) !== object.get(prop + 'ValidatorPreviousVal')) {
-          rules[prop] = validations[prop];
+      if (this._isValidate(propDetails, object, property)) {
+        object.set(property + 'ValidatorPreviousVal', object.get(property));
+        Ember.defineProperty(object, property + 'ValidatorResult', Ember.computed(property, function(sender) {
+          var rules = {};
+          var prop = sender.replace('ValidatorResult', '');
+          var result;
 
-          result = self.validateMap({
-            model: object,
-            validations: rules,
-            noPromise: true
-          });
-        }
+          if (object.get(prop) !== object.get(prop + 'ValidatorPreviousVal')) {
+            rules[prop] = validations[prop];
 
-        return result;
-      }));
+            result = self.validateMap({
+              model: object,
+              validations: rules,
+              noPromise: true
+            });
+          }
+
+          return result;
+        }));
+      }
     }
   },
 
@@ -104,49 +109,97 @@ export default Ember.Mixin.create({
 
   constructValidators: function(object, validations) {
     var validators = Ember.A();
+    var propDetails;
     var rules;
     for (var property in validations) {
-      rules = this.findValidators(validations[property]);
-      rules.setEach('property', property);
-      rules.setEach('model', object);
+      propDetails = validations[property];
 
-      validators.pushObject({
-        property: property,
-        rules: rules
-      });
+      if (this._isValidate(propDetails, object, property)) {
+        rules = this.findValidators(validations[property]);
+        rules.setEach('property', property);
+        rules.setEach('model', object);
+
+        validators.pushObject({
+          property: property,
+          rules: rules
+        });
+      }
     }
     return validators;
+  },
+
+  _check: function(validate, model, property, positive) {
+    var result = true;
+
+    if (typeof(validate) === 'undefined') {
+      result = true;
+    } else {
+      if (typeof(validate) === 'boolean') {
+        result = validate;
+      } else if (typeof(validate) === 'function') {
+        result = validate(model, property);
+      } else if (typeof(validate) === 'string') {
+        if (typeof(model[validate]) === 'function') {
+          result = model[validate]();
+        } else {
+          result = model.get(validate);
+        }
+      }
+      result = positive ? result : !result;
+    }
+
+    return result;
+  },
+
+  _isValidate: function(details, model, property) {
+    var ifValidate = this._check(details['if'], model, property, true);
+    var unlessValidate = this._check(details['unless'], model, property, false);
+    return ifValidate && unlessValidate;
   },
 
   createInlineValidator: function() {
     return Validator.extend({
       perform: function() {
-        var errorMessage = this.callback.call(this, this.model, this.property);
+        var callback = this.get('callback');
+        var error;
 
-        if (errorMessage) {
-          this.errors.pushObject(errorMessage);
+        if (callback) {
+          error = callback.call(this, this.model, this.property);
+
+          if (error) {
+            this.errors.pushObject(error);
+          }
         }
-      },
-      callback: null
+      }
     });
   },
 
   findValidators: function(rules) {
     var validators = Ember.A();
     var validator;
+    var options;
+
     for (var validatorName in rules) {
-      if (validatorName === 'custom' ) {
-        validator = this.createInlineValidator();
-        validators.pushObject(validator.create({
-          validatorName: validatorName,
-          callback: rules[validatorName].callback
-        }));
-      } else {
-        validator = this.lookupValidator(validatorName);
+
+      if (validatorName !== 'if' && validatorName !== 'unless') {
+        options = rules[validatorName];
+
+        if (typeof(options) === 'string') {
+          options = { message: options };
+        } else if (typeof(options) !== 'object') {
+          options = {};
+        }
+
+        if (validatorName === 'custom' ) {
+          validator = this.createInlineValidator();
+        } else {
+          validator = this.lookupValidator(validatorName);
+        }
+
         if (validator) {
           validators.pushObject(validator.create({
             validatorName: validatorName,
-            options: rules[validatorName]
+            options: options
           }));
         }
       }

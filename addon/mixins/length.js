@@ -40,7 +40,7 @@ export default Ember.Mixin.create({
         comparisonType = this.CHECKS[key];
 
         if (!this.compare(propertyLength, comparisonLength, comparisonType)) {
-          this.pushResult(this.renderMessageFor(key, { count: comparisonLength }), key);
+          this.pushResult(this.options.messages[key], { count: comparisonLength });
         }
       }
     }
