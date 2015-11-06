@@ -49,6 +49,7 @@ export default {
   pattern: {
     with: 'must match',
     without: 'must not match',
+    array: 'must match pattern'
   },
 
   phone: 'valid phone number',

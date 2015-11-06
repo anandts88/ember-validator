@@ -16,10 +16,10 @@ export default Ember.Mixin.create({
         for (var count = 0 ; count < array.length ; count++) {
           arr = array[count];
           if (arr.with && !arr.with.test(value)) {
-            this.pushResult(arr.message);
+            this.pushResult(arr.message || this.options.messages.array);
             break;
           } else if (arr.without && arr.without.test(value)) {
-            this.pushResult(arr.message);
+            this.pushResult(arr.message || this.options.messages.array);
             break;
           }
         }
