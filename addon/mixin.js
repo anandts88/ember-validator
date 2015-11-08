@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import Errors from 'ember-validator/errors';
 import Validator from 'ember-validator/validators/validator';
-
+import Constants from 'ember-validator/constants';
 
 export default Ember.Mixin.create({
   validate: function(props) {
@@ -19,6 +19,7 @@ export default Ember.Mixin.create({
     var validations = props.validations;
     var self = this;
     var propDetails;
+    var errorProperty;
 
     for (var key in object) {
       if (key.indexOf('ValidatorResult') !== -1 || key.indexOf('ValidatorPreviousVal') != -1) {
@@ -28,10 +29,11 @@ export default Ember.Mixin.create({
 
     for (var property in validations) {
       propDetails = validations[property];
+      errorProperty = propDetails.errorProperty;
 
       if (this._isValidate(propDetails, object, property)) {
-        object.set(property + 'ValidatorPreviousVal', object.get(property));
-        Ember.defineProperty(object, property + 'ValidatorResult', Ember.computed(property, function(sender) {
+        object.set((errorProperty || property) + 'ValidatorPreviousVal', object.get(property));
+        Ember.defineProperty(object, (errorProperty || property) + 'ValidatorResult', Ember.computed(property, function(sender) {
           var rules = {};
           var prop = sender.replace('ValidatorResult', '');
           var result;
@@ -64,6 +66,7 @@ export default Ember.Mixin.create({
       var rules;
       var rule;
       var property;
+      var errorProperty;
       var errors;
       var validationResult;
 
@@ -73,6 +76,7 @@ export default Ember.Mixin.create({
           validators.forEach(function(obj) {
             rules = obj.rules;
             property = obj.property;
+            errorProperty = obj.errorProperty;
 
             for (var count = 0; count < obj.rules.length; count++) {
               rule = obj.rules[count];
@@ -80,7 +84,7 @@ export default Ember.Mixin.create({
               errors = validationResult.get('errors');
               if (!Ember.isEmpty(errors)) {
                 allErrors.pushObjects(errors);
-                result.set(property, validationResult);
+                result.set(errorProperty || property, validationResult);
                 break;
               }
             }
@@ -121,7 +125,8 @@ export default Ember.Mixin.create({
 
         validators.pushObject({
           property: property,
-          rules: rules
+          rules: rules,
+          errorProperty: propDetails.errorProperty
         });
       }
     }
@@ -153,7 +158,7 @@ export default Ember.Mixin.create({
 
   _isValidate: function(details, model, property) {
     var ifValidate = this._check(details['if'], model, property, true);
-    var unlessValidate = this._check(details['unless'], model, property, false);
+    var unlessValidate = this._check(details.unless, model, property, false);
     return ifValidate && unlessValidate;
   },
 
@@ -181,7 +186,7 @@ export default Ember.Mixin.create({
 
     for (var validatorName in rules) {
 
-      if (validatorName !== 'if' && validatorName !== 'unless') {
+      if (Constants.RULES_TO_IGNORE.indexOf(validatorName) === -1) {
         options = rules[validatorName];
 
         if (typeof(options) === 'string') {

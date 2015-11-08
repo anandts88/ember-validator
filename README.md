@@ -5,6 +5,7 @@
 3. Provides facility to perform validation when user starts typing, based on computed property rather using observer.
 4. Returns validation result as promise.
 5. Provides facility to return result as regular object rather than promise.
+6. Supports nested property validation.
 
 ## Installation ##
 
@@ -13,7 +14,7 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.2.4"
+  "ember-validator": "1.2.5"
 }
 ```
 
@@ -261,6 +262,29 @@ If you dont want a promise, but only wants the result, then please pass flag `no
   // result.get('userName.isValid') -> Returns true if userName property is valid
   // result.get('userName.isInvalid') -> Returns true if userName property is invalid
   // result.get('userName.hasError') -> Returns true if userName property has errors
+```
+
+## Nested Property Validations ##
+
+Supports to validation of object with an object.
+
+In case of validation of a nested property, if you want to set validation result of the nested property in different parameter then supply 'errorProperty' along with validation rules.
+
+```javascript
+ var validations = {
+   'orders.detail': {
+     errorProperty: 'orderDetails',
+     required: true
+   }
+ };
+
+ var result = this.validateMap({
+   model: obj,
+   validations: validations,
+   noPromise: true
+ });
+
+ result.get('orderDetails.hasError');
 ```
 
 ## Validators ##

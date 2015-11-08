@@ -25,7 +25,7 @@ export default Ember.Object.extend({
         this.set('options', {});
       }
 
-      if (!this.options.messages) {
+      if (!this.options.messages || typeof(this.options.messages) !== 'object') {
         this.set('options.messages', {});
       }
 
