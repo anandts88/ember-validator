@@ -14,7 +14,7 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.2.5"
+  "ember-validator": "1.2.6"
 }
 ```
 
@@ -428,6 +428,13 @@ contains: {
 Validate poperty with passed regular expression
 
 #### Options ####
+  * `hasAlphabet` - Set to true, to check has atleast one alphabet
+  * `hasUpperCase` - Set to true, to check has atleast one upper case alphabet
+  * `hasLowerCase` - Set to true, to check has atleast one lower case alphabet
+  * `hasNumber` - Set to true, to check has atleast one number
+  * `hasSpecial` - Set to true, to check atleast one special character. Supply a string of characters that you want to check or supply your own regex pattern.
+  * `hasNoSpecial` - Set to true, to check no special characters
+  * `hasNoSpace` - Set to true, to check no spaces
   * `with` - The regular expression to test with
   * `without` - The regular expression to inverse test
   * `array` - Array of regular expression, when you want to validate more than one regex
@@ -436,6 +443,13 @@ Validate poperty with passed regular expression
 #### messages ####
   If you want to override message of individual rule.
 
+  * `hasAlphabet` - Error message returned when hasAlphabet validation fails.
+  * `hasUpperCase` - Error message returned when hasUpperCase validation fails.
+  * `hasLowerCase` - Error message returned when hasLowerCase validation fails.
+  * `hasNumber` - Error message returned when hasNumber validation fails.
+  * `hasSpecial` - Error message returned when hasSpecial validation fails.
+  * `hasNoSpecial` - Error message returned when hasNoSpecial validation fails.
+  * `hasNoSpace` - Error message returned when hasNoSpace validation fails.
   * `with` - Error message returned when with validation fails.
   * `without` - Error message returned when without validation fails.
 
@@ -647,6 +661,8 @@ By default maximum allowed decimal length is 12 and maximum allowed fraction len
   * `even` - Validates property is even
   * `decimal` - Validates maximum no of decimal digits. Default allowed digits is 12.
   * `fraction` - Validates maximum no of fraction digits. Default allowed digits is 2.
+  * `range` - Validates number falls in the range. This must be an array holding upper and lower limit
+  * `between` - Validates number falls between the given range. This must be an array holding upper and lower limit. Difference with range is this validation fails if value is equal to upper or lower limit.
   * `message` - Error message returned when validation fails.
 
 ##### Messages #####
@@ -664,6 +680,8 @@ By default maximum allowed decimal length is 12 and maximum allowed fraction len
   * `even` - Error message returned when even validation fails.
   * `decimal` - Error message returned when decimal validation fails.
   * `fraction` - Error message returned when fraction validation fails.
+  * `range` - Error message returned when range validation fails.
+  * `between` - Error message returned when between validation fails.
 
 ```javascript
   numeric: {

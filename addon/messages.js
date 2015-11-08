@@ -44,12 +44,21 @@ export default {
     even: 'must be even',
     decimal: 'decimal part must be {{count}} digits',
     fraction: 'fraction part must be {{fraction}} digits',
+    range: 'must be in range {{first}} and {{last}}',
+    between: 'must between {{first}} and {{last}}'
   },
 
   pattern: {
     with: 'must match',
     without: 'must not match',
-    array: 'must match pattern'
+    array: 'must match pattern',
+    hasAlphabet: 'must contain one alphabet',
+    hasUpperCase: 'must contain one upper case alphabet',
+    hasLowerCase: 'must contain one lower case alphabet',
+    hasNoSpace: 'must not contain space',
+    hasNumber: 'must contain one number',
+    hasSpecial: 'must contain one special character',
+    hasNoSpecial: 'must not contain any special character'
   },
 
   phone: 'valid phone number',

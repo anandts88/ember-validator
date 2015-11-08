@@ -1,6 +1,6 @@
 {
   "name": "ember-validator",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "Perform Ember Object Validation",
   "main": "index.js",
   "scripts": {
