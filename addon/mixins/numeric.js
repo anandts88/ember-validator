@@ -3,8 +3,10 @@ import Constants from 'ember-validator/constants';
 
 export default Ember.Mixin.create({
 
-  isNumeric: function(str) {
+  isNumeric: function(str, pattern) {
     var val;
+
+    pattern = pattern || Constants.NUMERIC_PATTERN;
     if (pattern.test(str)) {
       val = Number(this.removeSpecial(str));
       return !isNaN(val) && isFinite(val);
@@ -94,7 +96,7 @@ export default Ember.Mixin.create({
 
     if (!Ember.isEmpty(value)) {
       str = this.toStr(value);
-      if (!this.isNumeric(str)) {
+      if (!this.isNumeric(str, pattern)) {
         this.pushResult(this.options.messages.numeric);
       } else {
         str = this.removeSpecial(str);
@@ -129,7 +131,7 @@ export default Ember.Mixin.create({
             }
 
             comparisonStr = this.toStr(this.options[key]);
-            comparisonValue = this.isNumeric(comparisonStr) ? Number(this.removeSpecial(comparisonStr)) : 0;
+            comparisonValue = this.isNumeric(comparisonStr, pattern) ? Number(this.removeSpecial(comparisonStr)) : 0;
             comparisonType = this.CHECKS[key];
 
             if (!this.compare(value, comparisonValue, comparisonType)) {
