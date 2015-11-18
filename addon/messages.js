@@ -4,7 +4,7 @@ export default {
   boolean: {
     boolean: 'must be boolean',
     required: 'must be true',
-    no: 'must be false'
+    notrequired: 'must be false'
   },
 
   contains: {
@@ -61,11 +61,32 @@ export default {
     hasNoSpecial: 'must not contain any special character'
   },
 
-  phone: 'valid phone number',
-  required: 'must not be empty',
-  notrequired: 'must be empty',
-  ssn: 'valid ssn',
-  zip: 'valid zip',
-  email: 'valid email',
-  equals: 'must be equal'
+  phone: {
+    phone: 'valid phone number'
+  },
+
+  required: {
+    required: 'must not be empty'
+  },
+
+  notrequired: {
+    notrequired: 'must be empty'
+  },
+
+  ssn: {
+    ssn: 'valid ssn'
+  },
+
+  zip: {
+    zip: 'valid zip'
+  },
+
+  email: {
+    email: 'valid email'
+  },
+
+  equals: {
+    accept: 'must be equal',
+    reject: 'must not be equal'
+  }
 };

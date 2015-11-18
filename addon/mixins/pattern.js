@@ -1,54 +1,77 @@
 import Ember from 'ember';
 
 export default Ember.Mixin.create({
-  perform: function() {
-    var value = this.model.get(this.property);
-    var specialTest;
-    var array;
-    var arr;
 
+  rules: {
+    hasAlphabet: function(value) {
+      return /(?=.*[a-z]|[A-Z])/.test(value);
+    },
+
+    hasUpperCase: function(value) {
+      return /(?=.*[A-Z])/.test(value);
+    },
+
+    hasLowerCase: function(value) {
+      return /(?=.*[a-z])/.test(value);
+    },
+
+    hasNumber: function(value) {
+      return /(?=.*\d)/.test(value);
+    },
+
+    hasSpecial: function(value, options) {
+      var specialTest;
+
+      if (typeof(options.target) === 'string') {
+        specialTest = new RegExp('(?=.*[' + options + '])').test(value);
+      } else if (options.target.constructor === RegExp) {
+        specialTest = options.target.test(value);
+      } else {
+        specialTest = new RegExp('(?=.*[!@$%^&*()-+_=~`{}:;"\'<>,.|?])').test(value);
+      }
+
+      return specialTest;
+    },
+
+    hasNoSpecial: function(value) {
+      return /^[a-zA-Z0-9]+$/.test(value);
+    },
+
+    hasNoSpace: function(value) {
+      return !/[\s]/.test(value);
+    },
+
+    with: function(value, options) {
+      return options.target.test(value);
+    },
+
+    without: function(value, options) {
+      return !options.target.test(value);
+    },
+
+    array: function(value, options) {
+      var arr;
+      var valid = [];
+
+      for (var count = 0 ; count < options.target.length ; count++) {
+        valid.push(true);
+        arr = options.target[count];
+        if (arr.with && !arr.with.test(value)) {
+          valid[count] = false;
+          break;
+        } else if (arr.without && arr.without.test(value)) {
+          valid[count] = false;
+          break;
+        }
+      }
+
+      return valid;
+    }
+  },
+
+  perform: function(value) {
     if (!Ember.isEmpty(value)) {
-      if (this.options.hasSpecial) {
-        if (typeof(this.options.hasSpecial) === 'string') {
-          specialTest = new RegExp('(?=.*[' + this.options.hasSpecial + '])').test(value);
-        } else if (this.options.hasSpecial.constructor !== RegExp) {
-          specialTest = this.options.hasSpecial.test(value);
-        } else {
-          specialTest = new RegExp('(?=.*[!@$%^&*()-+_=~`{}:;"\'<>,.|?])').test(value);
-        }
-      }
-
-      if (this.options.hasAlphabet && !/(?=.*[a-z]|[A-Z])/.test(value)) {
-        this.pushResult(this.options.messages.hasAlphabets);
-      } else if (this.options.hasUpperCase && !/(?=.*[A-Z])/.test(value)) {
-        this.pushResult(this.options.messages.hasUpperCase);
-      } else if (this.options.hasLowerCase && !/(?=.*[a-z])/.test(value)) {
-        this.pushResult(this.options.messages.hasLowerCase);
-      } else if (this.options.hasNumber && !/(?=.*\d)/.test(value)) {
-        this.pushResult(this.options.messages.hasNumber);
-      } else if (this.options.hasSpecial && !specialTest.test(value)) {
-        this.pushResult(this.options.messages.hasSpecial);
-      } else if (this.options.hasNoSpecial && !/^[a-zA-Z0-9]+$/.test(value)) {
-        this.pushResult(this.options.messages.hasNoSpecial);
-      } else if (this.options.hasNoSpace && /[\s]/.test(value)) {
-        this.pushResult(this.options.messages.hasNoSpace);
-      } else if (this.options.with && !this.options.with.test(value)) {
-        this.pushResult(this.options.messages.with);
-      } else if (this.options.without && this.options.without.test(value)) {
-        this.pushResult(this.options.messages.without);
-      } else if (!Ember.isEmpty(this.options.array)) {
-        array = this.options.array;
-        for (var count = 0 ; count < array.length ; count++) {
-          arr = array[count];
-          if (arr.with && !arr.with.test(value)) {
-            this.pushResult(arr.message || this.options.messages.array);
-            break;
-          } else if (arr.without && arr.without.test(value)) {
-            this.pushResult(arr.message || this.options.messages.array);
-            break;
-          }
-        }
-      }
+      this.process(value);
     }
   }
 });

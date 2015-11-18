@@ -9,15 +9,23 @@ export default Ember.Mixin.create({
     }
   },
 
-  perform: function() {
-    var value = this.model.get(this.property);
+  rules: {
+    boolean: function(value) {
+      return typeof(value) === 'boolean';
+    },
 
-    if (typeof(value) !== 'boolean') {
-      this.pushResult(this.options.messages.boolean);
-    } else if (this.options.required && !value) {
-      this.pushResult(this.options.messages.required);
-    } else if (this.options.notrequired && value) {
-      this.pushResult(this.options.message.notrequired);
+    required: function(value) {
+      return value;
+    },
+
+    notrequired: function(value) {
+      return !value;
+    }
+  },
+
+  perform: function(value) {
+    if (!Ember.isEmpty(value)) {
+      this.process(value);
     }
   }
 });

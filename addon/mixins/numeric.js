@@ -1,31 +1,8 @@
 import Ember from 'ember';
 import Constants from 'ember-validator/constants';
+import Utils from 'ember-validator/utils';
 
 export default Ember.Mixin.create({
-
-  isNumeric: function(str, pattern) {
-    var val;
-
-    pattern = pattern || Constants.NUMERIC_PATTERN;
-    if (pattern.test(str)) {
-      val = Number(this.removeSpecial(str));
-      return !isNaN(val) && isFinite(val);
-    }
-    return false;
-  },
-
-  isInteger: function(value) {
-    var val = Number(value);
-    return typeof(val) === 'number' && val % 1 === 0;
-  },
-
-  toStr: function(value) {
-    return value + '';
-  },
-
-  removeSpecial: function(str) {
-    return str.replace(/[^\d.]/g, '');
-  },
 
   init: function() {
     this._super();
@@ -33,113 +10,157 @@ export default Ember.Mixin.create({
     if (!this.options.pattern) {
       this.set('options.pattern', Constants.NUMERIC_PATTERN);
     }
-
-    if (!this.options.decimal) {
-      this.set('options.decimal', 12);
-    }
-
-    if (!this.options.fractions) {
-      this.set('options.fractions', 2);
-    }
-
-    if (this.options.range && this.isArray(this.options.range)) {
-      first = this.options.range[0];
-      last = this.options.range[1];
-
-      first = this.toStr(first);
-      first = this.isNumeric(first) ? Number(this.removeSpecial(first)) : 0;
-
-      last = this.toStr(last);
-      last = this.isNumeric(last) ? Number(this.removeSpecial(last)) : 0;
-
-      this.options.range = {
-        first: first,
-        last: last
-      };
-    }
-
-    if (this.options.between && this.isArray(this.options.between)) {
-      first = this.options.range[0];
-      last = this.options.range[1];
-
-      first = this.toStr(first);
-      first = this.isNumeric(first) ? Number(this.removeSpecial(first)) : 0;
-
-      last = this.toStr(last);
-      last = this.isNumeric(last) ? Number(this.removeSpecial(last)) : 0;
-
-      this.options.between = {
-        first: first,
-        last: last
-      };
-    }
   },
 
-  CHECKS: {
-    notEqualTo: '!==',
-    equalTo: '===',
-    greaterThan: '>',
-    greaterThanOrEqualTo: '>=',
-    lessThan: '<',
-    lessThanOrEqualTo: '<='
-  },
+  rules: {
+    numeric: function(value) {
+      return Utils.isNumeric(value);
+    },
 
-  perform: function() {
-    var value = this.model.get(this.property);
-    var pattern = this.options.pattern;
-    var str;
-    var comparisonValue;
-    var comparisonStr;
-    var comparisonType;
-    var dotIndex;
-    var decimalVal;
+    integer: function(value) {
+      return Utils.isInteger(value);
+    },
 
-    if (!Ember.isEmpty(value)) {
-      str = this.toStr(value);
-      if (!this.isNumeric(str, pattern)) {
-        this.pushResult(this.options.messages.numeric);
+    odd: function(value) {
+      return parseInt(value, 10) % 2 !== 0;
+    },
+
+    even: function(value) {
+      return parseInt(value, 10) % 2 === 0;
+    },
+
+    decimal: function(value, options) {
+      var dotIndex;
+      var decimalVal;
+      var str;
+
+      str = Utils.toStr(value);
+      dotIndex  = str.indexOf('.');
+      decimalVal = dotIndex !== -1 ? str.substring(0, dotIndex) : str;
+
+      return decimalVal.length <= (options.target || 12);
+    },
+
+    fraction: function(value, options) {
+      var dotIndex;
+      var str;
+
+      str = Utils.toStr(value);
+      dotIndex  = str.indexOf('.');
+
+      return (dotIndex === -1) || (dotIndex !== -1 && str.substring(dotIndex).length <= (options.target || 2));
+    },
+
+    range: function(value, options) {
+      var first;
+      var last;
+      var range;
+
+      if (Utils.isArray(options.target)) {
+        first = options.value[0];
+        last = options.value[1];
+
+        first = Utils.toNumber(first);
+        first = Utils.isNumeric(first) ? first : 0;
+
+        last = Utils.toNumber(last);
+        last = Utils.isNumeric(last) ? last : 0;
+
+        range = {
+          first: first,
+          last: last
+        };
       } else {
-        str = this.removeSpecial(str);
-        value = Number(str);
-        dotIndex  = str.indexOf('.');
-        decimalVal = dotIndex !== -1 ? str.substring(0, dotIndex) : str;
-
-        if (this.options.integer && !this.isInteger(value)) {
-          this.pushResult(this.options.messages.integer);
-        } else if (this.options.odd && parseInt(value, 10) % 2 === 0) {
-          this.pushResult(this.options.messages.odd);
-        } else if (this.options.even && parseInt(value, 10) % 2 !== 0) {
-          this.pushResult(this.options.messages.even);
-        } else if (this.options.decimal && decimalVal.length > this.options.decimal) {
-          this.pushResult(this.options.messages.decimal);
-        } else if (this.options.fraction && dotIndex !== -1 && str.substring(dotIndex).length > this.options.fraction) {
-          this.pushResult(this.options.messages.fraction);
-        } else if (this.options.range && value < this.options.range.first && value > this.options.range.last) {
-          this.pushResult(this.options.messages.range, {
-            first: this.options.range.first,
-            last: this.options.range.last
-          });
-        } else if (this.options.between && value <= this.options.between.first && value >= this.options.between.last) {
-          this.pushResult(this.options.messages.between, {
-            first: this.options.between.first,
-            last: this.options.between.last
-          });
-        } else {
-          for (var key in this.CHECKS) {
-            if (!this.options[key]) {
-              continue;
-            }
-
-            comparisonStr = this.toStr(this.options[key]);
-            comparisonValue = this.isNumeric(comparisonStr, pattern) ? Number(this.removeSpecial(comparisonStr)) : 0;
-            comparisonType = this.CHECKS[key];
-
-            if (!this.compare(value, comparisonValue, comparisonType)) {
-              this.pushResult(this.options.messages[key], { count: comparisonValue });
-            }
-          }
-        }
+        range = options.target;
       }
+
+      return value >= range.first && value <= range.last;
+    },
+
+    between: function(value, options) {
+      var first;
+      var last;
+      var range;
+
+      if (Utils.isArray(options.target)) {
+        first = options.value[0];
+        last = options.value[1];
+
+        first = Utils.toNumber(first);
+        first = Utils.isNumeric(first) ? first : 0;
+
+        last = Utils.toNumber(last);
+        last = Utils.isNumeric(last) ? last : 0;
+
+        range = {
+          first: first,
+          last: last
+        };
+      } else {
+        range = options.target;
+      }
+
+      return value > range.first && value < range.last;
+    },
+
+    notEqualTo: function(value, options) {
+      var comparisonValue;
+
+      comparisonValue = Utils.toNumber(options.target);
+      comparisonValue = Utils.isNumeric(comparisonValue) ? comparisonValue : 0;
+
+      return value !== comparisonValue;
+    },
+
+    equalTo: function(value, options) {
+      var comparisonValue;
+
+      comparisonValue = Utils.toNumber(options.target);
+      comparisonValue = Utils.isNumeric(comparisonValue) ? comparisonValue : 0;
+
+      return value === comparisonValue;
+    },
+
+    greaterThan: function(value, options) {
+      var comparisonValue;
+
+      comparisonValue = Utils.toNumber(options.target);
+      comparisonValue = Utils.isNumeric(comparisonValue) ? comparisonValue : 0;
+
+      return value > comparisonValue;
+    },
+
+    greaterThanOrEqualTo: function(value, options) {
+      var comparisonValue;
+
+      comparisonValue = Utils.toNumber(options.target);
+      comparisonValue = Utils.isNumeric(comparisonValue) ? comparisonValue : 0;
+
+      return value >= comparisonValue;
+    },
+
+    lessThan: function(value, options) {
+      var comparisonValue;
+
+      comparisonValue = Utils.toNumber(options.target);
+      comparisonValue = Utils.isNumeric(comparisonValue) ? comparisonValue : 0;
+
+      return value < comparisonValue;
+    },
+
+    lessThanOrEqualTo: function(value, options) {
+      var comparisonValue;
+
+      comparisonValue = Utils.toNumber(options.target);
+      comparisonValue = Utils.isNumeric(comparisonValue) ? comparisonValue : 0;
+
+      return value <= comparisonValue;
+    }
+  },
+
+  perform: function(value) {
+    if (!Ember.isEmpty(value)) {
+      this.process(Utils.toNumber(value));
     }
   }
 });

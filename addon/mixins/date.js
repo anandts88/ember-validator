@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import moment from 'moment';
+import Utils from 'ember-validator/utils';
 
 export default Ember.Mixin.create({
 
@@ -8,94 +9,125 @@ export default Ember.Mixin.create({
     saturday: 6
   },
 
-  CHECKS: {
-    same: '===',
-    notSame: '!==',
-    before: '<', // before
-    after: '>', // after
-    beforeSame: '<=', // before or same
-    afterSame: '>=' // after or same
-  },
+  rules: {
+    date: function(value) {
+      return value.isValid();
+    },
 
-  compare: function(source, target, operator) {
-    switch (operator) {
-      case '===':
-        return source.isSame(target);
-      case '!==':
-        return !source.isSame(target);
-      case '>=':
-        return source.isAfter(target) || source.isSame(target);
-      case '<=':
-        return source.isBefore(target) || source.isSame(target);
-      case '>':
-        return source.isAfter(target);
-      case '<':
-        return source.isBefore(target);
-      default:
+    weekend: function(value) {
+      return [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) === -1;
+    },
+
+    onlyWeekend: function(value) {
+      return [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) !== -1;
+    },
+
+    same: function(value, options) {
+      var target;
+
+      target = Utils.toMoment(options.target, options.format);
+
+      if (!this.options.time) {
+        target = Utils.setTime(target, 0, 0, 0, 0);
+      }
+
+      if (!target.isValid()) {
         return false;
+      }
+
+      return value.isSame(target);
+    },
+
+    notSame: function(value, options) {
+      var target;
+
+      target = Utils.toMoment(options.target, options.format);
+
+      if (!this.options.time) {
+        target = Utils.setTime(target, 0, 0, 0, 0);
+      }
+
+      if (!target.isValid()) {
+        return false;
+      }
+
+      return !value.isSame(target);
+    },
+
+    before: function(value, options) {
+      var target;
+
+      target = Utils.toMoment(options.target, options.format);
+
+      if (!this.options.time) {
+        target = Utils.setTime(target, 0, 0, 0, 0);
+      }
+
+      if (!target.isValid()) {
+        return false;
+      }
+
+      return value.before(target);
+    },
+
+    after: function(value, options) {
+      var target;
+
+      target = Utils.toMoment(options.target, options.format);
+
+      if (!this.options.time) {
+        target = Utils.setTime(target, 0, 0, 0, 0);
+      }
+
+      if (!target.isValid()) {
+        return false;
+      }
+
+      return value.after(target);
+    },
+
+    beforeSame: function(value, options) {
+      var target;
+
+      target = Utils.toMoment(options.target, options.format);
+
+      if (!this.options.time) {
+        target = Utils.setTime(target, 0, 0, 0, 0);
+      }
+
+      if (!target.isValid()) {
+        return false;
+      }
+
+      return value.isBefore(target) || value.isSame(target);
+    },
+
+    afterSame: function(value, options) {
+      var target;
+
+      target = Utils.toMoment(options.target, options.format);
+
+      if (!this.options.time) {
+        target = Utils.setTime(target, 0, 0, 0, 0);
+      }
+
+      if (!target.isValid()) {
+        return false;
+      }
+
+      return value.isAfter(target) || value.isSame(target);
     }
   },
 
-  perform: function() {
-    var value = this.model.get(this.property);
-    var option;
-    var target;
-
-    var transform = function(value, format) {
-      var date;
-      if (typeof(value) === 'string' && format) {
-        date = moment(value, format, true);
-      } else {
-        date = moment(value);
-      }
-      return date;
-    };
-
-    var setTime = function(date, hours, minutes, seconds, milliseconds) {
-      date.hours(hours);
-      date.minutes(minutes);
-      date.seconds(seconds);
-      date.milliseconds(milliseconds);
-      return date;
-    };
-
+  perform: function(value) {
     if (!Ember.isEmpty(value)) {
-      value = transform(value, this.options.format);
+      value = Utils.toMoment(value, this.options.format);
 
       if (!this.options.time) {
-        value = setTime(value, 0, 0, 0, 0);
+        value = Utils.setTime(value, 0, 0, 0, 0);
       }
 
-      if (!value.isValid()) {
-        this.pushResult(this.options.messages.date);
-      } else {
-        if (this.options.weekend && [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) !== -1) {
-          this.pushResult(this.options.messages.weekend);
-        } else if (this.options.onlyWeekend && [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) === -1) {
-          this.pushResult(this.options.messages.onlyWeekend);
-        } else {
-          for (var key in this.CHECKS) {
-            option = this.options[key];
-            if (!option) {
-              continue;
-            }
-
-            target = transform(option.target, option.format);
-
-            if (!this.options.time) {
-              target = setTime(target, 0, 0, 0, 0);
-            }
-
-            if (!target.isValid()) {
-              continue;
-            }
-
-            if (!this.compare(value, target, this.CHECKS[key])) {
-              this.pushResult(this.options.messages[key], { date: target.format(option.format) });
-            }
-          }
-        }
-      }
+      this.process(value);
     }
   }
 });

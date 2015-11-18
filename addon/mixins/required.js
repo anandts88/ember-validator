@@ -1,10 +1,13 @@
 import Ember from 'ember';
 
 export default Ember.Mixin.create({
-  perform: function() {
-    var value = this.model.get(this.property);
-    if (Ember.isBlank(value)) {
-      this.pushResult(this.options.message);
+  rules: {
+    required: function(value, options) {
+      return !Ember.isBlank(value);
     }
+  },
+
+  perform: function(value) {
+    this.process(value);
   }
 });

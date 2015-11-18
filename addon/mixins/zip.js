@@ -1,17 +1,24 @@
 import Ember from 'ember';
-import Pattern from 'ember-validator/mixins/pattern';
 import Constants from 'ember-validator/constants';
 
-export default Ember.Mixin.create(Pattern, {
-  pattern: Constants.ZIP_PATTERN,
+export default Ember.Mixin.create({
 
-  init: function() {
-    this._super();
+  rules: {
+    zip: function(value) {
+      var pattern = Constants.ZIP_PATTERN;
 
-    if (!this.options.with) {
-      this.set('options.with', this.get('pattern'));
+      if (this.options.constructor === RegExp ||
+        (this.options.with && this.options.with.constructor === RegExp)) {
+        pattern = options;
+      }
+
+      return pattern.test(value);
     }
+  },
 
-    this.options.messages.with = this.options.message;
+  perform: function(value) {
+    if (!Ember.isEmpty(value)) {
+      this.process(value);
+    }
   }
 });

@@ -14,14 +14,13 @@ export default Ember.Mixin.create({
     Constants.PHONE_PATTERN9 // 9999999999
   ],
 
-  perform: function() {
-    var value = this.model.get(this.property);
-    var test  = false;
-    var pattern = Ember.A();
-    var format;
-    var index;
+  rules: {
+    phone: function(value) {
+      var test  = false;
+      var pattern = Ember.A();
+      var format;
+      var index;
 
-    if (!Ember.isEmpty(value)) {
       for (var count = 1; count <= this.FORMATS.length; count++) {
         index = count - 1;
         format = this.options['format' + count];
@@ -44,9 +43,13 @@ export default Ember.Mixin.create({
         }
       });
 
-      if (!test) {
-        this.pushResult(this.options.message);
-      }
+      return test;
+    }
+  },
+
+  perform: function(value) {
+    if (!Ember.isEmpty(value)) {
+      this.process(value);
     }
   }
 });

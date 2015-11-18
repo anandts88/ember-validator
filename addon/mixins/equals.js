@@ -1,15 +1,19 @@
 import Ember from 'ember';
 
 export default Ember.Mixin.create({
-  perform: function() {
-    var value = this.model.get(this.property);
+  rules: {
+    accept: function(value, options) {
+      return value === options.target;
+    },
 
+    reject: function(value, options) {
+      return value !== options.target;
+    }
+  },
+
+  perform: function(value) {
     if (!Ember.isEmpty(value)) {
-      if (this.options.accept && value !== this.options.accept) {
-        this.pushResult(this.options.message);
-      } else if (this.options.reject && value === this.options.reject) {
-        this.pushResult(this.options.message);
-      }
+      this.process(value);
     }
   }
 });
