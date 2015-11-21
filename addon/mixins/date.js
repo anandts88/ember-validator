@@ -15,11 +15,11 @@ export default Ember.Mixin.create({
     },
 
     weekend: function(value) {
-      return [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) === -1;
+      return [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) !== -1;
     },
 
-    onlyWeekend: function(value) {
-      return [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) !== -1;
+    notWeekend: function(value) {
+      return [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) === -1;
     },
 
     same: function(value, options) {

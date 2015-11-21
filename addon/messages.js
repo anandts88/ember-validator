@@ -16,8 +16,8 @@ export default {
 
   date: {
     date: 'valid date',
-    weekend: 'must not be weekend',
-    onlyWeekend: 'must be weekend',
+    weekend: 'must be weekend',
+    notWeekend: 'must not be weekend',
     same: 'must be same as {{target}}',
     before: 'must be before {{target}}',
     after: 'must be after {{target}}',
