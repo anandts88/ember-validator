@@ -1,12 +1,26 @@
 import moment from 'moment';
 import Constants from 'ember-validator/constants';
 
+const { NUMERIC_PATTERN } = Constants;
+
 export function isArray(arr) {
   return arr.constructor.toString().indexOf("Array") > -1;
 }
 
+export function isString(str) {
+  return typeof(str) === 'string';
+}
+
+export function isRegexp(regexp) {
+  return regexp.constructor === RegExp;
+}
+
+export function isUndefined(value) {
+  return typeof(value) === 'undefined';
+}
+
 export function toMoment(value, format) {
-  var date;
+  let date;
   if (typeof(value) === 'string' && format) {
     date = moment(value, format, true);
   } else {
@@ -28,7 +42,7 @@ export function isNumeric(value, pattern) {
 }
 
 export function isInteger(value) {
-  var val = Number(value);
+  let val = Number(value);
   return typeof(val) === 'number' && val % 1 === 0;
 }
 
@@ -36,17 +50,17 @@ export function toStr(value) {
   return value + '';
 }
 
-export function removeSpecial(str) {
-  return str.replace(/[^\d.]/g, '');
+export function removeComma(str) {
+  return str.replace(/,/g, '')
 }
 
 export function toNumber(value, pattern) {
-  var str = toStr(value);
-  var val;
+  const str = toStr(value);
+  let val;
 
-  pattern = pattern || Constants.NUMERIC_PATTERN;
+  pattern = pattern || NUMERIC_PATTERN;
   if (pattern.test(str)) {
-    val = Number(removeSpecial(str));
+    val = Number(removeComma(str));
     if (!isNaN(val) && isFinite(val)) {
       return val;
     } else {

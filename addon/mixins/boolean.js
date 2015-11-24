@@ -1,30 +1,33 @@
 import Ember from 'ember';
+import { isUndefined } from 'ember-validator/utils';
 
-export default Ember.Mixin.create({
-  init: function() {
+const { Mixin, isEmpty } = Ember;
+
+export default Mixin.create({
+  init() {
     this._super();
 
-    if (typeof(this.options.required) === 'undefined' && typeof(this.options.notrequired) === 'undefined') {
+    if (isUndefined(this.options.required) && isUndefined(this.options.notrequired)) {
       this.options.required = true;
     }
   },
 
   rules: {
-    boolean: function(value) {
+    boolean(value) {
       return typeof(value) === 'boolean';
     },
 
-    required: function(value) {
+    required(value) {
       return value;
     },
 
-    notrequired: function(value) {
+    notrequired(value) {
       return !value;
     }
   },
 
-  perform: function(value) {
-    if (!Ember.isEmpty(value)) {
+  perform(value) {
+    if (!isEmpty(value)) {
       this.process(value);
     }
   }

@@ -1,13 +1,17 @@
 import Ember from 'ember';
 import Constants from 'ember-validator/constants';
+import { isRegexp } from 'ember-validator/utils';
 
-export default Ember.Mixin.create({
+const { Mixin, isEmpty } = Ember;
+
+const { EMAIL_PATTERN } = Constants;
+
+export default Mixin.create({
   rules: {
-    email: function(value) {
-      var pattern = Constants.EMAIL_PATTERN;
+    email(value) {
+      let pattern = EMAIL_PATTERN;
 
-      if (this.options.constructor === RegExp ||
-        (this.options.with && this.options.with.constructor === RegExp)) {
+      if (isRegexp(this.options) || (this.options.with && isRegexp(this.options))) {
         pattern = options;
       }
 
@@ -15,8 +19,8 @@ export default Ember.Mixin.create({
     }
   },
 
-  perform: function(value) {
-    if (!Ember.isEmpty(value)) {
+  perform(value) {
+    if (!isEmpty(value)) {
       this.process(value);
     }
   }

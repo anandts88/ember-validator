@@ -11,7 +11,7 @@ export default {
     include: 'must be one of the list values',
     exclude: 'must not be one of the list values',
     includeRange: 'must be one of the list values',
-    exludeRange: 'must not be one of the list values'
+    excludeRange: 'must not be one of the list values'
   },
 
   date: {
@@ -26,26 +26,26 @@ export default {
   },
 
   length: {
-    maximum: 'must be maximum of {{count}} characters',
-    minimum: 'must be minimum of {{count}} characters',
-    is: 'must be {{count}} characters'
+    maximum: 'must be maximum of {{target}} characters',
+    minimum: 'must be minimum of {{target}} characters',
+    is: 'must be {{target}} characters'
   },
 
   numeric: {
     numeric: 'must be a number',
     integer: 'must be an integer',
-    greaterThan: 'must be greater than {{count}}',
-    greaterThanOrEqualTo: 'must be greater than or equal to {{count}}',
-    equalTo: 'must be equal to {{count}}',
-    notEqualTo: 'must not be equal to {{count}}',
-    lessThan: 'must be less than {{count}}',
-    lessThanOrEqualTo: 'must be less than or equal to {{count}}',
+    greaterThan: 'must be greater than {{target}}',
+    greaterThanOrEqualTo: 'must be greater than or equal to {{target}}',
+    equalTo: 'must be equal to {{target}}',
+    notEqualTo: 'must not be equal to {{target}}',
+    lessThan: 'must be less than {{target}}',
+    lessThanOrEqualTo: 'must be less than or equal to {{target}}',
     odd: 'must be odd',
     even: 'must be even',
-    decimal: 'decimal part must be {{count}} digits',
-    fraction: 'fraction part must be {{fraction}} digits',
-    range: 'must be in range {{first}} and {{last}}',
-    between: 'must between {{first}} and {{last}}'
+    decimal: 'decimal part must be {{target}} digits',
+    fraction: 'fraction part must be {{target}} digits',
+    range: 'must be in range {{target}}',
+    between: 'must between {{target}}'
   },
 
   pattern: {

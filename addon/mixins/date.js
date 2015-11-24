@@ -1,8 +1,10 @@
 import Ember from 'ember';
 import moment from 'moment';
-import Utils from 'ember-validator/utils';
+import { toMoment, setTime } from 'ember-validator/utils';
 
-export default Ember.Mixin.create({
+const { Mixin, isEmpty } = Ember;
+
+export default Mixin.create({
 
   DAYS: {
     sunday: 0,
@@ -10,25 +12,27 @@ export default Ember.Mixin.create({
   },
 
   rules: {
-    date: function(value) {
+    date(value) {
       return value.isValid();
     },
 
-    weekend: function(value) {
-      return [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) !== -1;
+    weekend(value) {
+      const { sunday, saturday } = this.DAYS;
+      return [sunday, saturday].indexOf(value.day()) !== -1;
     },
 
-    notWeekend: function(value) {
-      return [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) === -1;
+    notWeekend(value) {
+      const { sunday, saturday } = this.DAYS;
+      return [sunday, saturday].indexOf(value.day()) === -1;
     },
 
-    same: function(value, options) {
-      var target;
+    same(value, options) {
+      let target;
 
-      target = Utils.toMoment(options.target, options.format);
+      target = toMoment(options.target, options.format);
 
       if (!this.options.time) {
-        target = Utils.setTime(target, 0, 0, 0, 0);
+        target = setTime(target, 0, 0, 0, 0);
       }
 
       if (!target.isValid()) {
@@ -38,13 +42,13 @@ export default Ember.Mixin.create({
       return value.isSame(target);
     },
 
-    notSame: function(value, options) {
-      var target;
+    notSame(value, options) {
+      let target;
 
-      target = Utils.toMoment(options.target, options.format);
+      target = toMoment(options.target, options.format);
 
       if (!this.options.time) {
-        target = Utils.setTime(target, 0, 0, 0, 0);
+        target = setTime(target, 0, 0, 0, 0);
       }
 
       if (!target.isValid()) {
@@ -54,13 +58,13 @@ export default Ember.Mixin.create({
       return !value.isSame(target);
     },
 
-    before: function(value, options) {
-      var target;
+    before(value, options) {
+      let target;
 
-      target = Utils.toMoment(options.target, options.format);
+      target = toMoment(options.target, options.format);
 
       if (!this.options.time) {
-        target = Utils.setTime(target, 0, 0, 0, 0);
+        target = setTime(target, 0, 0, 0, 0);
       }
 
       if (!target.isValid()) {
@@ -70,13 +74,13 @@ export default Ember.Mixin.create({
       return value.before(target);
     },
 
-    after: function(value, options) {
-      var target;
+    after(value, options) {
+      let target;
 
-      target = Utils.toMoment(options.target, options.format);
+      target = toMoment(options.target, options.format);
 
       if (!this.options.time) {
-        target = Utils.setTime(target, 0, 0, 0, 0);
+        target = setTime(target, 0, 0, 0, 0);
       }
 
       if (!target.isValid()) {
@@ -86,13 +90,13 @@ export default Ember.Mixin.create({
       return value.after(target);
     },
 
-    beforeSame: function(value, options) {
-      var target;
+    beforeSame(value, options) {
+      let target;
 
-      target = Utils.toMoment(options.target, options.format);
+      target = toMoment(options.target, options.format);
 
       if (!this.options.time) {
-        target = Utils.setTime(target, 0, 0, 0, 0);
+        target = setTime(target, 0, 0, 0, 0);
       }
 
       if (!target.isValid()) {
@@ -102,13 +106,13 @@ export default Ember.Mixin.create({
       return value.isBefore(target) || value.isSame(target);
     },
 
-    afterSame: function(value, options) {
-      var target;
+    afterSame(value, options) {
+      let target;
 
-      target = Utils.toMoment(options.target, options.format);
+      target = toMoment(options.target, options.format);
 
       if (!this.options.time) {
-        target = Utils.setTime(target, 0, 0, 0, 0);
+        target = setTime(target, 0, 0, 0, 0);
       }
 
       if (!target.isValid()) {
@@ -119,12 +123,12 @@ export default Ember.Mixin.create({
     }
   },
 
-  perform: function(value) {
-    if (!Ember.isEmpty(value)) {
-      value = Utils.toMoment(value, this.options.format);
+  perform(value) {
+    if (!isEmpty(value)) {
+      value = toMoment(value, this.options.format);
 
       if (!this.options.time) {
-        value = Utils.setTime(value, 0, 0, 0, 0);
+        value = setTime(value, 0, 0, 0, 0);
       }
 
       this.process(value);

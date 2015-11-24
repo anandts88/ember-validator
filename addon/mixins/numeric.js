@@ -1,10 +1,12 @@
 import Ember from 'ember';
 import Constants from 'ember-validator/constants';
-import Utils from 'ember-validator/utils';
+import { isNumeric, isInteger, toStr, isArray, toNumber } from 'ember-validator/utils';
 
-export default Ember.Mixin.create({
+const { Mixin, isEmpty } = Ember;
 
-  init: function() {
+export default Mixin.create({
+
+  init() {
     this._super();
 
     if (!this.options.pattern) {
@@ -15,64 +17,64 @@ export default Ember.Mixin.create({
       this.set('options.decimal', 12);
     }
 
-    if (!this.options.fractions) {
-      this.set('options.fractions', 2);
+    if (!this.options.fraction) {
+      this.set('options.fraction', 2);
     }
   },
 
   rules: {
-    numeric: function(value) {
-      return Utils.isNumeric(value);
+    numeric(value) {
+      return isNumeric(value);
     },
 
-    integer: function(value) {
-      return Utils.isInteger(value);
+    integer(value) {
+      return isInteger(value);
     },
 
-    odd: function(value) {
+    odd(value) {
       return parseInt(value, 10) % 2 !== 0;
     },
 
-    even: function(value) {
+    even(value) {
       return parseInt(value, 10) % 2 === 0;
     },
 
-    decimal: function(value, options) {
-      var dotIndex;
-      var decimalVal;
-      var str;
+    decimal(value, options) {
+      let dotIndex;
+      let decimalVal;
+      let str;
 
-      str = Utils.toStr(value);
+      str = toStr(value);
       dotIndex  = str.indexOf('.');
       decimalVal = dotIndex !== -1 ? str.substring(0, dotIndex) : str;
 
       return decimalVal.length <= (options.target || 12);
     },
 
-    fraction: function(value, options) {
-      var dotIndex;
-      var str;
+    fraction(value, options) {
+      let dotIndex;
+      let str;
 
-      str = Utils.toStr(value);
+      str = toStr(value);
       dotIndex  = str.indexOf('.');
 
       return (dotIndex === -1) || (dotIndex !== -1 && str.substring(dotIndex).length <= (options.target || 2));
     },
 
-    range: function(value, options) {
-      var first;
-      var last;
-      var range;
+    range(value, options) {
+      let first;
+      let last;
+      let range;
 
-      if (Utils.isArray(options.target)) {
-        first = options.value[0];
-        last = options.value[1];
+      if (isArray(options.target)) {
+        first = options.target[0];
+        last = options.target[1];
 
-        first = Utils.toNumber(first);
-        first = Utils.isNumeric(first) ? first : 0;
+        first = toNumber(first);
+        first = isNumeric(first) ? first : 0;
 
-        last = Utils.toNumber(last);
-        last = Utils.isNumeric(last) ? last : 0;
+        last = toNumber(last);
+        last = isNumeric(last) ? last : 0;
 
         range = {
           first: first,
@@ -85,20 +87,20 @@ export default Ember.Mixin.create({
       return value >= range.first && value <= range.last;
     },
 
-    between: function(value, options) {
-      var first;
-      var last;
-      var range;
+    between(value, options) {
+      let first;
+      let last;
+      let range;
 
-      if (Utils.isArray(options.target)) {
-        first = options.value[0];
-        last = options.value[1];
+      if (isArray(options.target)) {
+        first = options.target[0];
+        last = options.target[1];
 
-        first = Utils.toNumber(first);
-        first = Utils.isNumeric(first) ? first : 0;
+        first = toNumber(first);
+        first = isNumeric(first) ? first : 0;
 
-        last = Utils.toNumber(last);
-        last = Utils.isNumeric(last) ? last : 0;
+        last = toNumber(last);
+        last = isNumeric(last) ? last : 0;
 
         range = {
           first: first,
@@ -111,64 +113,64 @@ export default Ember.Mixin.create({
       return value > range.first && value < range.last;
     },
 
-    notEqualTo: function(value, options) {
-      var comparisonValue;
+    notEqualTo(value, options) {
+      let comparisonValue;
 
-      comparisonValue = Utils.toNumber(options.target);
-      comparisonValue = Utils.isNumeric(comparisonValue) ? comparisonValue : 0;
+      comparisonValue = toNumber(options.target);
+      comparisonValue = isNumeric(comparisonValue) ? comparisonValue : 0;
 
       return value !== comparisonValue;
     },
 
-    equalTo: function(value, options) {
-      var comparisonValue;
+    equalTo(value, options) {
+      let comparisonValue;
 
-      comparisonValue = Utils.toNumber(options.target);
-      comparisonValue = Utils.isNumeric(comparisonValue) ? comparisonValue : 0;
+      comparisonValue = toNumber(options.target);
+      comparisonValue = isNumeric(comparisonValue) ? comparisonValue : 0;
 
       return value === comparisonValue;
     },
 
-    greaterThan: function(value, options) {
-      var comparisonValue;
+    greaterThan(value, options) {
+      let comparisonValue;
 
-      comparisonValue = Utils.toNumber(options.target);
-      comparisonValue = Utils.isNumeric(comparisonValue) ? comparisonValue : 0;
+      comparisonValue = toNumber(options.target);
+      comparisonValue = isNumeric(comparisonValue) ? comparisonValue : 0;
 
       return value > comparisonValue;
     },
 
-    greaterThanOrEqualTo: function(value, options) {
-      var comparisonValue;
+    greaterThanOrEqualTo(value, options) {
+      let comparisonValue;
 
-      comparisonValue = Utils.toNumber(options.target);
-      comparisonValue = Utils.isNumeric(comparisonValue) ? comparisonValue : 0;
+      comparisonValue = toNumber(options.target);
+      comparisonValue = isNumeric(comparisonValue) ? comparisonValue : 0;
 
       return value >= comparisonValue;
     },
 
-    lessThan: function(value, options) {
-      var comparisonValue;
+    lessThan(value, options) {
+      let comparisonValue;
 
-      comparisonValue = Utils.toNumber(options.target);
-      comparisonValue = Utils.isNumeric(comparisonValue) ? comparisonValue : 0;
+      comparisonValue = toNumber(options.target);
+      comparisonValue = isNumeric(comparisonValue) ? comparisonValue : 0;
 
       return value < comparisonValue;
     },
 
-    lessThanOrEqualTo: function(value, options) {
-      var comparisonValue;
+    lessThanOrEqualTo(value, options) {
+      let comparisonValue;
 
-      comparisonValue = Utils.toNumber(options.target);
-      comparisonValue = Utils.isNumeric(comparisonValue) ? comparisonValue : 0;
+      comparisonValue = toNumber(options.target);
+      comparisonValue = isNumeric(comparisonValue) ? comparisonValue : 0;
 
       return value <= comparisonValue;
     }
   },
 
-  perform: function(value) {
-    if (!Ember.isEmpty(value)) {
-      this.process(Utils.toNumber(value));
+  perform(value) {
+    if (!isEmpty(value)) {
+      this.process(toNumber(value));
     }
   }
 });

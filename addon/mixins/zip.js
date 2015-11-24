@@ -1,14 +1,18 @@
 import Ember from 'ember';
 import Constants from 'ember-validator/constants';
+import { isRegexp } from 'ember-validator/utils';
 
-export default Ember.Mixin.create({
+const { Mixin, isEmpty } = Ember;
+
+const { ZIP_PATTERN } = Constants;
+
+export default Mixin.create({
 
   rules: {
-    zip: function(value) {
-      var pattern = Constants.ZIP_PATTERN;
+    zip(value) {
+      let pattern = ZIP_PATTERN;
 
-      if (this.options.constructor === RegExp ||
-        (this.options.with && this.options.with.constructor === RegExp)) {
+      if (isRegexp(this.options) || (this.options.with && isRegexp(this.options.with))) {
         pattern = options;
       }
 
@@ -16,8 +20,8 @@ export default Ember.Mixin.create({
     }
   },
 
-  perform: function(value) {
-    if (!Ember.isEmpty(value)) {
+  perform(value) {
+    if (!isEmpty(value)) {
       this.process(value);
     }
   }

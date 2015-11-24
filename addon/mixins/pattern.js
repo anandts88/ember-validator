@@ -1,30 +1,33 @@
 import Ember from 'ember';
+import { isString, isRegexp } from 'ember-validator/utils';
 
-export default Ember.Mixin.create({
+const { Mixin, isEmpty } = Ember;
+
+export default Mixin.create({
 
   rules: {
-    hasAlphabet: function(value) {
+    hasAlphabet(value) {
       return /(?=.*[a-z]|[A-Z])/.test(value);
     },
 
-    hasUpperCase: function(value) {
+    hasUpperCase(value) {
       return /(?=.*[A-Z])/.test(value);
     },
 
-    hasLowerCase: function(value) {
+    hasLowerCase(value) {
       return /(?=.*[a-z])/.test(value);
     },
 
-    hasNumber: function(value) {
+    hasNumber(value) {
       return /(?=.*\d)/.test(value);
     },
 
-    hasSpecial: function(value, options) {
-      var specialTest;
+    hasSpecial(value, options) {
+      let specialTest;
 
-      if (typeof(options.target) === 'string') {
+      if (isString(options.target)) {
         specialTest = new RegExp('(?=.*[' + options + '])').test(value);
-      } else if (options.target.constructor === RegExp) {
+      } else if (isRegexp(options.target)) {
         specialTest = options.target.test(value);
       } else {
         specialTest = new RegExp('(?=.*[!@$%^&*()-+_=~`{}:;"\'<>,.|?])').test(value);
@@ -33,27 +36,27 @@ export default Ember.Mixin.create({
       return specialTest;
     },
 
-    hasNoSpecial: function(value) {
+    hasNoSpecial(value) {
       return /^[a-zA-Z0-9]+$/.test(value);
     },
 
-    hasNoSpace: function(value) {
+    hasNoSpace(value) {
       return !/[\s]/.test(value);
     },
 
-    with: function(value, options) {
+    with(value, options) {
       return options.target.test(value);
     },
 
-    without: function(value, options) {
+    without(value, options) {
       return !options.target.test(value);
     },
 
-    array: function(value, options) {
-      var arr;
-      var valid = [];
+    array(value, options) {
+      let valid = [];
+      let arr;
 
-      for (var count = 0 ; count < options.target.length ; count++) {
+      for (let count = 0 ; count < options.target.length ; count++) {
         valid.push(true);
         arr = options.target[count];
         if (arr.with && !arr.with.test(value)) {
@@ -69,8 +72,8 @@ export default Ember.Mixin.create({
     }
   },
 
-  perform: function(value) {
-    if (!Ember.isEmpty(value)) {
+  perform(value) {
+    if (!isEmpty(value)) {
       this.process(value);
     }
   }

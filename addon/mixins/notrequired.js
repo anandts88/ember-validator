@@ -1,14 +1,16 @@
 import Ember from 'ember';
 
-export default Ember.Mixin.create({
+const { Mixin, isEmpty } = Ember;
+
+export default Mixin.create({
 
   rules: {
-    notrequired: function(value) {
-      return Ember.isEmpty(value);
+    notrequired(value) {
+      return isEmpty(value);
     }
   },
 
-  perform: function(value) {
+  perform(value) {
     this.process(value);
   }
 });

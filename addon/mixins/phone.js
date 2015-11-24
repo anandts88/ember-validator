@@ -1,27 +1,41 @@
 import Ember from 'ember';
 import Constants from 'ember-validator/constants';
 
-export default Ember.Mixin.create({
+const { Mixin, isEmpty } = Ember;
+
+const {
+  PHONE_PATTERN1,
+  PHONE_PATTERN2,
+  PHONE_PATTERN3,
+  PHONE_PATTERN4,
+  PHONE_PATTERN5,
+  PHONE_PATTERN6,
+  PHONE_PATTERN7,
+  PHONE_PATTERN8,
+  PHONE_PATTERN9
+} = Constants;
+
+export default Mixin.create({
   FORMATS: [
-    Constants.PHONE_PATTERN1, // (999) 999 9999
-    Constants.PHONE_PATTERN2, // (999) 999-9999
-    Constants.PHONE_PATTERN3, // (999)999 9999
-    Constants.PHONE_PATTERN4, // (999)999-9999
-    Constants.PHONE_PATTERN5, // (999)9999999
-    Constants.PHONE_PATTERN6, // 999 999 9999
-    Constants.PHONE_PATTERN7, // 999-999-9999
-    Constants.PHONE_PATTERN8, // 999.999.9999
-    Constants.PHONE_PATTERN9 // 9999999999
+    PHONE_PATTERN1, // (999) 999 9999
+    PHONE_PATTERN2, // (999) 999-9999
+    PHONE_PATTERN3, // (999)999 9999
+    PHONE_PATTERN4, // (999)999-9999
+    PHONE_PATTERN5, // (999)9999999
+    PHONE_PATTERN6, // 999 999 9999
+    PHONE_PATTERN7, // 999-999-9999
+    PHONE_PATTERN8, // 999.999.9999
+    PHONE_PATTERN9 // 9999999999
   ],
 
   rules: {
-    phone: function(value) {
-      var test  = false;
-      var pattern = Ember.A();
-      var format;
-      var index;
+    phone(value) {
+      let test  = false;
+      let pattern = Ember.A();
+      let format;
+      let index;
 
-      for (var count = 1; count <= this.FORMATS.length; count++) {
+      for (let count = 1; count <= this.FORMATS.length; count++) {
         index = count - 1;
         format = this.options['format' + count];
         if (format || this.options.all) {
@@ -33,11 +47,11 @@ export default Ember.Mixin.create({
         pattern.pushObject(this.options.with);
       }
 
-      if (Ember.isEmpty(pattern)) {
+      if (isEmpty(pattern)) {
         pattern.pushObject(this.FORMATS[0]);
       }
 
-      pattern.forEach(function(arr) {
+      pattern.forEach((arr) => {
         if (arr.test(value)) {
           test = true;
         }
@@ -47,8 +61,8 @@ export default Ember.Mixin.create({
     }
   },
 
-  perform: function(value) {
-    if (!Ember.isEmpty(value)) {
+  perform(value) {
+    if (!isEmpty(value)) {
       this.process(value);
     }
   }

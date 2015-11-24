@@ -1,32 +1,39 @@
 import Ember from 'ember';
+import { isArray, isString } from 'ember-validator/utils';
 
-export default Ember.Mixin.create({
-  init: function() {
+const { Mixin, isEmpty } = Ember;
+
+export default Mixin.create({
+  init() {
     this._super();
 
-    this.options.tokenizer = this.options.tokenizer || function(value) {
-      return value.toString().split('');
-    };
+    this.options.tokenizer = this.options.tokenizer || ((value) => value.toString().split(''));
   },
 
   rules: {
-    is: function(value, options) {
+    is(value, options) {
       return value === options.target;
     },
 
-    minimum: function(value, options) {
+    minimum(value, options) {
       return value >= options.target;
     },
 
-    maximum: function(value, options) {
+    maximum(value, options) {
       return value <= options.target;
     }
   },
 
-  perform: function(value) {
-    if (!Ember.isEmpty(value)) {
-      value = this.options.tokenizer(value).length;
-      this.process(value);
+  perform(value) {
+    let length;
+    if (!isEmpty(value)) {
+      if (isString(value)) {
+        length = this.options.tokenizer(value).length;
+      } else if (isArray(value)) {
+        length = value.length;
+      }
+
+      this.process(length);
     }
   }
 });

@@ -1,18 +1,37 @@
 import Ember from 'ember';
+import { isString } from 'ember-validator/utils';
 
-export default Ember.Mixin.create({
+const { Mixin, isEmpty } = Ember;
+
+export default Mixin.create({
   rules: {
-    accept: function(value, options) {
-      return value === options.target;
+    accept(value, options) {
+      let source = value;
+      let target = options.target;
+
+      if (this.options.ignoreCase && isString(source) && isString(target)) {
+        source = source.toUpperCase();
+        target = source.toUpperCase();
+      }
+
+      return source === target;
     },
 
-    reject: function(value, options) {
-      return value !== options.target;
+    reject(value, options) {
+      let source = value;
+      let target = options.target;
+
+      if (this.options.ignoreCase && isString(source) && isString(target)) {
+        source = source.toUpperCase();
+        target = source.toUpperCase();
+      }
+
+      return source !== target;
     }
   },
 
-  perform: function(value) {
-    if (!Ember.isEmpty(value)) {
+  perform(value) {
+    if (!isEmpty(value)) {
       this.process(value);
     }
   }

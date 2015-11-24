@@ -1,21 +1,29 @@
 import Ember from 'ember';
 import Constants from 'ember-validator/constants';
 
-export default Ember.Mixin.create({
+const { Mixin, isEmpty } = Ember;
+
+const {
+  SSN_PATTERN1,
+  SSN_PATTERN2,
+  SSN_PATTERN3
+} = Constants;
+
+export default Mixin.create({
   FORMATS: [
-    Constants.SSN_PATTERN1,
-    Constants.SSN_PATTERN2,
-    Constants.SSN_PATTERN3
+    SSN_PATTERN1,
+    SSN_PATTERN2,
+    SSN_PATTERN3
   ],
 
   rules: {
-    ssn: function(value) {
-      var test  = false;
-      var pattern = Ember.A();
-      var format;
-      var index;
+    ssn(value) {
+      let test  = false;
+      let pattern = Ember.A();
+      let format;
+      let index;
 
-      for (var count = 1; count <= this.FORMATS.length; count++) {
+      for (let count = 1; count <= this.FORMATS.length; count++) {
         index = count - 1;
         format = this.options['format' + count];
         if (format || this.options.all) {
@@ -31,7 +39,7 @@ export default Ember.Mixin.create({
         pattern.pushObject(this.FORMATS[0]);
       }
 
-      pattern.forEach(function(arr) {
+      pattern.forEach((arr) => {
         if (arr.test(value)) {
           test = true;
         }
@@ -41,8 +49,8 @@ export default Ember.Mixin.create({
     }
   },
 
-  perform: function(value) {
-    if (!Ember.isEmpty(value)) {
+  perform(value) {
+    if (!isEmpty(value)) {
       this.process(value);
     }
   }

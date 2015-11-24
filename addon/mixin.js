@@ -4,29 +4,38 @@ import Validator from 'ember-validator/validators/validator';
 import Constants from 'ember-validator/constants';
 import Utils from 'ember-validator/utils';
 
-export default Ember.Mixin.create({
+const { Mixin, RSVP, defineProperty, computed, isEmpty } = Ember;
+const { Promise } = RSVP;
+const { and } = computed;
+
+export default Mixin.create({
   messageFileName: 'messages',
 
-  validate: function(props) {
-    var rules = this.get('validations') || props.validations;
+  validate(props) {
+    let {
+      validations,
+      noPromise
+    } = props;
+
+    validations = this.get('validations') || validations;
 
     return this.validateMap({
       model: this,
-      validations: rules,
-      noPromise: props.noPromise
+      validations,
+      noPromise
     });
   },
 
-  computedValidateMap: function(props) {
-    var self            = this;
-    var model           = props.model;
-    var validationProps = [];
-    var validations     = props.validations;
-    var propDetails;
-    var errorProperty;
+  computedValidateMap(props) {
+    const self            = this;
+    const validationProps = [];
+    const model           = props.model;
+    const validations     = props.validations;
+    let propDetails;
+    let errorProperty;
 
     // Loop through each keys in the model
-    for (var key in model) {
+    for (let key in model) {
       // Check if key contains `ValidatorResult` or `ValidatorPreviousVal`.
       if (key.indexOf('ValidatorResult') !== -1 ||
         key.indexOf('ValidatorPreviousVal') != -1 ||
@@ -36,7 +45,7 @@ export default Ember.Mixin.create({
       }
     }
 
-    for (var property in validations) {
+    for (let property in validations) {
       propDetails = validations[property];
       errorProperty = propDetails.errorProperty;
 
@@ -44,10 +53,10 @@ export default Ember.Mixin.create({
       model.set((errorProperty || property) + 'ValidatorPreviousVal', model.get(property));
 
       // Defina a computed property which listens the `property` change and perform validation.
-      Ember.defineProperty(model, (errorProperty || property) + 'ValidatorResult', Ember.computed(property, function(sender) {
-        var rules = {};
-        var prop = sender.replace('ValidatorResult', ''); // Get the property name.
-        var result;
+      defineProperty(model, (errorProperty || property) + 'ValidatorResult', computed(property, (sender) => {
+        let rules = {};
+        let prop = sender.replace('ValidatorResult', ''); // Get the property name.
+        let result;
 
         // Perfrom validation only if previous and current values are different.
         if (model.get(prop) !== model.get(prop + 'ValidatorPreviousVal')) {
@@ -67,32 +76,32 @@ export default Ember.Mixin.create({
       validationProps.push(key + '.hasError');
     }
 
-    if (!Ember.isEmpty(validationProps)) {
-      Ember.defineProperty(model, 'isModelHasError', Ember.computed.and.apply(validationProps));
+    if (!isEmpty(validationProps)) {
+      defineProperty(model, 'isModelHasError', and.apply(validationProps));
     }
   },
 
-  perform: function(model, validations) {
-    var self        = this; // Holds the current instance.
-    var result      = Errors.create();
-    var allErrors   = Ember.A();
-    var rules;
-    var rule;
-    var property;
-    var errorProperty;
-    var errors;
-    var validationResult;
+  perform(model, validations) {
+    const self        = this; // Holds the current instance.
+    const result      = Errors.create();
+    const allErrors   = Ember.A();
+    let rules;
+    let rule;
+    let property;
+    let errorProperty;
+    let errors;
+    let validationResult;
 
     if (model && validations) { // If model and validations are defined.
       var validators = self.constructValidators(model, validations); // Create list of validator object based on what user defined.
 
       if (!Ember.isEmpty(validators)) { // If validators are present.
-        validators.forEach(function(obj) { // Loop through each validator
+        validators.forEach((obj) => { // Loop through each validator
           rules = obj.rules; // Holds list of validator definitions.
           property = obj.property; // Property of the validator
           errorProperty = obj.errorProperty; // Name of the property which holds validation results.
 
-          for (var count = 0; count < obj.rules.length; count++) { // Loop through validation rules
+          for (let count = 0; count < obj.rules.length; count++) { // Loop through validation rules
             rule = obj.rules[count];
             validationResult = rule.validate(); // Perform validation by calling its `validate` method.
             errors = validationResult.get('errors'); // Get errors messages from result of validation.
@@ -112,15 +121,15 @@ export default Ember.Mixin.create({
     return result;
   },
 
-  validateMap: function(props) {
-    var self = this; // Holds the current instance.
-    var noPromise = props.noPromise; // Holds flag to indicating return value is a promise or not.
+  validateMap(props) {
+    const self = this; // Holds the current instance.
+    const noPromise = props.noPromise; // Holds flag to indicating return value is a promise or not.
 
     if (noPromise) {
       return self.perform(props.model, props.validations);
     } else {
-      return new Ember.RSVP.Promise(function(resolve, reject) {
-        var result = self.perform(props.model, props.validations);
+      return new Promise((resolve, reject) => {
+        const result = self.perform(props.model, props.validations);
         if (result.get('isValid')) {
           resolve(true);
         } else {
@@ -130,13 +139,13 @@ export default Ember.Mixin.create({
     }
   },
 
-  constructValidators: function(model, validations) {
-    var validators  = Ember.A();
-    var messages    = this.lookupMessages();
-    var details;
-    var rules;
+  constructValidators(model, validations) {
+    const validators  = Ember.A();
+    const messages    = this.lookupMessages();
+    let details;
+    let rules;
 
-    for (var property in validations) { // Loop through each validation defined by the user.
+    for (let property in validations) { // Loop through each validation defined by the user.
       details = validations[property];
 
       // Perform `if` and `unless` check for validator, if the check fails then continue processing next validator
@@ -148,8 +157,8 @@ export default Ember.Mixin.create({
 
       // Push the validator
       validators.pushObject({
-        property: property,
-        rules: rules,
+        property,
+        rules,
         errorProperty: details.errorProperty
       });
     }
@@ -157,8 +166,8 @@ export default Ember.Mixin.create({
     return validators;
   },
 
-  processIfUnless: function(validate, model, property, positive) {
-    var result = true;
+  processIfUnless(validate, model, property, positive) {
+    let result = true;
 
     switch (typeof(validate)) {
       case 'undefined':
@@ -184,20 +193,20 @@ export default Ember.Mixin.create({
     return result;
   },
 
-  ifUnless: function(details, model, property) {
+  ifUnless(details, model, property) {
     // Process `if` definition
-    var ifCond = this.processIfUnless(details['if'], this.model, this.property, true);
+    const ifCond = this.processIfUnless(details['if'], this.model, this.property, true);
     // Process `unless` definition
-    var unlessCond = this.processIfUnless(details.unless, this.model, this.property, false);
+    const unlessCond = this.processIfUnless(details.unless, this.model, this.property, false);
     return ifCond && unlessCond;
   },
 
-  findValidators: function(rules, model, property, messages) {
-    var validators     = Ember.A();
-    var validator;
-    var options;
+  findValidators(rules, model, property, messages) {
+    const validators     = Ember.A();
+    let validator;
+    let options;
 
-    for (var validatorName in rules) { // Iterate throug each validation rules defined by the users and get name of the validator.
+    for (let validatorName in rules) { // Iterate throug each validation rules defined by the users and get name of the validator.
 
       // Ignore `if`, `unless` and `errorProperty` as they are not rules but just and additional information.
       if (Constants.RULES_TO_IGNORE.indexOf(validatorName) === -1) {
@@ -217,10 +226,10 @@ export default Ember.Mixin.create({
 
         if (validator) {
           validators.pushObject(validator.create({
-            validatorName: validatorName,
-            options: options,
-            model: model,
-            property: property,
+            validatorName,
+            options,
+            model,
+            property,
             customMessages: messages
           }));
         }
@@ -230,11 +239,11 @@ export default Ember.Mixin.create({
     return validators;
   },
 
-  lookupValidator: function(validatorName) {
-    var container = this.get('container');
-    var service = container.lookup('service:validator-cache');
-    var validator;
-    var cache;
+  lookupValidator(validatorName) {
+    const container = this.get('container');
+    const service = container.lookup('service:validator-cache');
+    let validator;
+    let cache;
 
     // Define cache
     if (service) {
@@ -258,20 +267,20 @@ export default Ember.Mixin.create({
     }
 
     // If validator not found then throw warning.
-    if (Ember.isEmpty(validator)) {
+    if (isEmpty(validator)) {
       Ember.warn('Could not find the "' +validatorName+ '" validator.');
     }
 
     return validator;
   },
 
-  lookupMessages: function() {
-    var container = this.get('container');
-    var service   = container.lookup('service:validator-cache');
-    var file      = this.get('messageFileName');
-    var cacheName = 'messages-' + file;
-    var messages;
-    var cache;
+  lookupMessages() {
+    const container = this.get('container');
+    const service   = container.lookup('service:validator-cache');
+    const file      = this.get('messageFileName');
+    const cacheName = 'messages-' + file;
+    let messages;
+    let cache;
 
     // Define cache
     if (service) {
@@ -291,7 +300,7 @@ export default Ember.Mixin.create({
     return messages;
   },
 
-  createInlineValidator: function() {
+  createInlineValidator() {
     return Validator.extend({
       perform: function() {
         var callback = this.get('callback');

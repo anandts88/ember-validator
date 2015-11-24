@@ -1,7 +1,11 @@
 import Ember from 'ember';
 import Messages from 'ember-validator/messages';
 import Errors from 'ember-validator/errors';
-import Utils from 'ember-validator/utils';
+import { isPlainObject, isArray } from 'ember-validator/utils';
+
+const { computed, isEmpty } = Ember;
+
+const { alias, empty, not } = computed;
 
 export default Ember.Object.extend({
   errors: null,
@@ -11,30 +15,30 @@ export default Ember.Object.extend({
   model: null,
   customMessages: null,
 
-  callback: Ember.computed.alias('options.callback'),
-  'if': Ember.computed.alias('options.if'),
-  unless: Ember.computed.alias('options.unless'),
-  isValid: Ember.computed.empty('errors.[]'),
-  isInvalid: Ember.computed.not('isValid'),
+  callback: alias('options.callback'),
+  'if': alias('options.if'),
+  unless: alias('options.unless'),
+  isValid: empty('errors.[]'),
+  isInvalid: not('isValid'),
 
-  initOptions: function() {
+  initOptions() {
     // Each validator must have `options` which is a plain javascript object.
     // Initalize with empty object if it is not defined
-    if (!Utils.isPlainObject(this.options)) {
+    if (!isPlainObject(this.options)) {
       this.set('options', {});
     }
   },
 
-  initMessages: function() {
+  initMessages() {
     // If the messages are not present in validator options, then initalize with empty object.
-    if (!this.options.messages || !Utils.isPlainObject(this.options.messages)) {
+    if (!this.options.messages || !isPlainObject(this.options.messages)) {
       this.set('options.messages', {});
     }
 
     // Loop through each rules in the validator.
-    for (var rule in this.rules) {
+    for (let rule in this.rules) {
       // Check if the message is defined for the rule
-      if (Ember.isEmpty(this.options.messages[rule])) {
+      if (isEmpty(this.options.messages[rule])) {
         // Assign message for the rule with
         // 1. If message is supplied for validator in `options.message` then assign the supplied message
         // 2. If not then assing default message from `messages` file.
@@ -43,23 +47,23 @@ export default Ember.Object.extend({
     }
   },
 
-  getMessage: function(rule) {
+  getMessage(rule) {
     var messages = Messages[this.validatorName];
     var custom   = this.get('customMessages');
     // Get message from custom message file defined by the user, if not get the message from default messages file.
     return custom ? custom[rule] : (messages ? messages[rule] : undefined);
   },
 
-  initRule: function(rule) {
+  initRule(rule) {
     var option = this.options[rule]; // Get options defined for each rule.
 
     // If the users defined options for the rule as non javascript plain object (boolean, array or regex etc), then convert them to plain javascript object.
-    if (!Utils.isPlainObject(option)) {
+    if (!isPlainObject(option)) {
       this.options[rule] = { target: option };
     }
   },
 
-  init: function() {
+  init() {
     // Set errors with empty array.
     this.set('errors', Ember.A());
 
@@ -70,33 +74,33 @@ export default Ember.Object.extend({
     }
   },
 
-  render: function(message, options) {
+  render(message, options) {
     message = message || 'Invalid';
 
-    for (var option in options) {
-      message = message.replace('{{' + option + '}}', options[option]);
+    for (let option in options) {
+      message = message.replace('{{' + option + '}}', JSON.stringify(options[option]));
     }
 
     return message;
   },
 
-  pushResult: function(error, options) {
+  pushResult(error, options) {
     this.errors.push(this.render(error, options)); // Render and adds error messages to validator array.
   },
 
   rules: {},
 
-  perform: function () {
+  perform() {
     throw 'Please override perform method in you validator.';
   },
 
-  process: function(value) {
-    var valid = false; // Flag to hold the result of validator rule.
-    var messages; // Holds messages for the rule.
-    var ruleOption; // Holds the options of the rule.
+  process(value) {
+    let valid = false; // Flag to hold the result of validator rule.
+    let messages; // Holds messages for the rule.
+    let ruleOption; // Holds the options of the rule.
 
     // Interate through each rules defined in the validator
-    for (var rule in this.rules) {
+    for (let rule in this.rules) {
       valid = false; // Init flag to false for each rule.
       ruleOption = this.options[rule]; // Get options defined for each rule.
 
@@ -121,25 +125,25 @@ export default Ember.Object.extend({
       // Get messages defined for the rule.
       messages = this.options.messages[rule];
 
-      this.setMessages(valid, messages);
+      this.setMessages(valid, messages, ruleOption);
     }
   },
 
-  setMessages: function(result, messages) {
+  setMessages(result, messages, options) {
     // Rule exceution will return result as boolean or array of boolean values.
-    if (Utils.isArray(result)) { // If returned result is an array
-      for (var count = 0 ; count < result.length ; count++) {
+    if (isArray(result)) { // If returned result is an array
+      for (let count = 0 ; count < result.length ; count++) {
         if (!result[count]) { // If the validation failes then
-          this.pushResult(Utils.isArray(messages) ? messages[count] : messages);
+          this.pushResult(Utils.isArray(messages) ? messages[count] : messages, options);
           break;
         }
       }
     } else if (!result) { // If returned result is boolean and validation is failed then push the message.
-      this.pushResult(messages);
+      this.pushResult(messages, options);
     }
   },
 
-  validate: function() {
+  validate() {
     // Clear errors array
     this.errors.clear();
 
@@ -156,8 +160,8 @@ export default Ember.Object.extend({
     });
   },
 
-  processIfUnless: function(validate, model, property, positive) {
-    var result = true;
+  processIfUnless(validate, model, property, positive) {
+    let result = true;
 
     switch (typeof(validate)) {
       case 'undefined':
@@ -183,11 +187,11 @@ export default Ember.Object.extend({
     return result;
   },
 
-  ifUnless: function(ifDef, unlessDef) {
+  ifUnless(ifDef, unlessDef) {
     // Process `if` definition
-    var ifCond = this.processIfUnless(ifDef, this.model, this.property, true);
+    const ifCond = this.processIfUnless(ifDef, this.model, this.property, true);
     // Process `unless` definition
-    var unlessCond = this.processIfUnless(unlessDef, this.model, this.property, false);
+    const unlessCond = this.processIfUnless(unlessDef, this.model, this.property, false);
     return ifCond && unlessCond;
   }
 });
