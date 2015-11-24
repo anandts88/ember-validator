@@ -11,7 +11,7 @@ export default Mixin.create({
 
       if (this.options.ignoreCase && isString(source) && isString(target)) {
         source = source.toUpperCase();
-        target = source.toUpperCase();
+        target = target.toUpperCase();
       }
 
       return source === target;
@@ -23,7 +23,7 @@ export default Mixin.create({
 
       if (this.options.ignoreCase && isString(source) && isString(target)) {
         source = source.toUpperCase();
-        target = source.toUpperCase();
+        target = target.toUpperCase();
       }
 
       return source !== target;
