@@ -27,9 +27,10 @@ export default Mixin.create({
     },
 
     same(value, options) {
+      const format = options.format || this.options.format;
       let target;
 
-      target = toMoment(options.target, options.format);
+      target = toMoment(options.target, format);
 
       if (!this.options.time) {
         target = setTime(target, 0, 0, 0, 0);
@@ -37,15 +38,20 @@ export default Mixin.create({
 
       if (!target.isValid()) {
         return false;
+      }
+
+      if (format) {
+        options.target = target.format(format);
       }
 
       return value.isSame(target);
     },
 
     notSame(value, options) {
+      const format = options.format || this.options.format;
       let target;
 
-      target = toMoment(options.target, options.format);
+      target = toMoment(options.target, format);
 
       if (!this.options.time) {
         target = setTime(target, 0, 0, 0, 0);
@@ -53,15 +59,20 @@ export default Mixin.create({
 
       if (!target.isValid()) {
         return false;
+      }
+
+      if (format) {
+        options.target = target.format(format);
       }
 
       return !value.isSame(target);
     },
 
     before(value, options) {
+      const format = options.format || this.options.format;
       let target;
 
-      target = toMoment(options.target, options.format);
+      target = toMoment(options.target, format);
 
       if (!this.options.time) {
         target = setTime(target, 0, 0, 0, 0);
@@ -71,13 +82,18 @@ export default Mixin.create({
         return false;
       }
 
-      return value.before(target);
+      if (format) {
+        options.target = target.format(format);
+      }
+
+      return value.isBefore(target);
     },
 
     after(value, options) {
+      const format = options.format || this.options.format;
       let target;
 
-      target = toMoment(options.target, options.format);
+      target = toMoment(options.target, format);
 
       if (!this.options.time) {
         target = setTime(target, 0, 0, 0, 0);
@@ -87,13 +103,18 @@ export default Mixin.create({
         return false;
       }
 
-      return value.after(target);
+      if (format) {
+        options.target = target.format(format);
+      }
+
+      return value.isAfter(target);
     },
 
     beforeSame(value, options) {
+      const format = options.format || this.options.format;
       let target;
 
-      target = toMoment(options.target, options.format);
+      target = toMoment(options.target, format);
 
       if (!this.options.time) {
         target = setTime(target, 0, 0, 0, 0);
@@ -101,15 +122,20 @@ export default Mixin.create({
 
       if (!target.isValid()) {
         return false;
+      }
+
+      if (format) {
+        options.target = target.format(format);
       }
 
       return value.isBefore(target) || value.isSame(target);
     },
 
     afterSame(value, options) {
+      const format = options.format || this.options.format;
       let target;
 
-      target = toMoment(options.target, options.format);
+      target = toMoment(options.target, format);
 
       if (!this.options.time) {
         target = setTime(target, 0, 0, 0, 0);
@@ -117,6 +143,10 @@ export default Mixin.create({
 
       if (!target.isValid()) {
         return false;
+      }
+
+      if (format) {
+        options.target = target.format(format);
       }
 
       return value.isAfter(target) || value.isSame(target);

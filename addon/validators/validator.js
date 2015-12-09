@@ -134,7 +134,7 @@ export default Ember.Object.extend({
     if (isArray(result)) { // If returned result is an array
       for (let count = 0 ; count < result.length ; count++) {
         if (!result[count]) { // If the validation failes then
-          this.pushResult(Utils.isArray(messages) ? messages[count] : messages, options);
+          this.pushResult(isArray(messages) ? messages[count] : messages, options);
           break;
         }
       }

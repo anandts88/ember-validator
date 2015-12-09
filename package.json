@@ -26,7 +26,9 @@
     "form-validator",
     "form-validations"
   ],
-  "author": "Anand Sakthivel",
+  "author": {
+    "name": "Anand Sakthivel"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/anandts88/ember-validator/issues"
@@ -35,5 +37,27 @@
   "dependencies": {
     "ember-cli-moment-shim": "0.6.2"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "gitHead": "2d8f41812bd17322a37c677aec380b62bfae270a",
+  "_id": "ember-validator@1.2.7",
+  "_shasum": "e912e46c21d1964a73b488869edfd0b23e7ecc7d",
+  "_from": "ember-validator@1.2.7",
+  "_npmVersion": "2.11.3",
+  "_nodeVersion": "0.12.7",
+  "_npmUser": {
+    "name": "anandts88",
+    "email": "anandts88@gmail.com"
+  },
+  "dist": {
+    "shasum": "e912e46c21d1964a73b488869edfd0b23e7ecc7d",
+    "tarball": "http://registry.npmjs.org/ember-validator/-/ember-validator-1.2.7.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "anandts88",
+      "email": "anandts88@gmail.com"
+    }
+  ],
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/ember-validator/-/ember-validator-1.2.7.tgz"
 }

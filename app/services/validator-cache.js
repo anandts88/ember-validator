@@ -1,9 +1,7 @@
 import Ember from 'ember';
 
-const { Service, on } = Ember;
-
-export default Service.extend({
-  _initialize: on('init', function() {
+export default Ember.Service.extend({
+  _initialize: Ember.on('init', function() {
     this.set('cache', {});
   })
 });

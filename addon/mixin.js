@@ -2,7 +2,7 @@ import Ember from 'ember';
 import Errors from 'ember-validator/errors';
 import Validator from 'ember-validator/validators/validator';
 import Constants from 'ember-validator/constants';
-import Utils from 'ember-validator/utils';
+import { isPlainObject } from 'ember-validator/utils';
 
 const { Mixin, RSVP, defineProperty, computed, isEmpty } = Ember;
 const { Promise } = RSVP;
@@ -26,11 +26,25 @@ export default Mixin.create({
     });
   },
 
+  createObjectWithValidator(instance, validations) {
+    let model;
+    if (instance) {
+      if (typeof(instance) === 'function') {
+        model = instance.create();
+      }
+      this.computedValidateMap({
+        model,
+        validations
+      });
+    }
+    return model;
+  },
+
   computedValidateMap(props) {
     const self            = this;
-    const validationProps = [];
     const model           = props.model;
     const validations     = props.validations;
+    let propertyName;
     let propDetails;
     let errorProperty;
 
@@ -48,18 +62,19 @@ export default Mixin.create({
     for (let property in validations) {
       propDetails = validations[property];
       errorProperty = propDetails.errorProperty;
+      propertyName = errorProperty || property;
 
       // Define a property which holds previous value of the property.
-      model.set((errorProperty || property) + 'ValidatorPreviousVal', model.get(property));
+      model.set(`${propertyName}ValidatorPreviousVal`, model.get(property));
 
       // Defina a computed property which listens the `property` change and perform validation.
-      defineProperty(model, (errorProperty || property) + 'ValidatorResult', computed(property, (sender) => {
+      defineProperty(model, `${propertyName}ValidatorResult`, computed(property, (sender) => {
         let rules = {};
         let prop = sender.replace('ValidatorResult', ''); // Get the property name.
         let result;
 
         // Perfrom validation only if previous and current values are different.
-        if (model.get(prop) !== model.get(prop + 'ValidatorPreviousVal')) {
+        if (model.get(prop) !== model.get(`${prop}ValidatorPreviousVal`)) {
           rules[prop] = validations[prop];
 
           // Invoke valiation map
@@ -72,12 +87,6 @@ export default Mixin.create({
 
         return result;
       }));
-
-      validationProps.push(key + '.hasError');
-    }
-
-    if (!isEmpty(validationProps)) {
-      defineProperty(model, 'isModelHasError', and.apply(validationProps));
     }
   },
 
@@ -195,9 +204,9 @@ export default Mixin.create({
 
   ifUnless(details, model, property) {
     // Process `if` definition
-    const ifCond = this.processIfUnless(details['if'], this.model, this.property, true);
+    const ifCond = this.processIfUnless(details['if'], model, property, true);
     // Process `unless` definition
-    const unlessCond = this.processIfUnless(details.unless, this.model, this.property, false);
+    const unlessCond = this.processIfUnless(details.unless, model, property, false);
     return ifCond && unlessCond;
   },
 
@@ -214,7 +223,7 @@ export default Mixin.create({
 
         if (typeof(options) === 'string') { // If error message is directly defined for the validator, the create options object with message.
           options = { message: options };
-        } else if (!Utils.isPlainObject(options)) {
+        } else if (!isPlainObject(options)) {
           options = {};
         }
 

@@ -12,14 +12,6 @@ export default Mixin.create({
     if (!this.options.pattern) {
       this.set('options.pattern', Constants.NUMERIC_PATTERN);
     }
-
-    if (!this.options.decimal) {
-      this.set('options.decimal', 12);
-    }
-
-    if (!this.options.fraction) {
-      this.set('options.fraction', 2);
-    }
   },
 
   rules: {
