@@ -6,7 +6,7 @@ import { isPlainObject } from 'ember-validator/utils';
 
 const { Mixin, RSVP, defineProperty, computed, isEmpty } = Ember;
 const { Promise } = RSVP;
-const { and } = computed;
+const { and, or, not, alias } = computed;
 
 export default Mixin.create({
   messageFileName: 'messages',
@@ -44,16 +44,22 @@ export default Mixin.create({
     const self            = this;
     const model           = props.model;
     const validations     = props.validations;
+    const validationHasError = Ember.A();
+    const validationError = Ember.A();
+    const computedErrors = Ember.A();
     let propertyName;
     let propDetails;
     let errorProperty;
-
+    let computedFunc;
+    let resetValidator;
+    
     // Loop through each keys in the model
     for (let key in model) {
       // Check if key contains `ValidatorResult` or `ValidatorPreviousVal`.
       if (key.indexOf('ValidatorResult') !== -1 ||
+        key.indexOf('validatorResult') !== -1 ||
         key.indexOf('ValidatorPreviousVal') != -1 ||
-        key === 'isModelHasError') {
+        key === 'validatorHasError') {
         // Reset the proerties to `undefined` value
         model.set(key, undefined);
       }
@@ -87,7 +93,32 @@ export default Mixin.create({
 
         return result;
       }));
+
+      validationHasError.pushObject(`${propertyName}ValidatorResult.hasError`);
+      validationError.pushObject(`${propertyName}ValidatorResult.error`);
     }
+
+    computedErrors.addObjects(validationError);
+    computedErrors.pushObject(function() {
+      const current = this;
+      const result  = Ember.A();
+      let error;
+      if (!isEmpty(validationError)) {
+        validationError.forEach((prop) => {
+          error = current.get(prop);
+          if (error) {
+            result.pushObject(error);
+          }
+        });
+      }
+
+      return result;
+    });
+
+    defineProperty(model, 'validatorResultHasError', or.apply(null, validationHasError));
+    defineProperty(model, 'validatorResultIsInValid', alias('validatorResultHasError'));
+    defineProperty(model, 'validatorResultIsValid', not('validatorResultIsInValid'));
+    defineProperty(model, 'validatorResultErrors', computed.apply(null, computedErrors));
   },
 
   perform(model, validations) {
