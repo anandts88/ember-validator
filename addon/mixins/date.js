@@ -43,8 +43,12 @@ export default Ember.Mixin.create({
 
     var transform = function(value, format) {
       var date;
-      if (typeof(value) === 'string' && format) {
-        date = moment(value, format, true);
+      if (typeof(value) === 'string') {
+        if (format) {
+          date = moment(value, format, true);
+        } else {
+          date = moment(new Date(value));
+        }
       } else {
         date = moment(value);
       }

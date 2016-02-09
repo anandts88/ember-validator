@@ -2,6 +2,7 @@ import Ember from 'ember';
 import Errors from 'ember-validator/errors';
 import Validator from 'ember-validator/validators/validator';
 import Constants from 'ember-validator/constants';
+import getOwner from 'ember-getowner-polyfill';
 
 export default Ember.Mixin.create({
   validate: function(props) {
@@ -214,7 +215,7 @@ export default Ember.Mixin.create({
   },
 
   lookupValidator: function(validatorName) {
-    var container = this.get('container');
+    var container = getOwner(this);
     var service = container.lookup('service:validator-cache');
     var validator;
     var cache;

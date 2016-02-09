@@ -31,7 +31,8 @@ export default Ember.Mixin.create({
 
     if (!Ember.isEmpty(value)) {
       for (var key in this.CHECKS) {
-        if (!this.options[key]) {
+        option = this.options[key];
+        if (!_.isNumber(option)) {
           continue;
         }
 

@@ -14,15 +14,19 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.2.7"
+  "ember-validator": "1.2.8"
 }
 ```
 
-### For Non CLI applications ###
+Library now depends on `lodash` and `moment` from bower directory. Please add the corresponding dependencies in `bower.json`
 
-Use [Ember Validator Non CLI library](https://github.com/anandts88/ember-validator/blob/master/ember-validator-non-cli.js) for non CLI applications.
-This depends on [moment library](http://momentjs.com/), so please include [moment.js](http://momentjs.com/downloads/moment.min.js) along with this library.
-
+```javascript
+  "dependencies": {
+    ...
+    "moment": "~2.10.6",
+    "lodash": "3.10.1"
+  }
+```
 
 ## Issues or Help? ##
 
