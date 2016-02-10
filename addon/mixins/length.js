@@ -28,6 +28,7 @@ export default Ember.Mixin.create({
     var propertyLength;
     var comparisonLength;
     var comparisonType;
+    var option;
 
     if (!Ember.isEmpty(value)) {
       for (var key in this.CHECKS) {

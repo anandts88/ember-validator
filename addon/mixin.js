@@ -229,11 +229,11 @@ export default Ember.Mixin.create({
     if (cache[validatorName]) {
       validator = cache[validatorName];
     } else {
-      var customValidator = container.lookupFactory('validator:' + validatorName);
+      var customValidator = container._lookupFactory('validator:' + validatorName);
       if (customValidator) {
         validator = customValidator;
       } else {
-        var predefined = container.lookupFactory('ember-validator@validator:' + validatorName);
+        var predefined = container._lookupFactory('ember-validator@validator:' + validatorName);
         validator = predefined;
       }
       cache[validatorName] = validator;
