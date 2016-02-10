@@ -93,6 +93,7 @@ export default Ember.Mixin.create({
     var comparisonType;
     var dotIndex;
     var decimalVal;
+    var option;
 
     if (!Ember.isEmpty(value)) {
       str = this.toStr(value);
