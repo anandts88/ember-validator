@@ -14,19 +14,32 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.3.0"
+  "ember-validator": "1.3.1"
 }
 ```
 
-Library now depends on `lodash` and `moment` from bower directory. Please add the corresponding dependencies in `bower.json`
+## Installation
 
-```javascript
-  "dependencies": {
-    ...
-    "moment": "~2.10.6",
-    "lodash": "3.10.1"
-  }
-```
+* `git clone` this repository
+* `npm install`
+* `bower install`
+
+## Running
+
+* `ember server`
+* Visit your app at http://localhost:4200.
+
+## Running Tests
+
+* `npm test` (Runs `ember try:testall` to test your addon against multiple Ember versions)
+* `ember test`
+* `ember test --server`
+
+## Building
+
+* `ember build`
+
+For more information on using ember-cli, visit [http://www.ember-cli.com/](http://www.ember-cli.com/).
 
 ## Issues or Help? ##
 

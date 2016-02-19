@@ -2,10 +2,14 @@ import Ember from 'ember';
 import Pattern from 'ember-validator/mixins/pattern';
 import Constants from 'ember-validator/constants';
 
-export default Ember.Mixin.create(Pattern, {
+const {
+  Mixin
+} = Ember;
+
+export default Mixin.create(Pattern, {
   pattern: Constants.ZIP_PATTERN,
 
-  init: function() {
+  init() {
     this._super();
 
     if (!this.options.with) {

@@ -1,6 +1,10 @@
 import Ember from 'ember';
 
-export default Ember.Mixin.create({
+const {
+  Mixin
+} = Ember;
+
+export default Mixin.create({
 
   DAYS: {
     sunday: 0,
@@ -16,7 +20,7 @@ export default Ember.Mixin.create({
     afterSame: '>=' // after or same
   },
 
-  compare: function(source, target, operator) {
+  compare(source, target, operator) {
     switch (operator) {
       case '===':
         return source.isSame(target);
@@ -35,13 +39,13 @@ export default Ember.Mixin.create({
     }
   },
 
-  perform: function() {
-    var value = this.model.get(this.property);
-    var option;
-    var target;
+  perform() {
+    let value = this.model.get(this.property);
+    let option;
+    let target;
 
-    var transform = function(value, format) {
-      var date;
+    let transform = function(value, format) {
+      let date;
       if (typeof(value) === 'string') {
         if (format) {
           date = moment(value, format, true);
@@ -54,7 +58,7 @@ export default Ember.Mixin.create({
       return date;
     };
 
-    var setTime = function(date, hours, minutes, seconds, milliseconds) {
+    let setTime = function(date, hours, minutes, seconds, milliseconds) {
       date.hours(hours);
       date.minutes(minutes);
       date.seconds(seconds);
@@ -77,7 +81,7 @@ export default Ember.Mixin.create({
         } else if (this.options.onlyWeekend && [this.DAYS.sunday, this.DAYS.saturday].indexOf(value.day()) === -1) {
           this.pushResult(this.options.messages.onlyWeekend);
         } else {
-          for (var key in this.CHECKS) {
+          for (let key in this.CHECKS) {
             option = this.options[key];
             if (!option) {
               continue;
