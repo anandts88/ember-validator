@@ -1,11 +1,15 @@
 import Ember from 'ember';
 
-export default Ember.Mixin.create({
+const {
+  Mixin
+} = Ember;
 
-  init: function() {
-    var first;
-    var last;
-    var isArray;
+export default Mixin.create({
+
+  init() {
+    let first;
+    let last;
+    let isArray;
 
     this._super();
 
@@ -28,8 +32,8 @@ export default Ember.Mixin.create({
     }
   },
 
-  perform: function() {
-    var value = this.model.get(this.property);
+  perform() {
+    let value = this.model.get(this.property);
 
     if (!Ember.isEmpty(value)) {
       if (this.options.exclude && this.options.exclude.indexOf(value) !== -1) {

@@ -1,10 +1,15 @@
 import Ember from 'ember';
 import Constants from 'ember-validator/constants';
 
-export default Ember.Mixin.create({
+const {
+  Mixin,
+  isNone
+} = Ember;
 
-  isNumeric: function(str, pattern) {
-    var val;
+export default Mixin.create({
+
+  isNumeric(str, pattern) {
+    let val;
 
     pattern = pattern || Constants.NUMERIC_PATTERN;
     if (pattern.test(str)) {
@@ -14,20 +19,20 @@ export default Ember.Mixin.create({
     return false;
   },
 
-  isInteger: function(value) {
-    var val = Number(value);
+  isInteger(value) {
+    let val = Number(value);
     return typeof(val) === 'number' && val % 1 === 0;
   },
 
-  toStr: function(value) {
+  toStr(value) {
     return value + '';
   },
 
-  removeSpecial: function(str) {
+  removeSpecial(str) {
     return str.replace(/[^\d.]/g, '');
   },
 
-  init: function() {
+  init() {
     this._super();
 
     if (!this.options.pattern) {
@@ -84,16 +89,16 @@ export default Ember.Mixin.create({
     lessThanOrEqualTo: '<='
   },
 
-  perform: function() {
-    var value = this.model.get(this.property);
-    var pattern = this.options.pattern;
-    var str;
-    var comparisonValue;
-    var comparisonStr;
-    var comparisonType;
-    var dotIndex;
-    var decimalVal;
-    var option;
+  perform() {
+    let value = this.model.get(this.property);
+    let pattern = this.options.pattern;
+    let str;
+    let comparisonValue;
+    let comparisonStr;
+    let comparisonType;
+    let dotIndex;
+    let decimalVal;
+    let option;
 
     if (!Ember.isEmpty(value)) {
       str = this.toStr(value);
@@ -126,9 +131,9 @@ export default Ember.Mixin.create({
             last: this.options.between.last
           });
         } else {
-          for (var key in this.CHECKS) {
+          for (let key in this.CHECKS) {
             option = this.options[key];
-            if (!_.isNumber(option)) {
+            if (isNone(option)) {
               continue;
             }
 

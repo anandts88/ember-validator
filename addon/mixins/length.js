@@ -1,7 +1,12 @@
 import Ember from 'ember';
 
-export default Ember.Mixin.create({
-  init: function() {
+const {
+  Mixin,
+  isNone
+} = Ember;
+
+export default Mixin.create({
+  init() {
     this._super();
 
     this.options.tokenizer = this.options.tokenizer || function(value) {
@@ -15,7 +20,7 @@ export default Ember.Mixin.create({
     'maximum': '<='
   },
 
-  getValue: function(key) {
+  getValue(key) {
     if (this.options[key].constructor === String) {
       return this.model.get(this.options[key]) || 0;
     } else {
@@ -23,17 +28,17 @@ export default Ember.Mixin.create({
     }
   },
 
-  perform: function() {
-    var value = this.model.get(this.property);
-    var propertyLength;
-    var comparisonLength;
-    var comparisonType;
-    var option;
+  perform() {
+    let value = this.model.get(this.property);
+    let propertyLength;
+    let comparisonLength;
+    let comparisonType;
+    let option;
 
     if (!Ember.isEmpty(value)) {
-      for (var key in this.CHECKS) {
+      for (let key in this.CHECKS) {
         option = this.options[key];
-        if (!_.isNumber(option)) {
+        if (isNone(option)) {
           continue;
         }
 

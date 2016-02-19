@@ -1,11 +1,22 @@
 import Ember from 'ember';
 
-export default Ember.Object.extend({
-  errors: null,
-  validators: null,
-  error: Ember.computed.alias('errors.firstObject'),
-  validator: Ember.computed.alias('validators.firstObject'),
-  isValid: Ember.computed.empty('errors.[]'),
-  isInvalid: Ember.computed.not('isValid'),
-  hasError: Ember.computed.alias('isInvalid')
+const {
+  Object: EmberObject,
+  computed
+} = Ember;
+
+const {
+  alias,
+  empty,
+  not
+} = computed;
+
+export default EmberObject.extend({
+  errors: undefined,
+  validators: undefined,
+  error: alias('errors.firstObject'),
+  validator: alias('validators.firstObject'),
+  isValid: empty('errors.[]'),
+  isInvalid: not('isValid'),
+  hasError: alias('isInvalid')
 });

@@ -1,11 +1,15 @@
 import Ember from 'ember';
 
-export default Ember.Mixin.create({
-  perform: function() {
-    var value = this.model.get(this.property);
-    var specialTest;
-    var array;
-    var arr;
+const {
+  Mixin
+} = Ember;
+
+export default Mixin.create({
+  perform() {
+    let value = this.model.get(this.property);
+    let specialTest;
+    let array;
+    let arr;
 
     if (!Ember.isEmpty(value)) {
       if (this.options.hasSpecial) {
@@ -38,7 +42,7 @@ export default Ember.Mixin.create({
         this.pushResult(this.options.messages.without);
       } else if (!Ember.isEmpty(this.options.array)) {
         array = this.options.array;
-        for (var count = 0 ; count < array.length ; count++) {
+        for (let count = 0 ; count < array.length ; count++) {
           arr = array[count];
           if (arr.with && !arr.with.test(value)) {
             this.pushResult(arr.message || this.options.messages.array);

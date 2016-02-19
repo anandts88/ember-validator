@@ -2,21 +2,32 @@ import Ember from 'ember';
 import Messages from 'ember-validator/messages';
 import Errors from 'ember-validator/errors';
 
-export default Ember.Object.extend({
-  errors: null,
-  validators: null,
-  options: null,
-  property: null,
-  model: null,
+const {
+  Object: EmberObject,
+  computed
+} = Ember;
 
-  callback: Ember.computed.alias('options.callback'),
-  'if': Ember.computed.alias('options.if'),
-  unless: Ember.computed.alias('options.unless'),
-  isValid: Ember.computed.empty('errors.[]'),
-  isInvalid: Ember.computed.not('isValid'),
+const {
+  alias,
+  empty,
+  not
+} = computed;
 
-  init: function() {
-    var messages;
+export default EmberObject.extend({
+  errors: undefined,
+  validators: undefined,
+  options: undefined,
+  property: undefined,
+  model: undefined,
+
+  callback: alias('options.callback'),
+  'if': alias('options.if'),
+  unless: alias('options.unless'),
+  isValid: empty('errors.[]'),
+  isInvalid: not('isValid'),
+
+  init() {
+    let messages;
 
     this.set('errors', Ember.A());
 
@@ -34,7 +45,7 @@ export default Ember.Object.extend({
       if (typeof(messages) === 'string' && !this.options.message) {
         this.set('options.message', messages);
       } else if (typeof(messages) === 'object') {
-        for (var key in messages) {
+        for (let key in messages) {
           if (Ember.isEmpty(this.options.messages[key])) {
             this.options.messages[key] = this.options.message || messages[key];
           }
@@ -43,25 +54,25 @@ export default Ember.Object.extend({
     }
   },
 
-  render: function(message, options) {
+  render(message, options) {
     message = message || 'Invalid';
 
-    for(var option in options) {
+    for(let option in options) {
       message = message.replace('{{' + option + '}}', options[option]);
     }
 
     return message;
   },
 
-  pushResult: function(error, options) {
+  pushResult(error, options) {
     this.errors.push(this.render(error, options));
   },
 
-  perform: function () {
+  perform() {
     throw 'Please override perform method in you validator.';
   },
 
-  validate: function() {
+  validate() {
     this.errors.clear();
     if (this._isValidate()) {
       this.perform();
@@ -74,8 +85,8 @@ export default Ember.Object.extend({
   },
 
 
-  _check: function(validate, model, property, positive) {
-    var result = true;
+  _check(validate, model, property, positive) {
+    let result = true;
 
     if (typeof(validate) === 'undefined') {
       result = true;
@@ -97,13 +108,13 @@ export default Ember.Object.extend({
     return result;
   },
 
-  _isValidate: function() {
-    var ifValidate = this._check(this.get('if'), this.model, this.property, true);
-    var unlessValidate = this._check(this.get('unless'), this.model, this.property, false);
+  _isValidate() {
+    let ifValidate = this._check(this.get('if'), this.model, this.property, true);
+    let unlessValidate = this._check(this.get('unless'), this.model, this.property, false);
     return ifValidate && unlessValidate;
   },
 
-  compare: function (a, b, operator) {
+  compare(a, b, operator) {
     switch (operator) {
       case '==':
         return a == b; // jshint ignore:line
@@ -126,7 +137,7 @@ export default Ember.Object.extend({
     }
   },
 
-  isArray: function(arr) {
+  isArray(arr) {
     return arr.constructor.toString().indexOf("Array") > -1;
   }
 });

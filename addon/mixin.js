@@ -4,9 +4,13 @@ import Validator from 'ember-validator/validators/validator';
 import Constants from 'ember-validator/constants';
 import getOwner from 'ember-getowner-polyfill';
 
-export default Ember.Mixin.create({
-  validate: function(props) {
-    var rules = this.get('validations') || props.validations;
+const {
+  Mixin
+} = Ember;
+
+export default Mixin.create({
+  validate(props) {
+    let rules = this.get('validations') || props.validations;
 
     return this.validateMap({
       model: this,
@@ -15,29 +19,29 @@ export default Ember.Mixin.create({
     });
   },
 
-  computedValidateMap: function(props) {
-    var object = props.model;
-    var validations = props.validations;
-    var self = this;
-    var propDetails;
-    var errorProperty;
+  computedValidateMap(props) {
+    let object = props.model;
+    let validations = props.validations;
+    let self = this;
+    let propDetails;
+    let errorProperty;
 
-    for (var key in object) {
+    for (let key in object) {
       if (key.indexOf('ValidatorResult') !== -1 || key.indexOf('ValidatorPreviousVal') != -1) {
         object.set(key, null);
       }
     }
 
-    for (var property in validations) {
+    for (let property in validations) {
       propDetails = validations[property];
       errorProperty = propDetails.errorProperty;
 
       if (this._isValidate(propDetails, object, property)) {
         object.set((errorProperty || property) + 'ValidatorPreviousVal', object.get(property));
         Ember.defineProperty(object, (errorProperty || property) + 'ValidatorResult', Ember.computed(property, function(sender) {
-          var rules = {};
-          var prop = sender.replace('ValidatorResult', '');
-          var result;
+          let rules = {};
+          let prop = sender.replace('ValidatorResult', '');
+          let result;
 
           if (object.get(prop) !== object.get(prop + 'ValidatorPreviousVal')) {
             rules[prop] = validations[prop];
@@ -55,31 +59,31 @@ export default Ember.Mixin.create({
     }
   },
 
-  validateMap: function(props) {
-    var self = this;
-    var noPromise = props.noPromise;
+  validateMap(props) {
+    let self = this;
+    let noPromise = props.noPromise;
 
-    var doValidate = function(props) {
-      var object = props.model;
-      var validations = props.validations;
-      var result = Errors.create();
-      var allErrors = Ember.A();
-      var rules;
-      var rule;
-      var property;
-      var errorProperty;
-      var errors;
-      var validationResult;
+    let doValidate = function(props) {
+      let object = props.model;
+      let validations = props.validations;
+      let result = Errors.create();
+      let allErrors = Ember.A();
+      let rules;
+      let rule;
+      let property;
+      let errorProperty;
+      let errors;
+      let validationResult;
 
       if (object && validations) {
-        var validators = self.constructValidators(object, validations);
+        let validators = self.constructValidators(object, validations);
         if (!Ember.isEmpty(validators)) {
           validators.forEach(function(obj) {
             rules = obj.rules;
             property = obj.property;
             errorProperty = obj.errorProperty;
 
-            for (var count = 0; count < obj.rules.length; count++) {
+            for (let count = 0; count < obj.rules.length; count++) {
               rule = obj.rules[count];
               validationResult = rule.validate();
               errors = validationResult.get('errors');
@@ -102,7 +106,7 @@ export default Ember.Mixin.create({
       return doValidate(props);
     } else {
       return new Ember.RSVP.Promise(function(resolve, reject) {
-        var result = doValidate(props);
+        let result = doValidate(props);
         if (result.get('isValid')) {
           resolve(true);
         } else {
@@ -112,11 +116,11 @@ export default Ember.Mixin.create({
     }
   },
 
-  constructValidators: function(object, validations) {
-    var validators = Ember.A();
-    var propDetails;
-    var rules;
-    for (var property in validations) {
+  constructValidators(object, validations) {
+    let validators = Ember.A();
+    let propDetails;
+    let rules;
+    for (let property in validations) {
       propDetails = validations[property];
 
       if (this._isValidate(propDetails, object, property)) {
@@ -134,8 +138,8 @@ export default Ember.Mixin.create({
     return validators;
   },
 
-  _check: function(validate, model, property, positive) {
-    var result = true;
+  _check(validate, model, property, positive) {
+    let result = true;
 
     if (typeof(validate) === 'undefined') {
       result = true;
@@ -157,17 +161,17 @@ export default Ember.Mixin.create({
     return result;
   },
 
-  _isValidate: function(details, model, property) {
-    var ifValidate = this._check(details['if'], model, property, true);
-    var unlessValidate = this._check(details.unless, model, property, false);
+  _isValidate(details, model, property) {
+    let ifValidate = this._check(details['if'], model, property, true);
+    let unlessValidate = this._check(details.unless, model, property, false);
     return ifValidate && unlessValidate;
   },
 
-  createInlineValidator: function() {
+  createInlineValidator() {
     return Validator.extend({
       perform: function() {
-        var callback = this.get('callback');
-        var error;
+        let callback = this.get('callback');
+        let error;
 
         if (callback) {
           error = callback.call(this, this.model, this.property);
@@ -180,12 +184,12 @@ export default Ember.Mixin.create({
     });
   },
 
-  findValidators: function(rules) {
-    var validators = Ember.A();
-    var validator;
-    var options;
+  findValidators(rules) {
+    let validators = Ember.A();
+    let validator;
+    let options;
 
-    for (var validatorName in rules) {
+    for (let validatorName in rules) {
 
       if (Constants.RULES_TO_IGNORE.indexOf(validatorName) === -1) {
         options = rules[validatorName];
@@ -214,11 +218,11 @@ export default Ember.Mixin.create({
     return validators;
   },
 
-  lookupValidator: function(validatorName) {
-    var container = getOwner(this);
-    var service = container.lookup('service:validator-cache');
-    var validator;
-    var cache;
+  lookupValidator(validatorName) {
+    let container = getOwner(this);
+    let service = container.lookup('service:validator-cache');
+    let validator;
+    let cache;
 
     if (service) {
       cache = service.get('cache');
@@ -229,11 +233,11 @@ export default Ember.Mixin.create({
     if (cache[validatorName]) {
       validator = cache[validatorName];
     } else {
-      var customValidator = container._lookupFactory('validator:' + validatorName);
+      let customValidator = container._lookupFactory('validator:' + validatorName);
       if (customValidator) {
         validator = customValidator;
       } else {
-        var predefined = container._lookupFactory('ember-validator@validator:' + validatorName);
+        let predefined = container._lookupFactory('ember-validator@validator:' + validatorName);
         validator = predefined;
       }
       cache[validatorName] = validator;

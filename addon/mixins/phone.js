@@ -1,7 +1,11 @@
 import Ember from 'ember';
 import Constants from 'ember-validator/constants';
 
-export default Ember.Mixin.create({
+const {
+  Mixin
+} = Ember;
+
+export default Mixin.create({
   FORMATS: [
     Constants.PHONE_PATTERN1, // (999) 999 9999
     Constants.PHONE_PATTERN2, // (999) 999-9999
@@ -14,15 +18,15 @@ export default Ember.Mixin.create({
     Constants.PHONE_PATTERN9 // 9999999999
   ],
 
-  perform: function() {
-    var value = this.model.get(this.property);
-    var test  = false;
-    var pattern = Ember.A();
-    var format;
-    var index;
+  perform() {
+    let value = this.model.get(this.property);
+    let test  = false;
+    let pattern = Ember.A();
+    let format;
+    let index;
 
     if (!Ember.isEmpty(value)) {
-      for (var count = 1; count <= this.FORMATS.length; count++) {
+      for (let count = 1; count <= this.FORMATS.length; count++) {
         index = count - 1;
         format = this.options['format' + count];
         if (format || this.options.all) {

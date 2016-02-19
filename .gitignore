@@ -5,8 +5,8 @@
 /tmp
 
 # dependencies
-/node_modules*
-/bower_components*
+/node_modules
+/bower_components
 
 # misc
 /.sass-cache
@@ -15,10 +15,3 @@
 /libpeerconnection.log
 npm-debug.log
 testem.log
-
-.DS_Store
-/*.sublime-workspace
-/*.sublime-project
-
-/fixtures
-public/data/

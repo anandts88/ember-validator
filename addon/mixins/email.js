@@ -2,10 +2,14 @@ import Ember from 'ember';
 import Constants from 'ember-validator/constants';
 import Pattern from 'ember-validator/mixins/pattern';
 
-export default Ember.Mixin.create(Pattern, {
+const {
+  Mixin
+} = Ember;
+
+export default Mixin.create(Pattern, {
   pattern: Constants.EMAIL_PATTERN,
 
-  init: function() {
+  init() {
     this._super();
 
     if (!this.options.with) {
