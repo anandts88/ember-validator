@@ -1,4 +1,4 @@
-# Ember Validator #
+# Ember Validator # [![Build Status](https://travis-ci.org/anandts88/ember-validator.svg?branch=master)](https://travis-ci.org/anandts88/ember-validator) [![Ember Observer Score](http://emberobserver.com/badges/ember-validator.svg)](http://emberobserver.com/addons/ember-validator)
 
 1. Performs validation on ember object.
 2. Provides facility to perform validation on submit or focus out.

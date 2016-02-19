@@ -3,7 +3,8 @@ import Constants from 'ember-validator/constants';
 
 const {
   Mixin,
-  isNone
+  isNone,
+  isArray
 } = Ember;
 
 export default Mixin.create({
@@ -47,7 +48,7 @@ export default Mixin.create({
       this.set('options.fractions', 2);
     }
 
-    if (this.options.range && this.isArray(this.options.range)) {
+    if (this.options.range && isArray(this.options.range)) {
       first = this.options.range[0];
       last = this.options.range[1];
 
@@ -63,7 +64,7 @@ export default Mixin.create({
       };
     }
 
-    if (this.options.between && this.isArray(this.options.between)) {
+    if (this.options.between && isArray(this.options.between)) {
       first = this.options.range[0];
       last = this.options.range[1];
 
