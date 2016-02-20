@@ -1,4 +1,9 @@
-# Ember Validator # [![Build Status](https://travis-ci.org/anandts88/ember-validator.svg?branch=master)](https://travis-ci.org/anandts88/ember-validator) [![Ember Observer Score](http://emberobserver.com/badges/ember-validator.svg)](http://emberobserver.com/addons/ember-validator)
+# Ember Validator #
+[![Build Status](https://travis-ci.org/anandts88/ember-validator.svg?branch=master)](https://travis-ci.org/anandts88/ember-validator)
+[![Ember Observer Score](http://emberobserver.com/badges/ember-validator.svg)](http://emberobserver.com/addons/ember-validator)
+[![Dependency Status](https://david-dm.org/anandts88/ember-validator.svg?style=flat)](https://david-dm.org/anandts88/ember-validator)
+[![devDependency Status](https://david-dm.org/anandts88/ember-validator/dev-status.svg?style=flat)](https://david-dm.org/anandts88/ember-validator#info=devDependencies)
+
 
 1. Performs validation on ember object.
 2. Provides facility to perform validation on submit or focus out.
