@@ -6,7 +6,6 @@ module.exports = function(defaults) {
   var app = new EmberAddon(defaults, {
     // Add options here
   });
-  app.import(app.bowerDirectory + '/lodash/lodash.min.js');
   app.import(app.bowerDirectory + '/moment/min/moment.min.js');
 
   /*

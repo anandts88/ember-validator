@@ -16,7 +16,6 @@ module.exports = {
   },
 
   importBowerDependencies: function(app) {
-    app.import(app.bowerDirectory + '/lodash/lodash.min.js');
     app.import(app.bowerDirectory + '/moment/min/moment.min.js');
   }
 };
