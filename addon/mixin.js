@@ -11,8 +11,7 @@ const {
   computed,
   isEmpty,
   isNone,
-  warn,
-  deprecate
+  warn
 } = Ember;
 
 const {
@@ -79,13 +78,7 @@ export default Mixin.create({
       }
     });
   */
-  createObjectWithValidator(props) {
-    let {
-      model,
-      validations,
-      validateOnDirty
-    } = props;
-
+  createObjectWithValidator(model, validations, validateOnDirty) {
     if (model) {
       if (typeof(model) === 'function') {
         model = model.create();
@@ -101,7 +94,6 @@ export default Mixin.create({
   },
 
   computedValidateMap(props) {
-    deprecate('`computedValidateMap` is deprecated. Please use `createObjectWithValidator`');
     this._computedValidateMap(props);
   },
 
@@ -161,8 +153,11 @@ export default Mixin.create({
           result = self.validateMap({
             model,
             validations: rules,
-            noPromise: true
+            noPromise: true,
+            skipreset: true
           });
+
+          self.resetValidationMapResult(model, propertyName);
         }
 
         return result;
@@ -246,20 +241,58 @@ export default Mixin.create({
     return result;
   },
 
+  resetComputedValidationResult(model, validations) {
+    let validatorResult;
+    let propDetails;
+    let errorProperty;
+    let propertyName;
+
+    for (let property in validations) {
+      propDetails = validations[property];
+      errorProperty = propDetails.errorProperty;
+      propertyName = errorProperty || property;
+
+      validatorResult = model.get(`${propertyName}ValidatorResult`);
+      if (!isNone(validatorResult) && validatorResult.get('hasError')) {
+        validatorResult.get('errors').clear();
+      }
+    }
+  },
+
+  resetValidationMapResult(model, propertyName) {
+    const validationResultProperty  = model.get('validationResultProperty') || 'validationResult'; // Name of the property in model where the validation result will be set.
+    const validationResult          = model.get(validationResultProperty);
+
+    if (!isNone(validationResult) && validationResult.get(`${propertyName}.hasError`)) {
+    validationResult.get(`${propertyName}.errors`).clear();
+    }
+  },
+
   validateMap(props) {
     const self = this; // Holds the current instance.
     let {
       model,
+      skipreset,
       validations,
       noPromise // Holds flag to indicating return value is a promise or not.
     } = props;
+    const validationResult = model.get('validationResultProperty') || 'validationResult'; // Name of the property in model where the validation result will be set.
     let result;
 
+    model.set(validationResult, undefined);
+
+    if (!skipreset) {
+      this.resetComputedValidationResult(model, validations);
+    }
+
     if (noPromise) {
-      return self.performValidation(model, validations);
+      result = self.performValidation(model, validations);
+      model.set(validationResult, result);
+      return result;
     } else {
       return new Promise((resolve, reject) => {
         result = self.performValidation(model, validations);
+        model.set(validationResult, result);
         if (result.get('isValid')) {
           resolve(true);
         } else {
@@ -269,15 +302,15 @@ export default Mixin.create({
     }
   },
 
-  constructValidators(object, validations) {
+  constructValidators(model, validations) {
     const validators = Ember.A();
-    let propDetails;
+    let details;
     let rules;
     let errorProperty;
 
     for (let property in validations) { // Loop through each validation defined by the user.
-      propDetails = validations[property];
-      errorProperty = propDetails.errorProperty;
+      details = validations[property];
+      errorProperty = details.errorProperty;
 
       // Perform `if` and `unless` check for validator, if the check fails then continue processing next validator
       if (!this.ifUnless(details, model, property)) {
