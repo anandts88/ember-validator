@@ -14,11 +14,11 @@ export default Mixin.create({
     if (!Ember.isEmpty(value)) {
       if (this.options.hasSpecial) {
         if (typeof(this.options.hasSpecial) === 'string') {
-          specialTest = new RegExp('(?=.*[' + this.options.hasSpecial + '])').test(value);
+          specialTest = new RegExp('(?=.*[' + this.options.hasSpecial + '])');
         } else if (this.options.hasSpecial.constructor !== RegExp) {
-          specialTest = this.options.hasSpecial.test(value);
+          specialTest = this.options.hasSpecial;
         } else {
-          specialTest = new RegExp('(?=.*[!@$%^&*()-+_=~`{}:;"\'<>,.|?])').test(value);
+          specialTest = new RegExp('(?=.*[!@$%^&*()-+_=~`{}:;"\'<>,.|?])');
         }
       }
 
