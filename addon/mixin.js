@@ -188,11 +188,11 @@ export default Mixin.create({
       });
     }
 
-    // Computed property which retuns true if the validation result has any error
+    // Computed property which returns true if the validation result has any error
     defineProperty(model, 'validatorResultHasError', or.apply(null, validationHasError));
-    // Computed property which retuns true if model is not valid
+    // Computed property which returns true if model is not valid
     defineProperty(model, 'validatorResultIsInValid', alias('validatorResultHasError'));
-    // Computed property which retuns true if model is valid
+    // Computed property which returns true if model is valid
     defineProperty(model, 'validatorResultIsValid', not('validatorResultIsInValid'));
     // Computed property which array of all validation errors
     defineProperty(model, 'validatorResultErrors', computed.apply(null, computedErrors));
@@ -420,11 +420,19 @@ export default Mixin.create({
 
   lookupValidator(validatorName) {
     const container = getOwner(this);
-    const service   = container.lookup('service:validator-cache');
     let cache       = {};
+    let service;
     let validator;
     let customValidator;
     let predefinedValidator;
+
+    // Object must needs container for doing validation.
+    if (isNone(container)) {
+      throw new TypeError(`[ember-validator] ${this.toString()} is missing a container or owner.`);
+    }
+
+    service = container.lookup('service:validator-cache');
+
 
     // Define cache
     if (service) {
