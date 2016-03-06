@@ -1,7 +1,8 @@
 import Ember from 'ember';
 
 const {
-  Mixin
+  Mixin,
+  isArray
 } = Ember;
 
 export default Mixin.create({
@@ -9,11 +10,10 @@ export default Mixin.create({
   init() {
     let first;
     let last;
-    let isArray;
 
     this._super();
 
-    if (this.options.exludeRange && this.isArray(this.options.exludeRange)) {
+    if (this.options.exludeRange && isArray(this.options.exludeRange)) {
       first = this.options.exludeRange[0];
       last = this.options.exludeRange[1];
       this.options.exludeRange = {
@@ -22,7 +22,7 @@ export default Mixin.create({
       };
     }
 
-    if (this.options.includeRange && this.isArray(this.options.includeRange)) {
+    if (this.options.includeRange && isArray(this.options.includeRange)) {
       first = this.options.includeRange[0];
       last = this.options.includeRange[1];
       this.options.includeRange = {

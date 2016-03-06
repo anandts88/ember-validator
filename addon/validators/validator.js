@@ -135,9 +135,5 @@ export default EmberObject.extend({
       default:
         return false;
     }
-  },
-
-  isArray(arr) {
-    return arr.constructor.toString().indexOf("Array") > -1;
   }
 });

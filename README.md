@@ -1,4 +1,9 @@
 # Ember Validator #
+[![Build Status](https://travis-ci.org/anandts88/ember-validator.svg?branch=master)](https://travis-ci.org/anandts88/ember-validator)
+[![npm version](https://badge.fury.io/js/ember-validator.svg)](https://badge.fury.io/js/ember-validator)
+[![Dependency Status](https://david-dm.org/anandts88/ember-validator.svg?style=flat)](https://david-dm.org/anandts88/ember-validator)
+[![devDependency Status](https://david-dm.org/anandts88/ember-validator/dev-status.svg?style=flat)](https://david-dm.org/anandts88/ember-validator#info=devDependencies)
+
 
 1. Performs validation on ember object.
 2. Provides facility to perform validation on submit or focus out.
@@ -14,8 +19,19 @@ Please add `ember-validator` to your `package.json`:
 ```javascript
 "devDependencies": {
   ...
-  "ember-validator": "1.3.1"
+  "ember-validator": "1.3.2"
 }
+```
+
+By default date validator is enabled in the validator, so you may need moment library.
+If you want to skip importing moment library then set `useDateValidator` to `false` in `ember-cli-build.js`.
+
+```javascript
+var app = new EmberApp(defaults, {
+  emberValidator: {
+    useDateValidator: false
+  }
+});
 ```
 
 ## Installation
@@ -60,7 +76,28 @@ use initilizer to reopen `EmberValidator` and assing container instance to it.
 
 ```javascript
 /**
-  initializers/ember-validator.js
+  app/instance-initializers/ember-validator.js
+*/
+import Ember from 'ember';
+import EmberValidator from 'ember-validator';
+
+export default {
+  name: 'ember-validator-reopen',
+  initialize: function(container) {
+    EmberValidator.reopen({
+      container: container
+    });
+  }
+}
+
+Ember.Object.extend(EmberValidator, {});
+```
+
+For older version of Ember. But we suggest not to use this approach.
+
+```javascript
+/**
+  app/initializers/ember-validator.js
 */
 import Ember from 'ember';
 import EmberValidator from 'ember-validator';
@@ -79,8 +116,9 @@ Ember.Object.extend(EmberValidator, {});
 
 `EmberValidator` exposes two functions to perform validation.
 1. `validateMap`
-2. `computedValidateMap`
-3. `validate`
+2. `createObjectWithValidator`
+3. `computedValidateMap`
+4. `validate`
 
 ### validateMap ###
 
@@ -140,16 +178,80 @@ export default Ember.Controller.extend(EmberValidations, {
 });
 ```
 
-### computedValidateMap ###
+### createObjectWithValidator ###
 
-Triggers validator by computing property change.
+Create or reopen object with validations. So validation will fired whenever the property value changes. In short triggers validator by computing property change.
+
+Takes 3 arguments.
+  * model - Object to be validated.
+  * validations - Validations rules for an object.
+  * validateOnDirty - Default `false`. By default validation will happen irrespective of field is dirty or not. Set to `true` if you want to perform validation only if the field becomes dirty.
+
 For example, if you are defining validation rules for a property called `userName` for the object called `model`, then validation result of that property is available in property `userNameValidatorResult`
 
 model.get('userNameValidatorResult.errors') -> Returns all error messages related with userName property
-result.get('userNameValidatorResult.errors') -> Returns first message related with userName property
-result.get('userNameValidatorResult.isValid') -> Returns true if userName property is valid
-result.get('userNameValidatorResult.isInvalid') -> Returns true if userName property is invalid
-result.get('userNameValidatorResult.hasError') -> Returns true if userName property has errors
+model.get('userNameValidatorResult.errors') -> Returns first message related with userName property
+model.get('userNameValidatorResult.isValid') -> Returns true if userName property is valid
+model.get('userNameValidatorResult.isInvalid') -> Returns true if userName property is invalid
+model.get('userNameValidatorResult.hasError') -> Returns true if userName property has errors
+
+model.get('validatorResultHasError') -> Computed property which returns true if the validation result has any error
+model.get('validatorResultIsInValid') -> Computed property which returns true if model is not valid
+model.get('validatorResultIsValid') -> Computed property which returns true if model is valid
+model.get('validatorResultErrors') -> Computed property which array of all validation errors
+model.get('validatorResultObjectDirty') -> Computed property which returns true if the object is dirty
+model.get('validatorResultObjectClean') -> Computed property which returns true if the object is clean
+
+```javascript
+  // app/models/login.js
+  import Ember from 'ember';
+
+  export default Ember.Object.extend({
+    userName: null,
+    password: null
+  });  
+
+  // app/routes/login.js
+  import Ember from 'ember';
+  import EmberValidator from 'ember-validator';
+  import LoginModel from 'app/models/login';
+
+  export default Ember.Route.extend(EmberValidations, {
+    model: function() {
+      var model = LoginModel.create();
+      var validations = {
+        userName: {
+          required: { message: 'Enter username' },
+          length: {
+            minimum: 4,
+            messages: {
+              minimum: 'Username is minimum of 4 characters'
+            }
+          }
+        },
+        password: {
+          required: { message: 'Enter Password' }
+        }
+      };
+
+      return this.createObjectWithValidator(model, validations, true);
+    }
+  });
+
+  // app/templates/login.hbs
+  <form {{action "login" on="submit"}}>
+    <p style="color:red">{{model.userNameValidatorResult.error}}</p>
+    {{input type="text" value=model.userName}}
+    <p style="color:red">{{model.passwordValidatorResult.error}}</p>
+    {{input type="password" value=model.password}}
+    <button type="submit">Login</button>
+  </form>
+
+```
+
+### computedValidateMap ###
+
+Same as `createObjectWithValidator`, but we suggest to use `createObjectWithValidator`.
 
 ```javascript
   // app/models/login.js
@@ -185,7 +287,8 @@ result.get('userNameValidatorResult.hasError') -> Returns true if userName prope
 
       this.computedValidateMap({
         model: model,
-        validations: validations
+        validations: validations,
+        validateOnDirty: true
       });
     }
   });
@@ -213,7 +316,7 @@ import EmberValidator from 'ember-validator';
 export default Ember.Controller.extend({
 
   actions: {
-    var obj = Ember.Object.create(EmberValidations, { // Dont forget to reopen mixin to add container.
+    var obj = Ember.Object.create(EmberValidations, { // Don't forget to reopen mixin to add container.
       userName: null,
       password: null
     });
