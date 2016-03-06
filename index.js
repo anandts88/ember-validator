@@ -47,6 +47,6 @@ module.exports = {
   },
 
   importBowerDependencies: function(app) {
-    app.import(app.bowerDirectory + '/moment/min/moment.min.js');
+    app.import(app.bowerDirectory + '/moment/moment.js');
   }
 };
