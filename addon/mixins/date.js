@@ -1,7 +1,9 @@
 import Ember from 'ember';
+import { isPlainObject } from 'ember-validator/utils';
 
 const {
-  Mixin
+  Mixin,
+  isNone
 } = Ember;
 
 export default Mixin.create({
@@ -43,6 +45,7 @@ export default Mixin.create({
     let value = this.model.get(this.property);
     let option;
     let target;
+    let format;
 
     let transform = function(value, format) {
       let date;
@@ -87,14 +90,23 @@ export default Mixin.create({
               continue;
             }
 
-            target = transform(option.target, option.format);
+            if (isPlainObject(option)) {
+              format = option.format;
+              target = transform(option.target, format);
+            } else {
+              target = transform(option);
+            }
+
+            if (!target.isValid()) {
+              continue;
+            }
 
             if (!this.options.time) {
               target = setTime(target, 0, 0, 0, 0);
             }
 
-            if (!target.isValid()) {
-              continue;
+            if (isNone(format)) {
+              format = 'MMM/DD/YYYY';
             }
 
             if (!this.compare(value, target, this.CHECKS[key])) {
