@@ -1,4 +1,4 @@
-import ember from 'Ember';
+import Ember from 'ember';
 
 const {
   isArray
@@ -15,16 +15,16 @@ const objectCtorString  = funcToString.call(Object);
 const objectTag         = '[object Object]';
 const getPrototypeOf    = Object.getPrototypeOf;
 
-export default function isObject(value) {
+export function isObject(value) {
   var type = typeof value;
   return !!value && (type == 'object' || type == 'function');
 }
 
-export default function isObjectLike(value) {
+export function isObjectLike(value) {
   return !!value && typeof value === 'object';
 }
 
-export default function isHostObject(value) {
+export function isHostObject(value) {
   // Many host objects are `Object` objects that can coerce to strings
   // despite having improperly defined `toString` methods.
   let result = false;
@@ -36,7 +36,7 @@ export default function isHostObject(value) {
   return result;
 }
 
-export default function isPlainObject(value) {
+export function isPlainObject(value) {
   let proto;
   let Ctor;
 
