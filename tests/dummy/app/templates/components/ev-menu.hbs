@@ -1,0 +1,24 @@
+<ul class='menus'>
+  {{#each menus as |menu|}}
+    <li>
+      {{#if menu.submenus}}
+        <a href="#" {{action 'toogleMain' menu}}>{{menu.name}}</a>
+        {{#if menu.isOpen use='toDown'}}
+          <ul class='submenus'>
+            {{#each menu.submenus as |submenu|}}
+              <li>
+                {{#if submenu.route}}
+                  {{#link-to submenu.route}}{{submenu.name}}{{/link-to}}
+                {{else}}
+                  {{#link-to submenu.name}}{{submenu.name}}{{/link-to}}
+                {{/if}}
+              </li>
+            {{/each}}
+          </ul>
+        {{/if}}
+      {{else}}
+        {{#link-to menu.route}}{{menu.name}}{{/link-to}}
+      {{/if}}
+    </li>
+  {{/each}}
+</ul>

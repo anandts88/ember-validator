@@ -1,21 +1,37 @@
 import Ember from 'ember';
 import Constants from 'ember-validator/constants';
-import Pattern from 'ember-validator/mixins/pattern';
 
 const {
-  Mixin
+  Mixin,
+  isNone
 } = Ember;
 
-export default Mixin.create(Pattern, {
+export default Mixin.create({
   pattern: Constants.EMAIL_PATTERN,
 
-  init() {
-    this._super();
+  email(value) {
+    let compare = this.options.with;
+    let result;
 
-    if (!this.options.with) {
-      this.set('options.with', this.get('pattern'));
+    if (isNone(compare)) {
+      with = this.get('pattern');
     }
 
-    this.options.messages.with = this.options.message;
+    result = compare.test(value);
+
+    if (!result) {
+      return this.message('email');
+    }
+  },
+
+  perform(value) {
+    let result;
+
+    if (!isNone(value)) {
+      result = this.email(value);
+      if (!isNone(result)) {
+        return result;
+      }
+    }
   }
 });

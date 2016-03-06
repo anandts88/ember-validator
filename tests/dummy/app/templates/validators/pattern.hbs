@@ -1,0 +1,66 @@
+{{ev-title title='pattern'}}
+
+{{ev-rules validator=model.validator}}
+
+<h2>How to use?</h2>
+<pre><code>
+  pattern: {
+    with: /^([a-zA-Z])+$/,
+    messages: {
+      with: 'Must be alphabets'
+    }
+  }
+
+  pattern: {
+    with: /^([a-zA-Z])+$/,
+    message: 'Must be alphabets'
+  }
+
+  pattern: {
+    without: /^([a-zA-Z])+$/,
+    messages: {
+      without: 'Must not be alphabets'
+    }
+  }
+
+  pattern: {
+    without: /^([a-zA-Z])+$/,
+    message: 'Must not be alphabets'
+  }
+
+  pattern: {
+    array: [
+      {
+        with: /^([a-zA-Z])+$/
+      },
+      {
+        with: /(?=.*[A-Z])/
+      }
+    ],
+    messages: {
+      array: [
+        'Must be alphabets',
+        'Must has one upper case'
+      ]
+    }
+  }
+</code></pre>
+
+<h2>Example</h2>
+<form {{action 'submit' on='submit'}} class='example' autocomplete="off">
+  <ul>
+    <li>Password (1 alphabet(upper and lower case), 1 number, no special, no space):</li>
+    <li class='{{unless model.validationResult.password.hasError 'hide'}} error-msg'>{{model.validationResult.password.error}}</li>
+    <li>{{input type='text' classNameBindings='model.validationResult.password.hasError:error-field' value=model.password}}</li>
+
+    <li>Field with only alphabets:</li>
+    <li class='{{unless model.validationResult.alphabet.hasError 'hide'}} error-msg'>{{model.validationResult.alphabet.error}}</li>
+    <li>{{input type='text' classNameBindings='model.validationResult.alphabet.hasError:error-field' value=model.alphabet}}</li>
+
+    <li>Array rule (Field with numbers and 2 is not allowed):</li>
+    <li class='{{unless model.validationResult.number.hasError 'hide'}} error-msg'>{{model.validationResult.number.error}}</li>
+    <li>{{input type='text' classNameBindings='model.validationResult.number.hasError:error-field' value=model.number}}</li>
+
+    <li><button type='submit'>Submit</button></li>
+  </ul>
+</form>

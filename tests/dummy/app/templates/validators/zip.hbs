@@ -1,0 +1,23 @@
+{{ev-title title='zip'}}
+
+{{ev-rules validator=model.validator}}
+
+<h2>How to use?</h2>
+<pre><code>
+  zip: {
+    message: "Invalid zip"
+  }
+
+  zip: true
+  zip: 'Invalid zip'
+
+</code></pre>
+<h2>Example</h2>
+<form {{action 'submit' on='submit'}} class='example' autocomplete="off">
+  <ul>
+    <li>Enter zip: (NNNNN or NNNNN-NNNN)</li>
+    <li class='{{unless model.validationResult.field.hasError 'hide'}} error-msg'>{{model.validationResult.field.error}}</li>
+    <li>{{input type='text' classNameBindings='model.validationResult.field.hasError:error-field' value=model.field}}</li>
+    <li><button type='submit'>Submit</button></li>
+  </ul>
+</form>

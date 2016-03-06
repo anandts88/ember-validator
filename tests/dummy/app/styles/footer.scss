@@ -1,0 +1,16 @@
+.footer {
+  position: fixed;
+  height: 20px;
+  background-color: #CCCBCB;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 400;
+}
+
+.footer div {
+  font-size: 0.8em;
+  top: 1px;
+  position: relative;
+  font-weight: bold;
+}

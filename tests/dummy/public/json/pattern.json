@@ -1,0 +1,112 @@
+{
+  "rules": [
+    {
+      "rule":"hasAlphabet",
+      "description":"Validates property has an alphabet."
+    },
+    {
+      "rule":"hasUpperCase",
+      "description":"Validates property has an upper case alphabet."
+    },
+    {
+      "rule":"hasLowerCase",
+      "description":"Validates property has an lower case alphabet."
+    },
+    {
+      "rule":"hasNumber",
+      "description":"Validates property has a number."
+    },
+    {
+      "rule":"hasSpecial",
+      "description":"Validates property has a special character."
+    },
+    {
+      "rule":"hasNoSpecial",
+      "description":"Validates property has no special characters."
+    },
+    {
+      "rule":"hasNoSpace",
+      "description":"Validates property has no space."
+    },
+    {
+      "rule":"with",
+      "description":"Test property with supplied pattern, valid if the pattern matches the property."
+    },
+    {
+      "rule":"without",
+      "description":"Test property with supplied pattern, valid if the pattern not matches the property."
+    },
+    {
+      "rule":"array",
+      "options": [
+        {
+          "name": "with",
+          "description": "Test property with supplied pattern, valid if the pattern matches the property."
+        },
+        {
+          "name": "without",
+          "description": "Test property with supplied pattern, valid if the pattern not matches the property."
+        }
+      ],
+      "description":"Test property with array of 'with' or 'without' patterns."
+    }
+  ],
+
+  "options": [
+     {
+       "name":"pattern",
+       "description":"Default pattern for number /^\\d+(,\\d{3})(.\\d)?$/. If you are not happy with default supply your own pattern."
+     },
+     {
+       "name":"message",
+       "description":"Error message to be displayed when validation fails. Common message for all rules."
+     },
+     {
+       "name":"messages",
+       "description":"Object holding error message for each rule."
+     }
+   ],
+
+   "messages": [
+      {
+        "rule":"hasAlphabet",
+        "description":"Error message returned when hasAlphabet validation fails."
+      },
+      {
+        "rule":"hasUpperCase",
+        "description":"Error message returned when hasUpperCase validation fails."
+      },
+      {
+        "rule":"hasLowerCase",
+        "description":"Error message returned when hasLowerCase validation fails."
+      },
+      {
+        "rule":"hasNumber",
+        "description":"Error message returned when hasNumber validation fails."
+      },
+      {
+        "rule":"hasSpecial",
+        "description":"Error message returned when hasSpecial validation fails."
+      },
+      {
+        "rule":"hasNoSpecial",
+        "description":"Error message returned when hasNoSpecial validation fails."
+      },
+      {
+        "rule":"hasNoSpace",
+        "description":"Error message returned when hasNoSpace validation fails."
+      },
+      {
+        "rule":"with",
+        "description":"Error message returned when with validation fails."
+      },
+      {
+        "rule":"without",
+        "description":"Error message returned when without validation fails."
+      },
+      {
+        "rule":"array",
+        "description":"Error message returned when array validation fails. This must be array error messages, one for each pattern in rule 'array'"
+      }
+    ]
+}

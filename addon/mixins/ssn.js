@@ -2,7 +2,9 @@ import Ember from 'ember';
 import Constants from 'ember-validator/constants';
 
 const {
-  Mixin
+  Mixin,
+  isNone,
+  isEmpty
 } = Ember;
 
 export default Mixin.create({
@@ -12,38 +14,48 @@ export default Mixin.create({
     Constants.SSN_PATTERN3
   ],
 
-  perform() {
-    let value = this.model.get(this.property);
-    let test  = false;
+  ssn(value) {
+    let result  = false;
     let pattern = Ember.A();
+    let compare = this.options.with;
+    let { all } = this.options;
     let format;
     let index;
 
-    if (!Ember.isEmpty(value)) {
-      for (let count = 1; count <= this.FORMATS.length; count++) {
-        index = count - 1;
-        format = this.options['format' + count];
-        if (format || this.options.all) {
-          pattern.pushObject(this.FORMATS[index]);
-        }
+    for (let count = 1; count <= this.FORMATS.length; count++) {
+      index = count - 1;
+      format = this.options[`format${count}`];
+      if (format || all) {
+        pattern.pushObject(this.FORMATS[index]);
       }
+    }
 
-      if (this.options.with) {
-        pattern.pushObject(this.options.with);
+    if (compare) {
+      pattern.pushObject(compare);
+    }
+
+    if (isEmpty(pattern)) {
+      pattern.pushObject(this.FORMATS[0]);
+    }
+
+    pattern.forEach((arr) => {
+      if (arr.test(value)) {
+        result = true;
       }
+    });
 
-      if (Ember.isEmpty(pattern)) {
-        pattern.pushObject(this.FORMATS[0]);
-      }
+    if (!result) {
+      return this.message('ssn');
+    }
+  },
 
-      pattern.forEach(function(arr) {
-        if (arr.test(value)) {
-          test = true;
-        }
-      });
+  perform() {
+    let result;
+    if (!isNone(value)) {
 
-      if (!test) {
-        this.pushResult(this.options.message);
+      result = this.ssn(value);
+      if (!isNone(result)) {
+        return result;
       }
     }
   }

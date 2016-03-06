@@ -1,0 +1,26 @@
+{{ev-title title='custom'}}
+
+{{ev-rules validator=model.validator}}
+
+<h2>How to use?</h2>
+<pre><code>
+  import { inlineValidator } from 'ember-validator';
+
+  {
+    userName: {
+      custom: inlineValidator(function(model, property) {
+        return 'Error message';
+      })
+    }
+  }
+
+</code></pre>
+<h2>Example</h2>
+<form {{action 'submit' on='submit'}} class='example' autocomplete="off">
+  <ul>
+    <li>The sum of `2 + 2` is :</li>
+    <li class='{{unless model.validationResult.field2.hasError 'hide'}} error-msg'>{{model.validationResult.field2.error}}</li>
+    <li>{{input type='text' classNameBindings='model.validationResult.field2.hasError:error-field' value=model.field2}}</li>
+    <li><button type='submit'>Submit</button></li>
+  </ul>
+</form>

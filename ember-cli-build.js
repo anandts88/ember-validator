@@ -6,7 +6,8 @@ module.exports = function(defaults) {
   var app = new EmberAddon(defaults, {
     // Add options here
   });
-  app.import(app.bowerDirectory + '/moment/min/moment.min.js');
+  app.import(app.bowerDirectory + '/moment/moment.js');
+  app.import(app.bowerDirectory + '/lodash/lodash.js');
 
   /*
     This build file specifies the options for the dummy test app of this

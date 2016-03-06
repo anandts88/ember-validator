@@ -1,0 +1,158 @@
+{
+  "rules": [
+     {
+        "rule":"date",
+        "description":"Validates property is of type date."
+     },
+     {
+        "rule":"weekend",
+        "description":"Validates property is weekend."
+     },
+     {
+        "rule":"notWeekend",
+        "description":"Validates property is not weekend."
+     },
+     {
+        "rule":"before",
+        "option": [
+          {
+            "name": "target",
+            "description":"Target date to be compared with property. This can be string, date or moment."
+          },
+          {
+            "name": "format",
+            "description":"Format of target of date."
+          }
+        ],
+        "description":"Validates property is before supplied target date."
+     },
+     {
+        "rule":"after",
+        "option": [
+          {
+            "name": "target",
+            "description":"Target date to be compared with property. This can be string, date or moment."
+          },
+          {
+            "name": "format",
+            "description":"Format of target of date."
+          }
+        ],
+        "description":"Validates property is after supplied target date."
+     },
+     {
+        "rule":"beforeSame",
+        "option": [
+          {
+            "name": "target",
+            "description":"Target date to be compared with property. This can be string, date or moment."
+          },
+          {
+            "name": "format",
+            "description":"Format of target of date."
+          }
+        ],
+        "description":"Validates property is before or same as supplied target date."
+     },
+     {
+        "rule":"afterSame",
+        "option": [
+          {
+            "name": "target",
+            "description":"Target date to be compared with property. This can be string, date or moment."
+          },
+          {
+            "name": "format",
+            "description":"Format of target of date."
+          }
+        ],
+        "description":"Validates property is after or same as supplied target date."
+     },
+     {
+        "rule":"same",
+        "option": [
+          {
+            "name": "target",
+            "description":"Target date to be compared with property. This can be string, date or moment."
+          },
+          {
+            "name": "format",
+            "description":"Format of target of date."
+          }
+        ],
+        "description":"Validates property is equal to supplied target date."
+     },
+     {
+        "rule":"notSame",
+        "option": [
+          {
+            "name": "target",
+            "description":"Target date to be compared with property. This can be string, date or moment."
+          },
+          {
+            "name": "format",
+            "description":"Format of target of date."
+          }
+        ],
+        "description":"Validates property is not equal to supplied target date."
+     }
+   ],
+
+   "options": [
+      {
+        "name":"format",
+        "description":"If property is string, then supply format of date here."
+      },
+      {
+        "name":"time",
+        "description":"Set to true, if you want to include time in the validation. Default time is not included."
+      },
+      {
+        "name":"message",
+        "description":"Error message to be displayed when validation fails. Common message for all rules."
+      },
+      {
+        "name":"messages",
+        "description":"Object holding error message for each rule."
+      }
+    ],
+
+    "messages": [
+      {
+        "rule":"date",
+        "description":"Error message to be displayed if date is not valid."
+      },
+      {
+        "rule":"weekend",
+        "description":"Error message returned when weekend validation fails."
+      },
+      {
+        "rule":"notWeekend",
+        "description":"Error message returned when notWeekend validation fails."
+      },
+      {
+        "rule":"before",
+        "description":"Error message returned when before validation fails."
+      },
+      {
+        "rule":"beforeSame",
+        "description":"Error message returned when beforeSame validation fails."
+      },
+      {
+        "rule":"same",
+        "description":"Error message returned when same validation fails."
+      },
+      {
+        "rule":"notSame",
+        "description":"Error message returned when notSame validation fails."
+      },
+      {
+        "rule":"after",
+        "description":"Error message returned when after validation fails."
+      },
+      {
+        "rule":"afterSame",
+        "description":"Error message returned when afterSame validation fails."
+      }
+    ]
+}

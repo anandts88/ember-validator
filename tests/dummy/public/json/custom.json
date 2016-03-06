@@ -1,0 +1,8 @@
+{
+  "rules": [
+     {
+        "rule":"custom",
+        "description":"Define your validations on the fly using `inlineValidator` function and it must needs to return error message if your custom validations fails."
+     }
+   ]
+}

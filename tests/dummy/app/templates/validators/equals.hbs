@@ -1,0 +1,40 @@
+{{ev-title title='equals'}}
+
+{{ev-rules validator=model.validator}}
+
+<h2>How to use?</h2>
+<pre><code>
+  equals: {
+    message: 'Only myusername is accepted',
+    accept: 'myusername'
+  }
+
+  equals: {
+    message: 'Only myusername is not allowed',
+    reject: 'myusername'
+  }
+
+  equals: {
+    accept: 'correctusername',
+    reject: 'wrongusername',
+    messages: {
+      accept: 'Only correctusername is accepted',
+      reject: 'wrongusername is not accepted',
+    }
+  }
+
+</code></pre>
+
+<h2>Example</h2>
+<form {{action 'submit' on='submit'}} class='example' autocomplete="off">
+  <ul>
+    <li>Field1 (must have value 'cat'):</li>
+    <li class='{{unless model.validationResult.field1.hasError 'hide'}} error-msg'>{{model.validationResult.field1.error}}</li>
+    <li>{{input type='text' classNameBindings='model.validationResult.field1.hasError:error-field' value=model.field1}}</li>
+
+    <li>Field2 (must not have value 'dog'):</li>
+    <li class='{{unless model.validationResult.field2.hasError 'hide'}} error-msg'>{{model.validationResult.field2.error}}</li>
+    <li>{{input type='text' classNameBindings='model.validationResult.field2.hasError:error-field' value=model.field2}}</li>
+    <li><button type='submit'>Submit</button></li>
+  </ul>
+</form>

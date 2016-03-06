@@ -1,0 +1,31 @@
+{{ev-title title='phone'}}
+
+{{ev-rules validator=model.validator}}
+
+<h2>How to use?</h2>
+<pre><code>
+  phone: {
+    format1: true,
+    format5: true,
+    message: "Invalid phone"
+  }
+  // This matches format1 and format4 patterns of phone number
+
+  phone: {
+    all: true
+    message: "Invalid phone"
+  }
+
+  phone: true
+  phone: 'Invalid phone'
+
+</code></pre>
+<h2>Example</h2>
+<form {{action 'submit' on='submit'}} class='example' autocomplete="off">
+  <ul>
+    <li>Enter phone number: NNNNNNNNNN or (NNN) NNN-NNNN</li>
+    <li class='{{unless model.validationResult.field.hasError 'hide'}} error-msg'>{{model.validationResult.field.error}}</li>
+    <li>{{input type='text' classNameBindings='model.validationResult.field.hasError:error-field' value=model.field}}</li>
+    <li><button type='submit'>Submit</button></li>
+  </ul>
+</form>

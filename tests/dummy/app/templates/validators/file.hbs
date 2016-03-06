@@ -1,0 +1,27 @@
+{{ev-title title='file'}}
+
+<p>Available in release 2.0.0</p>
+
+{{ev-rules validator=model.validator}}
+
+<h2>How to use?</h2>
+<pre><code>
+  file: {
+    extension: ['jpg', 'png'],
+    sizeLessThanEqualTo: 1024 * 1024, // In bytes
+    messages: {
+      extension: 'Enter Valid extension',
+      sizeLessThanEqualTo: 'File size must be less than or equal to 1MB'
+    }
+  }
+
+</code></pre>
+
+<h2>Example</h2>
+<form {{action 'submit' on='submit'}} class='example' autocomplete="off">
+  <ul>
+    <li class='{{unless model.validationResult.myFiles.hasError 'hide'}} error-msg'>{{model.validationResult.myFiles.error}}</li>
+    <li>{{input-file files=model.myFiles}}</li>
+    <li><button type='submit'>Submit</button></li>
+  </ul>
+</form>

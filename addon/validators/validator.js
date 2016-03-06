@@ -4,7 +4,10 @@ import Errors from 'ember-validator/errors';
 
 const {
   Object: EmberObject,
-  computed
+  computed,
+  isNone,
+  isEmpty,
+  isArray
 } = Ember;
 
 const {
@@ -39,26 +42,36 @@ export default EmberObject.extend({
       if (!this.options.messages || typeof(this.options.messages) !== 'object') {
         this.set('options.messages', {});
       }
-
-      messages = Messages[this.validatorName];
-
-      if (typeof(messages) === 'string' && !this.options.message) {
-        this.set('options.message', messages);
-      } else if (typeof(messages) === 'object') {
-        for (let key in messages) {
-          if (Ember.isEmpty(this.options.messages[key])) {
-            this.options.messages[key] = this.options.message || messages[key];
-          }
-        }
-      }
     }
   },
 
-  render(message, options) {
-    message = message || 'Invalid';
+  message(rule, options) {
+    let message = this.options.messages[rule] || this.options.message;
+    let messages;
 
-    for(let option in options) {
-      message = message.replace('{{' + option + '}}', options[option]);
+    if (isArray(message) && option && options.messageIndex) {
+      message = message[options.messageIndex]
+    }
+
+    if (isNone(message) || isEmpty(message)) {
+      messages = Messages[this.validatorName];
+      if (typeof(messages) === 'object') {
+        message = messages[rule];
+      } else if (typeof(messages) === 'string') {
+        message = messages;
+      } else {
+        message = 'Invalid';
+      }
+    }
+
+    return this.render(message, options);
+  },
+
+  render(message='Invalid', options) {
+    if (!isNone(options)) {
+      for(let option in options) {
+        message = message.replace(`{{${option}}}`, options[option]);
+      }
     }
 
     return message;
@@ -73,9 +86,15 @@ export default EmberObject.extend({
   },
 
   validate() {
+    const value = this.model.get(this.property);
+    let result;
+
     this.errors.clear();
     if (this._isValidate()) {
-      this.perform();
+      result = this.perform(value);
+      if (!isNone(result)) {
+        this.errors.push(result);
+      }
     }
 
     return Errors.create({

@@ -1,15 +1,20 @@
 import Ember from 'ember';
 
 const {
-  Mixin
+  Mixin,
+  isEmpty
 } = Ember;
 
 export default Mixin.create({
+  notrequired(value) {
+    let result = isEmpty(value);
 
-  perform() {
-    let value = this.model.get(this.property);
-    if (!Ember.isEmpty(value)) {
-      this.pushResult(this.options.message);
+    if (!result) {
+      return this.message('notrequired');
     }
+  },
+
+  perform(value) {
+    return this.notrequired(value);
   }
 });

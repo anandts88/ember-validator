@@ -1,0 +1,23 @@
+{{ev-title title='required'}}
+
+{{ev-rules validator=model.validator}}
+
+<h2>How to use?</h2>
+<pre><code>
+  required: { message: 'Please enter a value' }
+  required: 'Please enter a value'
+  required: true
+
+</code></pre>
+
+<h2>Example</h2>
+<form {{action 'submit' on='submit'}} class='example' autocomplete="off">
+  <ul>
+    <li class='{{unless model.validationResult.userName.hasError 'hide'}} error-msg'>{{model.validationResult.userName.error}}</li>
+    <li>{{input type='text' value=model.userName classNameBindings='model.validationResult.userName.hasError:error-field'}}</li>
+    <li class='{{unless model.validationResult.gender.hasError 'hide'}} error-msg'>{{model.validationResult.gender.error}}</li>
+    <li>{{radio-button value=model.male group=model.gender}} Male.</li>
+    <li>{{radio-button value=model.female group=model.gender}} Female.</li>
+    <li><button type='submit'>Submit</button></li>
+  </ul>
+</form>

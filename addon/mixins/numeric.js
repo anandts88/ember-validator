@@ -8,30 +8,49 @@ const {
 } = Ember;
 
 export default Mixin.create({
-
-  isNumeric(str, pattern) {
-    let val;
-
-    pattern = pattern || Constants.NUMERIC_PATTERN;
-    if (pattern.test(str)) {
-      val = Number(this.removeSpecial(str));
-      return !isNaN(val) && isFinite(val);
+  isNumeric(value, pattern=Constants.NUMERIC_PATTERN) {
+    if (pattern.test(value)) {
+      value = this.convertToNumber(value);
+      return !isNaN(value) && isFinite(value);
     }
     return false;
   },
 
+  convertToNumber(value) {
+    if (typeof(value) === 'string') {
+      value = Number(value.replace(/[^\d.]/g, ''));
+    }
+    return value;
+  },
+
   isInteger(value) {
-    let val = Number(value);
-    return typeof(val) === 'number' && val % 1 === 0;
+    return typeof(value) === 'number' && value % 1 === 0;
   },
 
-  toStr(value) {
-    return value + '';
+  numeric(value) {
+    let { pattern } = this.options;
+    let result = this.isNumeric(value, pattern);
+
+    if (!result) {
+      return this.message('numeric');
+    }
   },
 
-  removeSpecial(str) {
-    return str.replace(/[^\d.]/g, '');
+  integer(value) {
+    let { integer } = this.options;
+
+    if (isNone(integer) || (typeof(integer) === 'boolean')) {
+      return;
+    }
+
+    let result = this.isInteger(value);
+
+    if (!result) {
+      return this.message('integer');
+    }
   },
+
+  odd(value)
 
   init() {
     this._super();

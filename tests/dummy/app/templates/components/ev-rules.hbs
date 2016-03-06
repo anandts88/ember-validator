@@ -1,0 +1,73 @@
+<h2>Rules</h2>
+<table border='0' cellpadding='0'>
+  <thead>
+    <tr>
+      <th>Rule</th>
+      {{#if isRuleHasOption}}
+        <th>Options</th>
+      {{/if}}
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each rules as |r|}}
+      <tr>
+        <td>{{r.rule}}</td>
+        {{#if isRuleHasOption}}
+          <td></td>
+        {{/if}}
+        <td>{{r.description}}</td>
+      </tr>
+
+      {{#if isRuleHasOption}}
+        {{#each r.option as |o|}}
+          <tr>
+            <td></td>
+            <td>{{o.name}}</td>
+            <td>{{o.description}}</td>
+          </tr>
+        {{/each}}
+      {{/if}}
+    {{/each}}
+  </tbody>
+</table>
+
+{{#if options}}
+  <h2>Options</h2>
+  <table border='0' cellpadding='0'>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each options as |option|}}
+        <tr>
+          <td>{{option.name}}</td>
+          <td>{{option.description}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{/if}}
+
+{{#if messages}}
+  <h3>messages</h3>
+  <table border='0' cellpadding='0'>
+    <thead>
+      <tr>
+        <th>Rule</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each messages as |message|}}
+        <tr>
+          <td>{{message.rule}}</td>
+          <td>{{message.description}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{/if}}

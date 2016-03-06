@@ -1,0 +1,19 @@
+{
+  "rules": [
+     {
+        "rule":"zip",
+        "description":"Validates property is Zip Code. Default US zip code."
+     }
+   ],
+
+   "options": [
+      {
+        "name":"with",
+        "description":"If you are not happy with default supply your own pattern."
+      },
+      {
+        "name":"message",
+        "description":"Error message to be displayed when validation fails."
+      }
+    ]
+}

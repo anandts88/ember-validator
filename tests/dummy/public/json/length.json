@@ -1,0 +1,46 @@
+{
+  "rules": [
+    {
+      "rule":"minimum",
+      "description":"Validates length of property is greater than or equal to supplied target value."
+    },
+    {
+      "rule":"maximum",
+      "description":"Validates length of property is less than or equal to supplied target value."
+    },
+    {
+      "rule":"is",
+      "description":"Validates length of property is equal to supplied target value."
+    }
+  ],
+
+  "options": [
+     {
+       "name":"tokenizer",
+       "description":"A function that tokenize the string to get length, by default tokenized with ''."
+     },
+     {
+       "name":"message",
+       "description":"Error message to be displayed when validation fails. Common message for all rules."
+     },
+     {
+       "name":"messages",
+       "description":"Object holding error message for each rule."
+     }
+   ],
+
+   "messages": [
+      {
+        "rule":"minimum",
+        "description":"Error message returned when minimum validation fails."
+      },
+      {
+        "rule":"maximum",
+        "description":"Error message returned when maximum validation fails."
+      },
+      {
+        "rule":"is",
+        "description":"Error message returned when is validation fails."
+      }
+    ]
+}

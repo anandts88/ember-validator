@@ -1,0 +1,44 @@
+{{ev-title title='date'}}
+
+{{ev-rules validator=model.validator}}
+
+<h2>How to use?</h2>
+<pre><code>
+  date: {
+    weekend: true,
+    messages: {
+      weekend: 'must not be weekend'
+    }
+  }
+
+  // If property date is 'Nov/01/2015'
+  date: {
+    format: 'MMM/DD/YYYY',
+    before: {
+      target: 'Oct/31/2015',
+      format: 'MMM/DD/YYYY'
+    },
+    afterSame: {
+      target: new Date()
+    },
+    same: {
+      target: moment()
+    },
+    messages: {
+      before: 'date must be before Oct/31/2015',
+      afterSame: 'date must be after new Date()',
+      same: 'date must be same as moment()'
+    }
+  }
+
+</code></pre>
+
+<h2>Example</h2>
+<form {{action 'submit' on='submit'}} autocomplete="off">
+  <ul>
+    <li>Date in format MM/DD/YYYY:</li>
+    <li class='{{unless model.validationResult.date.hasError 'hide'}} error-msg'>{{model.validationResult.date.error}}</li>
+    <li>{{input type='text' checked=model.date classNameBindings='model.validationResult.date.hasError:error-field' value=model.date}}</li>
+    <li><button type='submit'>Submit</button></li>
+  </ul>
+</form>

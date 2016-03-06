@@ -1,21 +1,37 @@
 import Ember from 'ember';
-import Pattern from 'ember-validator/mixins/pattern';
 import Constants from 'ember-validator/constants';
 
 const {
-  Mixin
+  Mixin,
+  isNone
 } = Ember;
 
-export default Mixin.create(Pattern, {
+export default Mixin.create({
   pattern: Constants.ZIP_PATTERN,
 
-  init() {
-    this._super();
+  zip(value) {
+    let compare = this.options.with;
+    let result;
 
-    if (!this.options.with) {
-      this.set('options.with', this.get('pattern'));
+    if (isNone(compare)) {
+      with = this.get('pattern');
     }
 
-    this.options.messages.with = this.options.message;
+    result = compare.test(value);
+
+    if (!result) {
+      return this.message('zip');
+    }
+  },
+
+  perform(value) {
+    let result;
+
+    if (!isNone(value)) {
+      result = this.zip(value);
+      if (!isNone(result)) {
+        return result;
+      }
+    }
   }
 });

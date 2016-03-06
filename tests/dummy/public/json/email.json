@@ -1,0 +1,19 @@
+{
+  "rules": [
+     {
+        "rule":"email",
+        "description":"Validates property is email."
+     }
+   ],
+
+   "options": [
+      {
+        "name":"with",
+        "description":"If you are not happy with default supply your own pattern."
+      },
+      {
+        "name":"message",
+        "description":"Error message to be displayed when validation fails."
+      }
+    ]
+}

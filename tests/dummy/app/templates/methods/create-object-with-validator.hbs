@@ -1,0 +1,116 @@
+{{ev-title title='createObjectWithValidator'}}
+<p>Triggers validator by computing property change.</p>
+<p>
+  For example, if you are defining validation rules for a property called `userName` for the object called `model`,
+  then validation result of that property is available in property `userNameValidatorResult`.
+</p>
+
+<h2>Arguments</h2>
+<p>Takes plain javascript object as argument and the object has below property.</p>
+<ul>
+  <li>
+    <span class='argument'>model (mandatory)</span>
+    <p class='description'>Model which needs to be validated.</p>
+  </li>
+  <li>
+    <span class='argument'>validations  (mandatory)</span>
+    <p class='description'>Validation rules</p>
+  </li>
+</ul>
+
+<h3>return</h3>
+<ul>
+  <li>
+    <span class='argument'>model.get('userNameValidatorResult.errors')</span>
+    <p class='description'>Returns all error messages related with userName property</p>
+  </li>
+  <li>
+    <span class='argument'>model.get('userNameValidatorResult.error')</span>
+    <p class='description'>Returns first message related with userName property</p>
+  </li>
+  <li>
+    <span class='argument'>model.get('userNameValidatorResult.isValid')</span>
+    <p class='description'>Returns `true` if userName property is valid</p>
+  </li>
+  <li>
+    <span class='argument'>model.get('userNameValidatorResult.isInvalid')</span>
+    <p class='description'>Returns `true` if userName property is invalid</p>
+  </li>
+  <li>
+    <span class='argument'>model.get('userNameValidatorResult.hasError')</span>
+    <p class='description'>Returns `true` if userName property has errors</p>
+  </li>
+  <li>
+    <span class='argument'>model.get('validatorResultHasError')</span>
+    <p class='description'>Returns `true` if the model has any validation error.</p>
+  </li>
+  <li>
+    <span class='argument'>model.get('validatorResultIsInValid')</span>
+    <p class='description'>Returns `true` if the model is not valid.</p>
+  </li>
+  <li>
+    <span class='argument'>model.get('validatorResultIsValid')</span>
+    <p class='description'>Returns `true` if the model is valid.</p>
+  </li>
+  <li>
+    <span class='argument'>model.get('validatorResultErrors')</span>
+    <p class='description'>Returns arry of all validation error messages in the model.</p>
+  </li>
+</ul>
+
+<h2>Sample</h2>
+<pre><code>
+  // app/models/login.js
+  import Ember from 'ember';
+
+  export default Ember.Object.extend({
+    userName: null,
+    password: null
+  });
+
+  // app/routes/login.js
+  import Ember from 'ember';
+  import EmberValidator from 'ember-validator';
+  import LoginModel from 'app/models/login';
+
+  export default Ember.Route.extend(EmberValidations, {
+    model: function() {
+      var model = LoginModel.create();
+      var validations = {
+        userName: {
+          required: { message: 'Enter username' },
+          length: {
+            minimum: 4,
+            messages: {
+              minimum: 'Username is minimum of 4 characters'
+            }
+          }
+        },
+        password: {
+          required: { message: 'Enter Password' }
+        }
+      };
+
+      this.computedValidateMap({
+        model: model,
+        validations: validations
+      });
+
+      return model;
+    }
+  });
+
+</code></pre>
+
+<h2>Example</h2>
+<form {{action 'submit' on='submit'}} class='example' autocomplete="off">
+  <ul>
+    <li>Username:</li>
+    <li class='{{unless model.userNameValidatorResult.hasError 'hide'}} error-msg'>{{model.userNameValidatorResult.error}}</li>
+    <li>{{input type='text' value=model.userName classNameBindings='model.userNameValidatorResult.hasError:error-field'}}</li>
+    <li>Password:</li>
+    <li class='{{unless model.passwordValidatorResult.hasError 'hide'}} error-msg'>{{model.passwordValidatorResult.error}}</li>
+    <li>{{input type='text' value=model.password classNameBindings='model.passwordValidatorResult.hasError:error-field'}}</li>
+    <li><button type='submit'>Submit</button></li>
+  </ul>
+</form>

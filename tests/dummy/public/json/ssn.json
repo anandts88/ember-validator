@@ -1,0 +1,35 @@
+{
+  "rules": [
+     {
+        "rule":"ssn",
+        "description":"Validates property is SSN."
+     }
+   ],
+
+   "options": [
+      {
+        "name":"format1",
+        "description":"999-99-9999. Set to true if you want to validate this pattern."
+      },
+      {
+        "name":"format2",
+        "description":"999999999. Set to true if you want to validate this pattern."
+      },
+      {
+        "name":"format3",
+        "description":"999.99.9999. Set to true if you want to validate this pattern."
+      },
+      {
+        "name":"all",
+        "description":"Set to true, if you want to validate with all the default formats."
+      },
+      {
+        "name":"with",
+        "description":"If you are not happy with default supply your own pattern."
+      },
+      {
+        "name":"message",
+        "description":"Error message to be displayed when validation fails."
+      }
+    ]
+}

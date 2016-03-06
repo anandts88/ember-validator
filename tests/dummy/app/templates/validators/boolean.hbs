@@ -1,0 +1,30 @@
+{{ev-title title='boolean'}}
+
+{{ev-rules validator=model.validator}}
+
+<h2>How to use?</h2>
+<pre><code>
+  boolean: true
+  boolean: {
+    required: true
+    message: 'must be true'
+  }
+
+  boolean: {
+    notrequired: true
+    messages: {
+      boolean: 'must be boolean'
+      notrequired: 'must be false'
+    }
+  }
+
+</code></pre>
+
+<h2>Example</h2>
+<form {{action 'submit' on='submit'}} class='example' autocomplete="off">
+  <ul>
+    <li class='{{unless model.validationResult.isAccept.hasError 'hide'}} error-msg'>{{model.validationResult.isAccept.error}}</li>
+    <li>{{input type='checkbox' checked=model.isAccept classNameBindings='model.validationResult.isAccept.hasError:error-field'}} Check to Accept.</li>
+    <li><button type='submit'>Submit</button></li>
+  </ul>
+</form>

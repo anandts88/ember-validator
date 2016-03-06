@@ -1,3 +1,8 @@
-<h2 id="title">Welcome to Ember</h2>
-
-{{outlet}}
+{{ev-header class='header'}}
+<div class='content'>
+  {{ev-menu class='menu'}}
+  <section class='container'>
+    {{outlet}}
+  </section>
+</div>
+{{ev-footer class='footer'}}

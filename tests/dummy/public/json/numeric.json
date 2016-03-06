@@ -1,0 +1,119 @@
+{
+  "rules": [
+    {
+      "rule":"numeric",
+      "description":"Validates property is numeric."
+    },
+    {
+      "rule":"integer",
+      "description":"Validates property is integer."
+    },
+    {
+      "rule":"greaterThan",
+      "description":"Validates property is greater than supplied target value."
+    },
+    {
+      "rule":"lessThan",
+      "description":"Validates property is less than supplied target value."
+    },
+    {
+      "rule":"greaterThanOrEqualTo",
+      "description":"Validates property is greater than or equal to supplied target value."
+    },
+    {
+      "rule":"lessThanOrEqualTo",
+      "description":"Validates property is less than or equal to supplied target value."
+    },
+    {
+      "rule":"equalTo",
+      "description":"Validates property is equal to supplied target value."
+    },
+    {
+      "rule":"notEqualTo",
+      "description":"Validates property is not equal to supplied target value."
+    },
+    {
+      "rule":"odd",
+      "description":"Validates property is odd number."
+    },
+    {
+      "rule":"even",
+      "description":"Validates property is even number."
+    },
+    {
+      "rule":"decimal",
+      "description":"Validates number of digits in decimal part of property is less than or equal to supplied target value. Default 12."
+    },
+    {
+      "rule":"fractions",
+      "description":"Validates number of digits in fraction part of property is less than or equal to supplied target value. Default 2."
+    },
+    {
+      "rule":"range",
+      "description":"Validates property is within supplied target array."
+    },
+    {
+      "rule":"between",
+      "description":"Validates property is in between supplied target array."
+    }
+  ],
+
+  "messages": [
+      {
+        "rule":"numeric",
+        "description":"Error message returned when numeric validation fails."
+      },
+      {
+        "rule":"integer",
+        "description":"Error message returned when integer validation fails."
+      },
+      {
+        "rule":"greaterThan",
+        "description":"Error message returned when greaterThan validation fails."
+      },
+      {
+        "rule":"greaterThanOrEqualTo",
+        "description":"Error message returned when greaterThanOrEqualTo validation fails."
+      },
+      {
+        "rule":"equalTo",
+        "description":"Error message returned when equalTo validation fails."
+      },
+      {
+        "rule":"notEqualTo",
+        "description":"Error message returned when notEqualTo validation fails."
+      },
+      {
+        "rule":"lessThan",
+        "description":"Error message returned when lessThan validation fails."
+      },
+      {
+        "rule":"lessThanOrEqualTo",
+        "description":"Error message returned when lessThanOrEqualTo validation fails."
+      },
+      {
+        "rule":"odd",
+        "description":"Error message returned when odd validation fails."
+      },
+      {
+        "rule":"even",
+        "description":"Error message returned when even validation fails."
+      },
+      {
+        "rule":"decimal",
+        "description":"Error message returned when decimal validation fails."
+      },
+      {
+        "rule":"fraction",
+        "description":"Error message returned when fraction validation fails."
+      },
+      {
+        "rule":"range",
+        "description":"Error message returned when range validation fails."
+      },
+      {
+        "rule":"between",
+        "description":"Error message returned when between validation fails."
+      }
+    ]
+}

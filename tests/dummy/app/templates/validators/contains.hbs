@@ -1,0 +1,58 @@
+{{ev-title title='contains'}}
+
+{{ev-rules validator=model.validator}}
+
+<h2>How to use?</h2>
+<pre><code>
+  contains: {
+    exclude: ['A', 'B', 'C'],
+    messages: {
+      exclude: 'Please enter valid value'
+    }
+  }
+
+  contains: {
+    exclude: ['A', 'B', 'C'],
+    message: 'Please enter valid value'
+  }
+
+  contains: {
+    excludeRange: [1, 10],
+    messages: {
+      excludeRange: 'cannot be between 1 and 10'
+    }
+  }
+
+  contains: {
+    include: ['A', 'B', 'C'],
+    messages: {
+      include: 'Please enter valid value'
+    }
+  }
+
+  contains: {
+    include: ['A', 'B', 'C'],
+    message: 'Please enter valid value'
+  }
+
+  contains: {
+    includeRange: [1, 10],
+    messages: {
+      includeRange: 'cannot be between 1 and 10'
+    }
+  }
+
+</code></pre>
+
+<h2>Example</h2>
+<form {{action 'submit' on='submit'}} autocomplete="off">
+  <ul>
+    <li>Include only 'A', 'B', 'C', 'D'</li>
+    <li class='{{unless model.validationResult.field1.hasError 'hide'}} error-msg'>{{model.validationResult.field1.error}}</li>
+    <li>{{input type='text' classNameBindings='model.validationResult.field1.hasError:error-field' maxlength=1 value=model.field1}}</li>
+    <li>Exclude anything within 4 to 9</li>
+    <li class='{{unless model.validationResult.field2.hasError 'hide'}} error-msg'>{{model.validationResult.field2.error}}</li>
+    <li>{{input type='text' classNameBindings='model.validationResult.field2.hasError:error-field' maxlength=1 value=model.field2}}</li>
+    <li><button type='submit'>Submit</button></li>
+  </ul>
+</form>

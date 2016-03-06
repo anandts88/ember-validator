@@ -1,0 +1,167 @@
+{
+  "rules": [
+    {
+      "rule":"greaterThanEqualTo",
+      "description":"Validates property has number of files greater than or equal to supplied target value."
+    },
+    {
+      "rule":"lessThanEqualTo",
+      "description":"Validates property has number of files less than or equal to supplied target value."
+    },
+    {
+      "rule":"greaterThan",
+      "description":"Validates property has number of files greater than supplied target value."
+    },
+    {
+      "rule":"lessThan",
+      "description":"Validates property has number of files less than supplied target value."
+    },
+    {
+      "rule":"equalTo",
+      "description":"Validates property has number of files equal to supplied target value."
+    },
+    {
+      "rule":"notEqualTo",
+      "description":"Validates property has number of files not equal to supplied target value."
+    },
+    {
+      "rule":"extension",
+      "description":"Validates property has files that are in the list of supplied target extensions array."
+    },
+    {
+      "rule":"type",
+      "description":"Validates property has files that are in the list of supplied target type."
+    },
+    {
+      "rule":"sizeGreaterThanEqualTo",
+      "description":"Validates each file in the property has size that is greater than or equal to supplied target value."
+    },
+    {
+      "rule":"sizeLessThanEqualTo",
+      "description":"Validates each file in the property has size that is less than or equal to supplied target value."
+    },
+    {
+      "rule":"sizeGreaterThan",
+      "description":"Validates each file in the property has size that is greater than supplied target value."
+    },
+    {
+      "rule":"sizeLessThan",
+      "description":"Validates each file in the property has size that is less than supplied target value."
+    },
+    {
+      "rule":"sizeEqualTo",
+      "description":"Validates each file in the property has size that is equal to supplied target value."
+    },
+    {
+      "rule":"sizeNotEqualTo",
+      "description":"Validates each file in the property has size that is not equal to supplied target value."
+    },
+    {
+      "rule":"totalSizeGreaterThanEqualTo",
+      "description":"Validates total size of each file in the property is greater than or equal to supplied target value."
+    },
+    {
+      "rule":"totalSizeLessThanEqualTo",
+      "description":"Validates total size of each file in the property is less than or equal to supplied target value."
+    },
+    {
+      "rule":"totalSizeGreaterThan",
+      "description":"Validates total size of each file in the property is greater than supplied target value."
+    },
+    {
+      "rule":"totalSizeLessThan",
+      "description":"Validates total size of each file in the property is less than supplied target value."
+    },
+    {
+      "rule":"totalSizeEqualTo",
+      "description":"Validates total size of each file in the property is equal to supplied target value."
+    },
+    {
+      "rule":"totalSizeNotEqualTo",
+      "description":"Validates total size of each file in the property is not equal to supplied target value."
+    }
+  ],
+
+   "messages": [
+     {
+       "rule":"greaterThanEqualTo",
+       "description":"Error message returned when greaterThanEqualTo validation fails."
+     },
+     {
+       "rule":"lessThanEqualTo",
+       "description":"Error message returned when lessThanEqualTo validation fails."
+     },
+     {
+       "rule":"greaterThan",
+       "description":"Error message returned when greaterThan validation fails."
+     },
+     {
+       "rule":"lessThan",
+       "description":"Error message returned when lessThan validation fails."
+     },
+     {
+       "rule":"equalTo",
+       "description":"Error message returned when equalTo validation fails."
+     },
+     {
+       "rule":"notEqualTo",
+       "description":"Error message returned when notEqualTo validation fails."
+     },
+     {
+       "rule":"extension",
+       "description":"Error message returned when extension validation fails."
+     },
+     {
+       "rule":"type",
+       "description":"Error message returned when type validation fails."
+     },
+     {
+       "rule":"sizeGreaterThanEqualTo",
+       "description":"Error message returned when sizeGreaterThanEqualTo validation fails."
+     },
+     {
+       "rule":"sizeLessThanEqualTo",
+       "description":"Error message returned when sizeLessThanEqualTo validation fails."
+     },
+     {
+       "rule":"sizeGreaterThan",
+       "description":"Error message returned when sizeGreaterThan validation fails.s"
+     },
+     {
+       "rule":"sizeLessThan",
+       "description":"Error message returned when sizeLessThan validation fails."
+     },
+     {
+       "rule":"sizeEqualTo",
+       "description":"Error message returned when sizeEqualTo validation fails."
+     },
+     {
+       "rule":"sizeNotEqualTo",
+       "description":"Error message returned when sizeNotEqualTo validation fails."
+     },
+     {
+       "rule":"totalSizeGreaterThanEqualTo",
+       "description":"Error message returned when totalSizeGreaterThanEqualTo validation fails."
+     },
+     {
+       "rule":"totalSizeLessThanEqualTo",
+       "description":"Error message returned when totalSizeLessThanEqualTo validation fails."
+     },
+     {
+       "rule":"totalSizeGreaterThan",
+       "description":"Error message returned when totalSizeGreaterThan validation fails."
+     },
+     {
+       "rule":"totalSizeLessThan",
+       "description":"Error message returned when totalSizeLessThan validation fails."
+     },
+     {
+       "rule":"totalSizeEqualTo",
+       "description":"Error message returned when totalSizeEqualTo validation fails."
+     },
+     {
+       "rule":"totalSizeNotEqualTo",
+       "description":"Error message returned when totalSizeNotEqualTo validation fails."
+     }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "rules": [
+     {
+        "rule":"boolean",
+        "description":"Validates property is of type boolean."
+     },
+     {
+        "rule":"required",
+        "description":"Validates property has a value 'true'."
+     },
+     {
+        "rule":"notrequired",
+        "description":"Validates property has a value 'false'."
+     }
+  ],
+
+  "options": [
+     {
+       "name":"message",
+       "description":"Error message to be displayed when validation fails."
+     },
+     {
+       "name":"messages",
+       "description":"Object holding error message for each rule."
+     }
+   ],
+
+   "messages": [
+      {
+        "rule":"required",
+        "description":"Error message returned when required validation fails."
+      },
+      {
+        "rule":"notrequired",
+        "description":"Error message returned when notrequired validation fails."
+      },
+      {
+        "rule":"boolean",
+        "description":"Error message returned when boolean validation fails."
+      }
+    ]
+}

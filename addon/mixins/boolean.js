@@ -1,27 +1,65 @@
 import Ember from 'ember';
 
 const {
-  Mixin
+  Mixin,
+  isNone
 } = Ember;
 
 export default Mixin.create({
-  init() {
-    this._super();
+  boolean(value) {
+    let result = typeof(value) === 'boolean';
 
-    if (typeof(this.options.required) === 'undefined' && typeof(this.options.notrequired) === 'undefined') {
-      this.options.required = true;
+    if (!result) {
+      return this.message('boolean');
     }
   },
 
-  perform() {
-    let value = this.model.get(this.property);
+  required(value) {
+    let { required } = this.options;
+    let result;
 
-    if (typeof(value) !== 'boolean') {
-      this.pushResult(this.options.messages.boolean);
-    } else if (this.options.required && !value) {
-      this.pushResult(this.options.messages.required);
-    } else if (this.options.notrequired && value) {
-      this.pushResult(this.options.message.notrequired);
+    if (isNone(required)) {
+      return;
+    }
+
+    result = value === true;
+
+    if (!result) {
+      return this.message('required');
+    }
+  },
+
+  notrequired(value) {
+    let { notrequired } = this.options;
+    let result;
+
+    if (isNone(notrequired)) {
+      return;
+    }
+
+    result = value === false;
+
+    if (!result) {
+      return this.message('notrequired');
+    }
+  },
+
+  perform(value) {
+    let result;
+
+    result = this.boolean(value);
+    if (!isNone(result)) {
+      return result;
+    }
+
+    result = this.required(value);
+    if (!isNone(result)) {
+      return result;
+    }
+
+    result = this.notrequired(value);
+    if (!isNone(result)) {
+      return result;
     }
   }
 });

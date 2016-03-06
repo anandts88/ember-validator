@@ -1,0 +1,15 @@
+{
+  "rules": [
+     {
+        "rule":"notrequired",
+        "description":"Validates property don’t have a value."
+     }
+   ],
+
+   "options": [
+      {
+        "name":"message",
+        "description":"Error message to be displayed when validation fails."
+      }
+    ]
+}

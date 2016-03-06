@@ -26,9 +26,11 @@ export default {
   },
 
   length: {
-    maximum: 'must be maximum of {{count}} characters',
-    minimum: 'must be minimum of {{count}} characters',
-    is: 'must be {{count}} characters'
+    lessThan: 'must be less than {{lessThan}} characters',
+    greaterThan: 'must be greater than {{greaterThan}} characters',
+    maximum: 'must be maximum of {{maximum}} characters',
+    minimum: 'must be minimum of {{minimum}} characters',
+    is: 'must be {{is}} characters'
   },
 
   numeric: {

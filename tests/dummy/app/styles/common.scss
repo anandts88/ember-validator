@@ -1,0 +1,154 @@
+html {
+  height: 100%;
+}
+
+body {
+  line-height: 1.5;
+  font-size: 1em;
+}
+
+a {
+  color: #03A7F5;
+  text-decoration: none;
+  font-size: 0.9em;
+}
+
+a:hover {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+ul li {
+  list-style: none;
+  overflow: hidden;
+}
+
+input[type=password], input[type=text], textarea {
+  border: 1px solid #cdcdcd;
+  padding: 1px 7px;
+  border-radius: 4px;
+}
+
+h1 {
+  margin: 12px 0;
+  font-size: 2em;
+}
+
+h2 {
+  margin: 10px 0;
+  font-size: 1.5em;
+}
+
+h3 {
+  margin: 8px 0;
+  font-size: 1.2em;
+}
+
+table {
+  width: 100%;
+}
+
+table thead tr th {
+  background-color: #42DEAC;
+  color: #fff;
+  border: 1px solid #ccc;
+}
+
+table tbody tr td {
+  border: 1px solid #ccc;
+  padding: 0 10px;
+}
+
+pre {
+  border: 1px solid #ccc;
+  color: #0004BD;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  width: 60%;
+  border-radius: 4px;
+}
+
+form>ul>li {
+  padding: 1px;
+  padding-bottom: 15px;
+}
+
+button {
+  color: #333;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  padding: 0px 10px;
+  margin-bottom: 0;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  box-shadow: none;
+}
+
+button:hover {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+
+button[disabled] {
+  cursor: not-allowed;
+  opacity: .65;
+}
+
+form.example {
+  border: 1px solid #ccc;
+  padding: 15px 20px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.hide {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
+.error-msg {
+  color: #AF0202;
+}
+
+input.error-field {
+  background-color: #f3e6ec;
+  border-color: #AF0202;
+}
+
+.selected-menu {
+  background-color: #F1F1F1;
+}
+
+.loader-container {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  text-align: center;
+}
+
+.loader-container-img {
+  height: 235px;
+  width: 320px;
+}

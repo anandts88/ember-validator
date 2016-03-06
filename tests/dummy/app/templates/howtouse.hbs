@@ -1,0 +1,34 @@
+<section class='main'>
+  {{ev-title title='How to use?'}}
+
+  <p>Import `EmberValidator` mixin and use this in any route, controller, service or component.</p>
+  <p>Note: This applicable only for `Ember Object` which has container.</p>
+  <pre><code>
+    import EmberValidator from 'ember-validator';
+
+    export default Ember.Controller.extend(EmberValidations, {});
+
+  </code></pre>
+  <p>If you want to add this mixin in a regular `Ember.Object` which dont have container support,
+    then use `initilizer` to reopen `EmberValidator` and assing container instance to it.</p>
+
+  <pre><code>
+    /**
+      initializers/ember-validator.js
+    */
+    import Ember from 'ember';
+    import EmberValidator from 'ember-validator';
+
+    export default {
+      name: 'ember-validator-reopen',
+      initialize: function(container) {
+        EmberValidator.reopen({
+          container: container
+        });
+      }
+    }
+
+    Ember.Object.extend(EmberValidator, {});
+
+  </code></pre>
+</section>

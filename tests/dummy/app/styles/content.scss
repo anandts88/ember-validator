@@ -1,0 +1,45 @@
+.content {
+  top: 40px;
+  position: relative;
+  width: 100%;
+  min-height: 500px;
+}
+
+.content .menu {
+  width: 200px;
+  min-height: 500px;
+  position: fixed;
+  top: 40px;
+  border-right-style: solid;
+  border-right-width: 1px;
+  padding: 12px 5px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  float: left;
+  bottom: 20px;
+  z-index: 900px;
+}
+
+.content .container {
+  margin-left: 230px;
+  margin-bottom: 30px;
+  margin-right: 30px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.menu ul.menus li {
+  padding: 3px 0;
+}
+
+.menu .menus .submenus {
+  margin-left: 15px;
+}
+
+.argument {
+  color: #03A7F5;
+}
+
+.description {
+  margin-left: 30px;
+}

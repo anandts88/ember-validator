@@ -1,0 +1,50 @@
+{
+  "rules": [
+     {
+        "rule":"include",
+        "description":"Validates property is present in supplied target array."
+     },
+     {
+        "rule":"exclude",
+        "description":"Validates property is not present in supplied target array."
+     },
+     {
+        "rule":"includeRange",
+        "description":"Validates property is present within the supplied target range."
+     },
+     {
+        "rule":"excludeRange",
+        "description":"Validates property is not present within the supplied target range."
+     }
+   ],
+
+   "options": [
+      {
+        "name":"message",
+        "description":"Error message to be displayed when validation fails."
+      },
+      {
+        "name":"messages",
+        "description":"Object holding error message for each rule."
+      }
+    ],
+
+    "messages": [
+      {
+        "rule":"exclude",
+        "description":"Error message returned when exclude validation fails."
+      },
+      {
+        "rule":"exludeRange",
+        "description":"Error message returned when exludeRange validation fails."
+      },
+      {
+        "rule":"include",
+        "description":"Error message returned when include validation fails."
+      },
+      {
+        "rule":"includeRange",
+        "description":"Error message returned when includeRange validation fails."
+      }
+    ]
+}
