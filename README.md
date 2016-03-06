@@ -23,6 +23,17 @@ Please add `ember-validator` to your `package.json`:
 }
 ```
 
+By default date validator is enabled in the validator, so you may need moment library.
+If you want to skip importing moment library then set `useDateValidator` to `false` in `ember-cli-build.js`.
+
+```javascript
+var app = new EmberApp(defaults, {
+  emberValidator: {
+    useDateValidator: false
+  }
+});
+```
+
 ## Installation
 
 * `git clone` this repository
