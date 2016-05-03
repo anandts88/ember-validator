@@ -110,7 +110,7 @@ export default Mixin.create({
             }
 
             if (!this.compare(value, target, this.CHECKS[key])) {
-              this.pushResult(this.options.messages[key], { date: target.format(option.format) });
+              this.pushResult(this.options.messages[key], { date: target.format(format) });
             }
           }
         }
