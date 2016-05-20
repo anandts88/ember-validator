@@ -43,6 +43,7 @@ export default Mixin.create({
   },
 
   resetValidatorProperties(model) {
+    model.set('computedValidations', false);
     // Loop through each keys in the model
     for (let key in model) {
       // Check if key contains `ValidatorResult` or `ValidatorPreviousVal`.
@@ -123,6 +124,8 @@ export default Mixin.create({
       errorProperty = propDetails.errorProperty;
       propertyName = errorProperty || property;
       mapper[propertyName] = property;
+
+      model.set('computedValidations', true);
 
       // Define a property which holds initial value of the property.
       model.set(`${propertyName}ValidatorPreviousVal`, model.get(property));
@@ -287,12 +290,17 @@ export default Mixin.create({
 
     if (noPromise) {
       result = self.performValidation(model, validations);
-      model.set(validationResult, result);
+      if (model.get('computedValidations')) {
+        model.set(validationResult, result);
+      }
+
       return result;
     } else {
       return new Promise((resolve, reject) => {
         result = self.performValidation(model, validations);
-        model.set(validationResult, result);
+        if (model.get('computedValidations')) {
+          model.set(validationResult, result);
+        }
         if (result.get('isValid')) {
           resolve(true);
         } else {
