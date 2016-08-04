@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import Messages from 'ember-validator/messages';
 import Errors from 'ember-validator/errors';
+import isHTMLSafe from 'ember-string-ishtmlsafe-polyfill';
 
 const {
   Object: EmberObject,
@@ -56,6 +57,11 @@ export default EmberObject.extend({
 
   render(message, options) {
     message = message || 'Invalid';
+
+    // Handle the `Ember.Handlebars.SafeString()` and the `Ember.String.htmlSafe()` cases.
+    if (isHTMLSafe(message)) {
+      message = message.toString();
+    }
 
     for(let option in options) {
       message = message.replace('{{' + option + '}}', options[option]);
