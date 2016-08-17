@@ -3,6 +3,7 @@ import Errors from 'ember-validator/errors';
 import Validator from 'ember-validator/validators/validator';
 import Constants from 'ember-validator/constants';
 import getOwner from 'ember-getowner-polyfill';
+import isHTMLSafe from 'ember-string-ishtmlsafe-polyfill';
 
 const {
   Mixin,
@@ -402,6 +403,8 @@ export default Mixin.create({
 
         if (typeof(options) === 'string') { // If error message is directly defined for the validator, the create options object with message.
           options = { message: options };
+        } else if (isHTMLSafe(options)) {
+          options = { message: options.toString() };
         } else if (typeof(options) !== 'object') {
           options = {};
         }
