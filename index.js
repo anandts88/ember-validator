@@ -10,28 +10,22 @@ module.exports = {
   },
 
   included: function(app, parentAddon) {
-    var _app = app;
+    // https://github.com/ember-cli/ember-cli/issues/3718#issuecomment-88122543
+    this._super.included.apply(this, arguments);
+
     var _options;
     var _useDateValidator;
 
-    // Quick fix for add-on nesting
-    // https://github.com/ember-cli/ember-cli/issues/3718
-    // https://github.com/aexmachina/ember-cli-sass/blob/v5.3.0/index.js#L73-L75
-    if (typeof app.import !== 'function' && app.app) {
-      _app = app.app;
+    var target = parentAddon || app;
+
+    // allow addon to be nested - see: https://github.com/ember-cli/ember-cli/issues/3718
+    if (target.app) {
+      target = target.app;
     }
 
-    // https://github.com/ember-cli/ember-cli/issues/3718#issuecomment-88122543
-    this._super.included.call(this, _app);
+    target.options = target.options || {};
 
-    // Per the ember-cli documentation
-    // http://ember-cli.com/extending/#broccoli-build-options-for-in-repo-addons
-    _app = (parentAddon || _app || {});
-
-    _app.options = _app.options || {};
-    _options = _app.options.emberValidator || {
-      useDateValidator: true
-    };
+    _options = target.options.emberValidator || { useDateValidator: true };
 
     _useDateValidator = _options.useDateValidator;
 
@@ -41,8 +35,8 @@ module.exports = {
 
     // Import moment library only when `useDateValidator` is set to true. By default moment library is imported.
     // If you dont want to use date validator then set `useDateValidator` to false.
-    if (_app.import && _useDateValidator) {
-      this.importBowerDependencies(_app);
+    if (target.import && _useDateValidator) {
+      this.importBowerDependencies(target);
     }
   },
 
