@@ -51,8 +51,7 @@ export default Mixin.create({
     }
 
     if (this.options.range && isArray(this.options.range)) {
-      first = this.options.range[0];
-      last = this.options.range[1];
+      let [ first, last ] = this.options.range;
 
       first = this.toStr(first);
       first = this.isNumeric(first) ? Number(this.removeSpecial(first)) : 0;
@@ -67,8 +66,7 @@ export default Mixin.create({
     }
 
     if (this.options.between && isArray(this.options.between)) {
-      first = this.options.range[0];
-      last = this.options.range[1];
+      let [ first, last ] = this.options.range;
 
       first = this.toStr(first);
       first = this.isNumeric(first) ? Number(this.removeSpecial(first)) : 0;

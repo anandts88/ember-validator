@@ -1,5 +1,3 @@
-import Ember from 'ember';
-
 export default {
   boolean: {
     boolean: 'must be boolean',

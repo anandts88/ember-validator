@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import { isPlainObject } from 'ember-validator/utils';
+import moment from 'moment';
 
 const {
   Mixin,

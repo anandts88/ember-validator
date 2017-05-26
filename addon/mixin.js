@@ -2,7 +2,6 @@ import Ember from 'ember';
 import Errors from 'ember-validator/errors';
 import Validator from 'ember-validator/validators/validator';
 import Constants from 'ember-validator/constants';
-import isHTMLSafe from 'ember-string-ishtmlsafe-polyfill';
 
 const {
   Mixin,
@@ -22,7 +21,6 @@ const {
 } = RSVP;
 
 const {
-  and,
   or,
   not,
   alias
@@ -110,7 +108,6 @@ export default Mixin.create({
     } = props;
     const validationProp    = Ember.A();
     const computedErrors    = Ember.A();
-    const computedDirty     = Ember.A();
     const mapper            = {};
     let validationHasError  = Ember.A();
     let validationError     = Ember.A();
@@ -118,7 +115,6 @@ export default Mixin.create({
     let propertyName;
     let propDetails;
     let errorProperty;
-    let computedFunc;
 
     this.resetValidatorProperties(model);
 
@@ -148,7 +144,6 @@ export default Mixin.create({
         let propertyName  = sender.replace('ValidatorResult', '');
         let prop          = mapper[propertyName]; // Get the property name.
         let result        = Errors.create();
-        let validationResultInModel;
 
         // By default validation will happen irrespective of field is dirty or not.
         // Check `validateOnDirty` if it is true then perform validation only if the field becomes dirty otherwise skips validation

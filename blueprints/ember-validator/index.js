@@ -1,7 +1,9 @@
+/* eslint-env node */
 var RSVP = require('rsvp');
 
-/*jshint node:true*/
 module.exports = {
+  description: '',
+
   normalizeEntityName: function() {},
 
   afterInstall: function() {
