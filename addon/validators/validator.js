@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import Messages from 'ember-validator/messages';
 import Errors from 'ember-validator/errors';
-import isHTMLSafe from 'ember-string-ishtmlsafe-polyfill';
 
 const {
   Object: EmberObject,
@@ -61,7 +60,7 @@ export default EmberObject.extend({
     message = message || 'Invalid';
 
     // Handle the `Ember.Handlebars.SafeString()` and the `Ember.String.htmlSafe()` cases.
-    if (isHTMLSafe(message)) {
+    if (Ember.String.isHTMLSafe(message)) {
       message = message.toString();
     }
 

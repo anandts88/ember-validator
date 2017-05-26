@@ -405,7 +405,7 @@ export default Mixin.create({
 
         if (typeof(options) === 'string') { // If error message is directly defined for the validator, the create options object with message.
           options = { message: options };
-        } else if (isHTMLSafe(options)) {
+        } else if (Ember.String.isHTMLSafe(options)) {
           options = { message: options.toString() };
         } else if (typeof(options) !== 'object') {
           options = {};
@@ -456,11 +456,11 @@ export default Mixin.create({
       validator = cache[validatorName];
     } else { // If validator is not present in cache.
       // Look up if the validator is overriden or defined by the user in the application.
-      customValidator = container._lookupFactory(`validator:${validatorName}`);
+      customValidator = container.factoryFor(`validator:${validatorName}`);
       if (customValidator) { // If user customized the validator
         validator = customValidator;
       } else { // If user not customized the validator, then look up default validators.
-        predefinedValidator = container._lookupFactory(`ember-validator@validator:${validatorName}`);
+        predefinedValidator = container.factoryFor(`ember-validator@validator:${validatorName}`);
         validator = predefinedValidator;
       }
       // Add the validator in cache.
