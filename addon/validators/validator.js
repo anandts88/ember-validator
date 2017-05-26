@@ -5,7 +5,9 @@ import isHTMLSafe from 'ember-string-ishtmlsafe-polyfill';
 
 const {
   Object: EmberObject,
-  computed
+  computed,
+  get,
+  set
 } = Ember;
 
 const {
@@ -30,21 +32,21 @@ export default EmberObject.extend({
   init() {
     let messages;
 
-    this.set('errors', Ember.A());
+    set(this, 'errors', Ember.A());
 
     if (this.validatorName !== 'custom') {
       if (typeof(this.options) !== 'object') {
-        this.set('options', {});
+        set(this, 'options', {});
       }
 
       if (!this.options.messages || typeof(this.options.messages) !== 'object') {
-        this.set('options.messages', {});
+        set(this, 'options.messages', {});
       }
 
       messages = Messages[this.validatorName];
 
       if (typeof(messages) === 'string' && !this.options.message) {
-        this.set('options.message', messages);
+        set(this, 'options.message', messages);
       } else if (typeof(messages) === 'object') {
         for (let key in messages) {
           if (Ember.isEmpty(this.options.messages[key])) {
@@ -85,8 +87,8 @@ export default EmberObject.extend({
     }
 
     return Errors.create({
-      errors: this.get('errors'),
-      validators: this.get('validators')
+      errors: get(this, 'errors'),
+      validators: get(this, 'validators')
     });
   },
 
@@ -105,7 +107,7 @@ export default EmberObject.extend({
         if (typeof(model[validate]) === 'function') {
           result = model[validate]();
         } else {
-          result = model.get(validate);
+          result = get(model, validate);
         }
       }
       result = positive ? result : !result;
@@ -115,8 +117,8 @@ export default EmberObject.extend({
   },
 
   _isValidate() {
-    let ifValidate = this._check(this.get('if'), this.model, this.property, true);
-    let unlessValidate = this._check(this.get('unless'), this.model, this.property, false);
+    let ifValidate = this._check(get(this, 'if'), this.model, this.property, true);
+    let unlessValidate = this._check(get(this, 'unless'), this.model, this.property, false);
     return ifValidate && unlessValidate;
   },
 

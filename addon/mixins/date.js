@@ -3,7 +3,8 @@ import { isPlainObject } from 'ember-validator/utils';
 
 const {
   Mixin,
-  isNone
+  isNone,
+  get
 } = Ember;
 
 export default Mixin.create({
@@ -42,7 +43,7 @@ export default Mixin.create({
   },
 
   perform() {
-    let value = this.model.get(this.property);
+    let value = get(this.model, this.property);
     let option;
     let target;
     let format;

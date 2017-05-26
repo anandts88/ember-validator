@@ -2,7 +2,8 @@ import Ember from 'ember';
 
 const {
   Mixin,
-  isNone
+  isNone,
+  get
 } = Ember;
 
 export default Mixin.create({
@@ -22,14 +23,14 @@ export default Mixin.create({
 
   getValue(key) {
     if (this.options[key].constructor === String) {
-      return this.model.get(this.options[key]) || 0;
+      return get(this.model, this.options[key]) || 0;
     } else {
       return this.options[key];
     }
   },
 
   perform() {
-    let value = this.model.get(this.property);
+    let value = get(this.model, this.property);
     let propertyLength;
     let comparisonLength;
     let comparisonType;

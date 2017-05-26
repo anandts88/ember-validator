@@ -1,7 +1,8 @@
 import Ember from 'ember';
 
 const {
-  Mixin
+  Mixin,
+  get
 } = Ember;
 
 export default Mixin.create({
@@ -14,7 +15,7 @@ export default Mixin.create({
   },
 
   perform() {
-    let value = this.model.get(this.property);
+    let value = get(this.model, this.property);
 
     if (typeof(value) !== 'boolean') {
       this.pushResult(this.options.messages.boolean);
