@@ -4,7 +4,9 @@ import Constants from 'ember-validator/constants';
 const {
   Mixin,
   isNone,
-  isArray
+  isArray,
+  get,
+  set
 } = Ember;
 
 export default Mixin.create({
@@ -37,15 +39,15 @@ export default Mixin.create({
     this._super();
 
     if (!this.options.pattern) {
-      this.set('options.pattern', Constants.NUMERIC_PATTERN);
+      set(this, 'options.pattern', Constants.NUMERIC_PATTERN);
     }
 
     if (!this.options.decimal) {
-      this.set('options.decimal', 12);
+      set(this, 'options.decimal', 12);
     }
 
     if (!this.options.fractions) {
-      this.set('options.fractions', 2);
+      set(this, 'options.fractions', 2);
     }
 
     if (this.options.range && isArray(this.options.range)) {
@@ -91,7 +93,7 @@ export default Mixin.create({
   },
 
   perform() {
-    let value = this.model.get(this.property);
+    let value = get(this.model, this.property);
     let pattern = this.options.pattern;
     let str;
     let comparisonValue;

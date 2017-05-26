@@ -1,0 +1,21 @@
+<form {{action "login" on="submit"}}>
+  <div>
+    <label for="userName"></label>
+    {{input type="text" id="userName" value=model.userName}}
+    {{#each validationResult.userName.errors as |error|}}
+      <p>{{error}}</p>
+    {{/each}}
+  </div>
+
+  <div>
+    <label for="password"></label>
+    {{input type="password" id="password" value=model.password}}
+    {{#each validationResult.password.errors as |error|}}
+      <p>{{error}}</p>
+    {{/each}}
+  </div>
+
+  <div>
+    <button type="submit">Login</button>
+  </div>
+</form>
