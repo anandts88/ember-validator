@@ -1,9 +1,3 @@
-import Ember from 'ember';
-
-const {
-  isArray
-} = Ember;
-
 const objectProto       = Object.prototype;
 const funcProto         = Function.prototype;
 
@@ -31,7 +25,9 @@ export function isHostObject(value) {
   if (value !== null && typeof value.toString !== 'function') {
     try {
       result = !!(value + '');
-    } catch (e) {}
+    } catch (e) {
+      // empty block
+    }
   }
   return result;
 }
