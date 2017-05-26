@@ -2,7 +2,8 @@ import Ember from 'ember';
 
 const {
   Mixin,
-  isArray
+  isArray,
+  get
 } = Ember;
 
 export default Mixin.create({
@@ -33,7 +34,7 @@ export default Mixin.create({
   },
 
   perform() {
-    let value = this.model.get(this.property);
+    let value = get(this.model, this.property);
 
     if (!Ember.isEmpty(value)) {
       if (this.options.exclude && this.options.exclude.indexOf(value) !== -1) {

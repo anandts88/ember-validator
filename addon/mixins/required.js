@@ -1,12 +1,13 @@
 import Ember from 'ember';
 
 const {
-  Mixin
+  Mixin,
+  get
 } = Ember;
 
 export default Mixin.create({
   perform() {
-    let value = this.model.get(this.property);
+    let value = get(this.model, this.property);
     if (Ember.isBlank(value)) {
       this.pushResult(this.options.message);
     }

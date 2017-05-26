@@ -2,7 +2,8 @@ import Ember from 'ember';
 import Constants from 'ember-validator/constants';
 
 const {
-  Mixin
+  Mixin,
+  get
 } = Ember;
 
 export default Mixin.create({
@@ -19,7 +20,7 @@ export default Mixin.create({
   ],
 
   perform() {
-    let value = this.model.get(this.property);
+    let value = get(this.model, this.property);
     let test  = false;
     let pattern = Ember.A();
     let format;

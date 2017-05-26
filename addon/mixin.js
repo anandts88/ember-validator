@@ -2,7 +2,7 @@ import Ember from 'ember';
 import Errors from 'ember-validator/errors';
 import Validator from 'ember-validator/validators/validator';
 import Constants from 'ember-validator/constants';
-import getOwner from 'ember-getowner-polyfill';
+import isHTMLSafe from 'ember-string-ishtmlsafe-polyfill';
 
 const {
   Mixin,
@@ -11,7 +11,10 @@ const {
   computed,
   isEmpty,
   isNone,
-  warn
+  warn,
+  get,
+  set,
+  getOwner
 } = Ember;
 
 const {
@@ -33,7 +36,7 @@ export default Mixin.create({
       noPromise
     } = props;
 
-    validations = this.get('validations') || validations;
+    validations = get(this, 'validations') || validations;
 
     return this.validateMap({
       model: this,
@@ -43,7 +46,7 @@ export default Mixin.create({
   },
 
   resetValidatorProperties(model) {
-    model.set('computedValidations', false);
+    set(model, 'computedValidations', false);
     // Loop through each keys in the model
     for (let key in model) {
       // Check if key contains `ValidatorResult` or `ValidatorPreviousVal`.
@@ -53,7 +56,7 @@ export default Mixin.create({
         key.indexOf('FieldIsDirty') != -1 ||
         key === 'validatorHasError') {
         // Reset the proerties to `undefined` value
-        model.set(key, undefined);
+        set(model, key, undefined);
       }
     }
   },
@@ -125,10 +128,10 @@ export default Mixin.create({
       propertyName = errorProperty || property;
       mapper[propertyName] = property;
 
-      model.set('computedValidations', true);
+      set(model, 'computedValidations', true);
 
       // Define a property which holds initial value of the property.
-      model.set(`${propertyName}ValidatorPreviousVal`, model.get(property));
+      set(model, `${propertyName}ValidatorPreviousVal`, get(model, property));
 
       // Define a computed Property to check whether the field is dirty (holding the initial value or not)
       defineProperty(model, `${propertyName}FieldIsDirty`, computed(property, function(sender) {
@@ -136,7 +139,7 @@ export default Mixin.create({
         let prop = mapper[propertyName]; // Get the property name.
         // Compare current value with the initial value of the property.
         // If they are not equal then it is considered value has been changed and hence the field becomes dirty
-        return this.get(`${propertyName}ValidatorPreviousVal`) !== this.get(prop);
+        return get(this, `${propertyName}ValidatorPreviousVal`) !== get(this, prop);
       }));
 
       // Defina a computed property which listens the `property` change and perform validation.
@@ -149,7 +152,7 @@ export default Mixin.create({
 
         // By default validation will happen irrespective of field is dirty or not.
         // Check `validateOnDirty` if it is true then perform validation only if the field becomes dirty otherwise skips validation
-        if (!validateOnDirty || (validateOnDirty && this.get(`${propertyName}FieldIsDirty`))) {
+        if (!validateOnDirty || (validateOnDirty && get(this, `${propertyName}FieldIsDirty`))) {
           rules[prop] = validations[prop];
 
           // Invoke valiation map
@@ -181,7 +184,7 @@ export default Mixin.create({
         let error;
 
         validationError.forEach((prop) => {
-          error = current.get(prop);
+          error = get(current, prop);
           if (error) {
             result.pushObject(error);
           }
@@ -227,19 +230,19 @@ export default Mixin.create({
           for (let count = 0; count < rules.length; count++) { // Loop through validation rules
             rule = obj.rules[count];
             validationResult = rule.validate(); // Perform validation by calling its `validate` method.
-            errors = validationResult.get('errors'); // Get errors messages from result of validation.
+            errors = get(validationResult, 'errors'); // Get errors messages from result of validation.
             if (!isEmpty(errors)) { // If the errors are not empty then model is not valid
               allErrors.pushObjects(errors);
               // By default validation result for that particular property is assinged in the name of property.
               // If `errorProperty` is defined then validation result is assinged in the name of value defined in `errorProperty`.
-              result.set(errorProperty || property, validationResult);
+              set(result, errorProperty || property, validationResult);
               break;
             }
           }
         });
       }
     }
-    result.set('errors', allErrors);
+    set(result, 'errors', allErrors);
 
     return result;
   },
@@ -255,19 +258,19 @@ export default Mixin.create({
       errorProperty = propDetails.errorProperty;
       propertyName = errorProperty || property;
 
-      validatorResult = model.get(`${propertyName}ValidatorResult`);
-      if (!isNone(validatorResult) && validatorResult.get('hasError')) {
-        validatorResult.get('errors').clear();
+      validatorResult = get(model, `${propertyName}ValidatorResult`);
+      if (!isNone(validatorResult) && get(validatorResult, 'hasError')) {
+        get(validatorResult, 'errors').clear();
       }
     }
   },
 
   resetValidationMapResult(model, propertyName) {
-    const validationResultProperty  = model.get('validationResultProperty') || 'validationResult'; // Name of the property in model where the validation result will be set.
-    const validationResult          = model.get(validationResultProperty);
+    const validationResultProperty  = get(model, 'validationResultProperty') || 'validationResult'; // Name of the property in model where the validation result will be set.
+    const validationResult          = get(model, validationResultProperty);
 
-    if (!isNone(validationResult) && validationResult.get(`${propertyName}.hasError`)) {
-    validationResult.get(`${propertyName}.errors`).clear();
+    if (!isNone(validationResult) && get(validationResult, `${propertyName}.hasError`)) {
+      get(validationResult, `${propertyName}.errors`).clear();
     }
   },
 
@@ -279,10 +282,10 @@ export default Mixin.create({
       validations,
       noPromise // Holds flag to indicating return value is a promise or not.
     } = props;
-    const validationResult = model.get('validationResultProperty') || 'validationResult'; // Name of the property in model where the validation result will be set.
+    const validationResult = get(model, 'validationResultProperty') || 'validationResult'; // Name of the property in model where the validation result will be set.
     let result;
 
-    model.set(validationResult, undefined);
+    set(model, validationResult, undefined);
 
     if (!skipreset) {
       this.resetComputedValidationResult(model, validations);
@@ -290,18 +293,18 @@ export default Mixin.create({
 
     if (noPromise) {
       result = self.performValidation(model, validations);
-      if (model.get('computedValidations')) {
-        model.set(validationResult, result);
+      if (get(model, 'computedValidations')) {
+        set(model, validationResult, result);
       }
 
       return result;
     } else {
       return new Promise((resolve, reject) => {
         result = self.performValidation(model, validations);
-        if (model.get('computedValidations')) {
-          model.set(validationResult, result);
+        if (get(model, 'computedValidations')) {
+          set(model, validationResult, result);
         }
-        if (result.get('isValid')) {
+        if (get(result, 'isValid')) {
           resolve(true);
         } else {
           reject(result);
@@ -356,7 +359,7 @@ export default Mixin.create({
         result = positive ? result : !result;
         break;
       case 'string':
-        result = typeof(model[validate]) === 'function' ? model[validate]() : model.get(validate);
+        result = typeof(model[validate]) === 'function' ? model[validate]() : get(model, validate);
         // For `if` validations return `results` as it is for `unless` return inverse.
         result = positive ? result : !result;
         break;
@@ -375,7 +378,7 @@ export default Mixin.create({
   createInlineValidator() {
     return Validator.extend({
       perform() {
-        const callback = this.get('callback');
+        const callback = get(this, 'callback');
         let error;
 
         if (callback) {
@@ -446,7 +449,7 @@ export default Mixin.create({
 
     // Define cache
     if (service) {
-      cache = service.get('cache');
+      cache = get(service, 'cache');
     }
 
     if (cache[validatorName]) { // Check if validator is available in cache

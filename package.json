@@ -1,6 +1,6 @@
 {
   "name": "ember-validator",
-  "version": "1.3.7",
+  "version": "1.3.8",
   "description": "Perform Ember Object Validation",
   "directories": {
     "test": "tests"
@@ -63,7 +63,7 @@
   ],
   "dependencies": {
     "ember-cli-babel": "^5.1.5",
-    "ember-getowner-polyfill": "^1.0.0",
+    "ember-getowner-polyfill": "^1.2.2",
     "ember-string-ishtmlsafe-polyfill": "^1.1.0"
   },
   "ember-addon": {

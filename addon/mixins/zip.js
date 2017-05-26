@@ -3,7 +3,9 @@ import Pattern from 'ember-validator/mixins/pattern';
 import Constants from 'ember-validator/constants';
 
 const {
-  Mixin
+  Mixin,
+  get,
+  set
 } = Ember;
 
 export default Mixin.create(Pattern, {
@@ -13,7 +15,7 @@ export default Mixin.create(Pattern, {
     this._super();
 
     if (!this.options.with) {
-      this.set('options.with', this.get('pattern'));
+      set(this, 'options.with', get(this, 'pattern'));
     }
 
     this.options.messages.with = this.options.message;
