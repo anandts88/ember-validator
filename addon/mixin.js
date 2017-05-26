@@ -2,7 +2,6 @@ import Ember from 'ember';
 import Errors from 'ember-validator/errors';
 import Validator from 'ember-validator/validators/validator';
 import Constants from 'ember-validator/constants';
-import isHTMLSafe from 'ember-string-ishtmlsafe-polyfill';
 
 const {
   Mixin,
