@@ -1,19 +1,10 @@
-import Ember from 'ember';
+import { isHTMLSafe } from '@ember/template';
+import { isEmpty } from '@ember/utils';
+import { A } from '@ember/array';
+import { not, empty, alias } from '@ember/object/computed';
+import EmberObject, { set, get } from '@ember/object';
 import Messages from 'ember-validator/messages';
 import Errors from 'ember-validator/errors';
-
-const {
-  Object: EmberObject,
-  computed,
-  get,
-  set
-} = Ember;
-
-const {
-  alias,
-  empty,
-  not
-} = computed;
 
 export default EmberObject.extend({
   errors: undefined,
@@ -31,7 +22,7 @@ export default EmberObject.extend({
   init() {
     let messages;
 
-    set(this, 'errors', Ember.A());
+    set(this, 'errors', A());
 
     if (this.validatorName !== 'custom') {
       if (typeof(this.options) !== 'object') {
@@ -48,7 +39,7 @@ export default EmberObject.extend({
         set(this, 'options.message', messages);
       } else if (typeof(messages) === 'object') {
         for (let key in messages) {
-          if (Ember.isEmpty(this.options.messages[key])) {
+          if (isEmpty(this.options.messages[key])) {
             this.options.messages[key] = this.options.message || messages[key];
           }
         }
@@ -60,7 +51,7 @@ export default EmberObject.extend({
     message = message || 'Invalid';
 
     // Handle the `Ember.Handlebars.SafeString()` and the `Ember.String.htmlSafe()` cases.
-    if (Ember.String.isHTMLSafe(message)) {
+    if (isHTMLSafe(message)) {
       message = message.toString();
     }
 

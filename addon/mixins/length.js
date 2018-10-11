@@ -1,10 +1,6 @@
-import Ember from 'ember';
-
-const {
-  Mixin,
-  isNone,
-  get
-} = Ember;
+import Mixin from '@ember/object/mixin';
+import { isNone, isEmpty } from '@ember/utils';
+import { get } from '@ember/object';
 
 export default Mixin.create({
   init() {
@@ -36,7 +32,7 @@ export default Mixin.create({
     let comparisonType;
     let option;
 
-    if (!Ember.isEmpty(value)) {
+    if (!isEmpty(value)) {
       for (let key in this.CHECKS) {
         option = this.options[key];
         if (isNone(option)) {

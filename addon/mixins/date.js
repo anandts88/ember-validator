@@ -1,12 +1,8 @@
-import Ember from 'ember';
+import Mixin from '@ember/object/mixin';
+import { isNone, isEmpty } from '@ember/utils';
+import { get } from '@ember/object';
 import { isPlainObject } from 'ember-validator/utils';
 import moment from 'moment';
-
-const {
-  Mixin,
-  isNone,
-  get
-} = Ember;
 
 export default Mixin.create({
 
@@ -71,7 +67,7 @@ export default Mixin.create({
       return date;
     };
 
-    if (!Ember.isEmpty(value)) {
+    if (!isEmpty(value)) {
       value = transform(value, this.options.format);
 
       if (!this.options.time) {

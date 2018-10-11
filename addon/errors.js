@@ -1,15 +1,5 @@
-import Ember from 'ember';
-
-const {
-  Object: EmberObject,
-  computed
-} = Ember;
-
-const {
-  alias,
-  empty,
-  not
-} = computed;
+import { not, empty, alias } from '@ember/object/computed';
+import EmberObject from '@ember/object';
 
 export default EmberObject.extend({
   errors: undefined,

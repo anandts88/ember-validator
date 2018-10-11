@@ -1,9 +1,6 @@
-import Ember from 'ember';
-
-const {
-  Mixin,
-  get
-} = Ember;
+import { isEmpty } from '@ember/utils';
+import Mixin from '@ember/object/mixin';
+import { get } from '@ember/object';
 
 export default Mixin.create({
   perform() {
@@ -12,7 +9,7 @@ export default Mixin.create({
     let array;
     let arr;
 
-    if (!Ember.isEmpty(value)) {
+    if (!isEmpty(value)) {
       if (this.options.hasSpecial) {
         if (typeof(this.options.hasSpecial) === 'string') {
           specialTest = new RegExp('(?=.*[' + this.options.hasSpecial + '])');
@@ -41,7 +38,7 @@ export default Mixin.create({
         this.pushResult(this.options.messages.with);
       } else if (this.options.without && this.options.without.test(value)) {
         this.pushResult(this.options.messages.without);
-      } else if (!Ember.isEmpty(this.options.array)) {
+      } else if (!isEmpty(this.options.array)) {
         array = this.options.array;
         for (let count = 0 ; count < array.length ; count++) {
           arr = array[count];

@@ -1,13 +1,8 @@
-import Ember from 'ember';
+import Mixin from '@ember/object/mixin';
+import { isNone, isEmpty } from '@ember/utils';
+import { isArray } from '@ember/array';
+import { set, get } from '@ember/object';
 import Constants from 'ember-validator/constants';
-
-const {
-  Mixin,
-  isNone,
-  isArray,
-  get,
-  set
-} = Ember;
 
 export default Mixin.create({
 
@@ -101,7 +96,7 @@ export default Mixin.create({
     let decimalVal;
     let option;
 
-    if (!Ember.isEmpty(value)) {
+    if (!isEmpty(value)) {
       str = this.toStr(value);
       if (!this.isNumeric(str, pattern)) {
         this.pushResult(this.options.messages.numeric);

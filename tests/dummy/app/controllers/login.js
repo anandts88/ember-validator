@@ -1,10 +1,6 @@
-import Ember from 'ember';
+import Controller from '@ember/controller';
+import { set } from '@ember/object';
 import EmberValidator from 'ember-validator';
-
-const {
-  Controller,
-  set
-} = Ember;
 
 export default Controller.extend(EmberValidator, {
 
@@ -15,6 +11,12 @@ export default Controller.extend(EmberValidator, {
         userName: {
           required: {
             message: "Please enter user name"
+          },
+          length: {
+            minimum: 4,
+            messages: {
+              minimum: 'Username is minimum of 4 characters'
+            }
           }
         },
 

@@ -1,9 +1,5 @@
-import Ember from 'ember';
-
-const {
-  Mixin,
-  get
-} = Ember;
+import Mixin from '@ember/object/mixin';
+import { get } from '@ember/object';
 
 export default Mixin.create({
   init() {
