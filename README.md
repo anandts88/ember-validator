@@ -37,7 +37,7 @@ var app = new EmberApp(defaults, {
 ## Installation
 
 * `git clone` this repository
-* `npm install`
+* `yarn install`
 * `bower install`
 
 ## Running
@@ -47,7 +47,7 @@ var app = new EmberApp(defaults, {
 
 ## Running Tests
 
-* `npm test` (Runs `ember try:testall` to test your addon against multiple Ember versions)
+* `yarn run test` (Runs `ember try:testall` to test your addon against multiple Ember versions)
 * `ember test`
 * `ember test --server`
 

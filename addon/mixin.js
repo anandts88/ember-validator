@@ -1,30 +1,15 @@
-import Ember from 'ember';
+import { isHTMLSafe } from '@ember/template';
+import { A } from '@ember/array';
+import { alias, not, or } from '@ember/object/computed';
+import Mixin from '@ember/object/mixin';
+import { Promise } from 'rsvp';
+import { isNone, isEmpty } from '@ember/utils';
+import { warn } from '@ember/debug';
+import { set, get, computed, defineProperty } from '@ember/object';
+import { getOwner } from '@ember/application';
 import Errors from 'ember-validator/errors';
 import Validator from 'ember-validator/validators/validator';
 import Constants from 'ember-validator/constants';
-
-const {
-  Mixin,
-  RSVP,
-  defineProperty,
-  computed,
-  isEmpty,
-  isNone,
-  warn,
-  get,
-  set,
-  getOwner
-} = Ember;
-
-const {
-  Promise
-} = RSVP;
-
-const {
-  or,
-  not,
-  alias
-} = computed;
 
 export default Mixin.create({
 
@@ -106,12 +91,12 @@ export default Mixin.create({
       validateOnDirty,
       validations
     } = props;
-    const validationProp    = Ember.A();
-    const computedErrors    = Ember.A();
+    const validationProp    = A();
+    const computedErrors    = A();
     const mapper            = {};
-    let validationHasError  = Ember.A();
-    let validationError     = Ember.A();
-    let dirty               = Ember.A();
+    let validationHasError  = A();
+    let validationError     = A();
+    let dirty               = A();
     let propertyName;
     let propDetails;
     let errorProperty;
@@ -175,7 +160,7 @@ export default Mixin.create({
       computedErrors.addObjects(validationError);
       computedErrors.pushObject(function() {
         const current = this;
-        const result  = Ember.A();
+        const result  = A();
         let error;
 
         validationError.forEach((prop) => {
@@ -206,7 +191,7 @@ export default Mixin.create({
   performValidation(model, validations) {
     const self        = this; // Holds the current instance.
     const result      = Errors.create();
-    const allErrors   = Ember.A();
+    const allErrors   = A();
     let rule;
     let errors;
     let validationResult;
@@ -309,7 +294,7 @@ export default Mixin.create({
   },
 
   constructValidators(model, validations) {
-    const validators = Ember.A();
+    const validators = A();
     let details;
     let rules;
     let errorProperty;
@@ -388,7 +373,7 @@ export default Mixin.create({
   },
 
   findValidators(rules, model, property) {
-    const validators = Ember.A();
+    const validators = A();
     let validator;
     let options;
 
@@ -400,7 +385,7 @@ export default Mixin.create({
 
         if (typeof(options) === 'string') { // If error message is directly defined for the validator, the create options object with message.
           options = { message: options };
-        } else if (Ember.String.isHTMLSafe(options)) {
+        } else if (isHTMLSafe(options)) {
           options = { message: options.toString() };
         } else if (typeof(options) !== 'object') {
           options = {};

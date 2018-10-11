@@ -1,10 +1,8 @@
-import Ember from 'ember';
+import { isEmpty } from '@ember/utils';
+import { A } from '@ember/array';
+import Mixin from '@ember/object/mixin';
+import { get } from '@ember/object';
 import Constants from 'ember-validator/constants';
-
-const {
-  Mixin,
-  get
-} = Ember;
 
 export default Mixin.create({
   FORMATS: [
@@ -22,11 +20,11 @@ export default Mixin.create({
   perform() {
     let value = get(this.model, this.property);
     let test  = false;
-    let pattern = Ember.A();
+    let pattern = A();
     let format;
     let index;
 
-    if (!Ember.isEmpty(value)) {
+    if (!isEmpty(value)) {
       for (let count = 1; count <= this.FORMATS.length; count++) {
         index = count - 1;
         format = this.options['format' + count];
@@ -39,7 +37,7 @@ export default Mixin.create({
         pattern.pushObject(this.options.with);
       }
 
-      if (Ember.isEmpty(pattern)) {
+      if (isEmpty(pattern)) {
         pattern.pushObject(this.FORMATS[0]);
       }
 

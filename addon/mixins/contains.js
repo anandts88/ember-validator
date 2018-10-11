@@ -1,10 +1,7 @@
-import Ember from 'ember';
-
-const {
-  Mixin,
-  isArray,
-  get
-} = Ember;
+import { isEmpty } from '@ember/utils';
+import Mixin from '@ember/object/mixin';
+import { isArray } from '@ember/array';
+import { get } from '@ember/object';
 
 export default Mixin.create({
 
@@ -36,7 +33,7 @@ export default Mixin.create({
   perform() {
     let value = get(this.model, this.property);
 
-    if (!Ember.isEmpty(value)) {
+    if (!isEmpty(value)) {
       if (this.options.exclude && this.options.exclude.indexOf(value) !== -1) {
         this.pushResult(this.options.messages.exclude);
       } else if (this.options.include && this.options.include.indexOf(value) === -1) {

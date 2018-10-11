@@ -1,12 +1,7 @@
-import Ember from 'ember';
+import Mixin from '@ember/object/mixin';
+import { set, get } from '@ember/object';
 import Constants from 'ember-validator/constants';
 import Pattern from 'ember-validator/mixins/pattern';
-
-const {
-  Mixin,
-  get,
-  set
-} = Ember;
 
 export default Mixin.create(Pattern, {
   pattern: Constants.EMAIL_PATTERN,

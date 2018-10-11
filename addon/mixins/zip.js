@@ -1,12 +1,7 @@
-import Ember from 'ember';
+import Mixin from '@ember/object/mixin';
+import { set, get } from '@ember/object';
 import Pattern from 'ember-validator/mixins/pattern';
 import Constants from 'ember-validator/constants';
-
-const {
-  Mixin,
-  get,
-  set
-} = Ember;
 
 export default Mixin.create(Pattern, {
   pattern: Constants.ZIP_PATTERN,
